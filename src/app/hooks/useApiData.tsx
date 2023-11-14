@@ -31,8 +31,8 @@ interface DateDataUpdated {
 }
 
 // const route = 'https://washington-trout-stats.vercel.app'
-// const route = "http://localhost:5000";
-const route = "";
+const route = "http://localhost:5000";
+// const route = "";
 const useApiData = () => {
   const [stockedLakesData, setStockedLakesData] = useState<StockedLake[]>([]);
   const [hatcheryTotals, setHatcheryTotals] = useState<HatcheryTotal[]>([]);
@@ -66,6 +66,7 @@ const useApiData = () => {
         );
         const totalStockedByDate: TotalStockedByDate[] =
           await totalStockedByDateResponse.json();
+        console.log(totalStockedByDate)
         setTotalStockedByDate(totalStockedByDate);
 
         const dateDataUpdatedResponse = await fetch(
