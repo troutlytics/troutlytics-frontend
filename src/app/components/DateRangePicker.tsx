@@ -35,7 +35,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
   };
 
   return (
-    <div>
+    <div className="w-full z-10  h-fit">
       <label>
         <input
           type="radio"
