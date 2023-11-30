@@ -10,10 +10,14 @@ import FishingMap from "./components/fishMap";
 import StockChart from "./components/StockChart";
 
 export default function Home() {
-  const [selectedDateRange, setSelectedDateRange] = useState<DateRange | null>(
-    null
-  );
+  const today = new Date();
+  const sevenDaysAgo = new Date(today);
+  sevenDaysAgo.setDate(today.getDate() - 7);
 
+  const [selectedDateRange, setSelectedDateRange] = useState<DateRange>({
+    startDate: today.toISOString(),
+    endDate: sevenDaysAgo.toISOString(),
+  });
   const handleDateChange = (dateRange: DateRange) => {
     setSelectedDateRange(dateRange);
     // Do something with the selected date range, e.g., fetch data based on the date range
@@ -26,7 +30,7 @@ export default function Home() {
   //   // totalStockedByDate,
   //   // dateDataUpdated,
   //   // loading,
-  // } = useApiData();
+  // } = useApiData(selectedDateRange);
   const stockedLakesData = [
     {
       date: "Wed, 18 Oct 2023 00:00:00 GMT",
@@ -584,10 +588,10 @@ export default function Home() {
               {/* Display selected date range */}
               {selectedDateRange && (
                 <p>
-                  {selectedDateRange.startDate?.toDateString()} -{" "}
-                  {selectedDateRange.endDate
-                    ? selectedDateRange.endDate.toDateString()
-                    : "Present"}
+                  {selectedDateRange.startDate === today.toISOString()
+                    ? "Present"
+                    : selectedDateRange.startDate}{" "}
+                  - {selectedDateRange.endDate}
                 </p>
               )}
             </div>
@@ -597,7 +601,6 @@ export default function Home() {
           <FishingMap fishingDataList={stockedLakesData} />
         </section>
         <section className="z-0 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex  mb-10">
-         
           <StockChart lakes={totalStockedByDate} />
         </section>
       </main>
