@@ -4,33 +4,41 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 export interface DateRange {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: string | null;
+  endDate: string | null;
 }
 
 interface DateRangePickerProps {
   onDateChange: (dateRange: DateRange) => void;
 }
 
+
 const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
   const today = new Date();
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(today.getDate() - 7);
+  const [startDate, setStartDate] = useState<Date | null>(today);
+  const [endDate, setEndDate] = useState<Date | null>(sevenDaysAgo);
 
   const handleRadioChange = (days: number) => {
     const end = new Date();
     const start = new Date();
     start.setDate(today.getDate() - days);
-
     setStartDate(start);
     setEndDate(end);
 
-    onDateChange({ startDate: start, endDate: end });
+    onDateChange({
+      startDate: start.toISOString(),
+      endDate: end.toISOString(),
+    });
   };
 
   const handleCustomDateChange = () => {
     if (startDate && endDate) {
-      onDateChange({ startDate, endDate });
+      onDateChange({
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      });
     }
   };
 
@@ -63,7 +71,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
         Last 1 Year
       </label>
 
-      <div>
+      <div className="z-3">
         <label>Custom Range:</label>
         <DatePicker
           selected={startDate}
@@ -80,7 +88,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
           selectsEnd
           startDate={startDate}
           endDate={endDate}
-          minDate={startDate}
+          // minDate={startDate}
           maxDate={today}
           isClearable
         />
