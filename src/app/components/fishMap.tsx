@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
+import useApiData from "../hooks/useApiData";
+import { DateRange } from "./DateRangePicker";
 
 // Create a custom icon
 const customIcon = L.icon({
@@ -23,55 +25,68 @@ interface FishingData {
 }
 
 interface MapProps {
-  fishingDataList: FishingData[];
+  selectedDateRange: DateRange;
+  loading: boolean;
 }
 
-const Map: React.FC<MapProps> = ({ fishingDataList }) => {
+const Map: React.FC<MapProps> = ({ selectedDateRange }) => {
   const mapRef = useRef<L.Map | null>(null);
+  const {
+    stockedLakesData,
+    // hatcheryTotals,
+    // derbyLakesData,
+    // totalStockedByDate,
+    // dateDataUpdated,
+    loading,
+  } = useApiData(selectedDateRange);
 
   useEffect(() => {
-    if (!mapRef.current) {
-      // Initialize the map
-      mapRef.current = L.map("map").setView(
-        [fishingDataList[0].latitude, fishingDataList[0].longitude],
-        6
-      );
-
+    if (!loading && stockedLakesData && stockedLakesData.length) {
+      if (!mapRef.current) {
+        // Initialize the map
+        mapRef.current = L.map("map").setView(
+          [stockedLakesData[0].latitude, stockedLakesData[0].longitude],
+          6
+        );
+      }
+      mapRef.current.eachLayer((layer) => {
+        layer.remove();
+      });
       // Add a tile layer
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(mapRef.current);
-    }
-
-    // Add markers for fishing data
-    fishingDataList.forEach((data) => {
-      const marker = L.marker([data.latitude, data.longitude], {
-        icon: customIcon, // Set the custom icon
-      })
-        .addTo(mapRef.current)
-        .bindPopup(
-          `<div>
+      console.log(stockedLakesData);
+      // Add markers for fishing data
+      stockedLakesData.forEach((data) => {
+        const marker = L.marker([data.latitude, data.longitude], {
+          icon: customIcon, // Set the custom icon
+        })
+          .addTo(mapRef.current)
+          .bindPopup(
+            `<div>
             <h3>${data.lake}</h3>
             <p>Date: ${data.date}</p>
             <p>Species: ${data.species}</p>
-            <p>Stocked Fish: ${data.stocked_fish}</p>
+            <p>Amount Stocked: ${data.stocked_fish}</p>
             <p>Weight: ${data.weight} lbs</p>
             <a href="${data.directions}" target="_blank" rel="noopener noreferrer">Get Directions</a>
           </div>`
-        );
-    });
-    // Calculate the average coordinates
-    const averageLatitude =
-      fishingDataList.reduce((sum, data) => sum + data.latitude, 0) /
-      fishingDataList.length;
-    const averageLongitude =
-      fishingDataList.reduce((sum, data) => sum + data.longitude, 0) /
-      fishingDataList.length;
+          );
+      });
+      // Calculate the average coordinates
+      const averageLatitude =
+        stockedLakesData.reduce((sum, data) => sum + data.latitude, 0) /
+        stockedLakesData.length;
+      const averageLongitude =
+        stockedLakesData.reduce((sum, data) => sum + data.longitude, 0) /
+        stockedLakesData.length;
 
-    // Set the map center to the average coordinates
-    mapRef.current.setView([averageLatitude, averageLongitude], 7);
-  }, [fishingDataList]);
+      // Set the map center to the average coordinates
+      mapRef.current.setView([averageLatitude, averageLongitude], 7);
+    }
+  }, [stockedLakesData, loading, selectedDateRange]);
 
   return <div id="map" style={{ height: "500px", width: "100%" }} />;
 };
