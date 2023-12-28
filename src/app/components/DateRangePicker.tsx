@@ -12,7 +12,6 @@ interface DateRangePickerProps {
   onDateChange: (dateRange: DateRange) => void;
 }
 
-
 const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
   const today = new Date();
   const sevenDaysAgo = new Date();
@@ -23,7 +22,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
   const handleRadioChange = (days: number) => {
     const end = new Date();
     const start = new Date();
-    start.setDate(today.getDate() - days);
+    end.setDate(today.getDate() - days);
     setStartDate(start);
     setEndDate(end);
 
@@ -74,15 +73,6 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
       <div className="z-3">
         <label>Custom Range:</label>
         <DatePicker
-          selected={startDate}
-          onChange={(date: Date) => setStartDate(date)}
-          selectsStart
-          startDate={startDate}
-          endDate={endDate}
-          isClearable
-        />
-        to
-        <DatePicker
           selected={endDate}
           onChange={(date: Date) => setEndDate(date)}
           selectsEnd
@@ -90,6 +80,15 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
           endDate={endDate}
           // minDate={startDate}
           maxDate={today}
+          isClearable
+        />
+        to
+        <DatePicker
+          selected={startDate}
+          onChange={(date: Date) => setStartDate(date)}
+          selectsStart
+          startDate={startDate}
+          endDate={endDate}
           isClearable
         />
         <button onClick={handleCustomDateChange}>Apply</button>
