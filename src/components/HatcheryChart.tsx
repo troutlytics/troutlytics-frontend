@@ -31,7 +31,6 @@ const TotalStockedByHatcheryChart: React.FC<
 > = ({ lakes }) => {
   // Check if lakes array is not empty
   if (lakes && lakes.length > 0) {
-    console.log({ lakes });
     const hatcheries = lakes.map((lake) => lake.hatchery);
     const totalStockedFish = lakes.map((lake) => lake.sum_1);
 

@@ -60,7 +60,7 @@ const useApiData = (dateRange: DateRange) => {
   const [derbyLakesData, setDerbyLakesData] = useState(null);
   const [dateDataUpdated, setDateDataUpdated] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   const dateQuery = `?start_date=${dateRange.startDate}&end_date=${dateRange.endDate}`;
 
@@ -71,7 +71,7 @@ const useApiData = (dateRange: DateRange) => {
       const data = await response.json();
       setData(data);
       console.log(data);
-    } catch (error) {
+    } catch (error:any | Error) {
       setError(error);
       console.log(error);
     } finally {
@@ -141,36 +141,14 @@ const useApiData = (dateRange: DateRange) => {
     dateDataUpdatedFromApi,
   ]);
 
-  const mutateData = (endPoint: string) => {
-    // Manually trigger a re-fetch for stocked lakes data
-    mutate(route + endPoint + dateQuery);
-    console.log("MUTATED");
-    console.log(stockedLakesData);
-  };
-
   return {
     stockedLakesData,
     hatcheryTotals,
     derbyLakesData,
     totalStockedByDate,
     dateDataUpdated,
-    mutateData,
     loading,
     error,
-    // Expose individual fetch functions
-    fetchStockedLakesData: () =>
-      fetchData(route + "/stocked_lakes_data" + dateQuery, setStockedLakesData),
-    fetchHatcheryTotals: () =>
-      fetchData(route + "/hatchery_totals" + dateQuery, setHatcheryTotals),
-    fetchTotalStockedByDate: () =>
-      fetchData(
-        route + "/total_stocked_by_date_data" + dateQuery,
-        setTotalStockedByDate
-      ),
-    fetchDerbyLakesData: () =>
-      fetchData(route + "/derby_lakes_data", setDerbyLakesData),
-    fetchDateDataUpdated: () =>
-      fetchData(route + "/date_data_updated", setDateDataUpdated),
   };
 };
 export default useApiData;

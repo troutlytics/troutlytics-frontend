@@ -1,16 +1,21 @@
 import React from "react";
-
+import Image from "next/image";
 export default function Header() {
   return (
     <header>
       <nav className="bg-white border-gray-200 ">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a href="https://flowbite.com/" className="flex items-center">
-            <img
+            <Image
+              className="w-10 h-8 mr-3"
+              width={0}
+              height={0}
+              sizes="100vw"
+              style={{ width: "100%", height: "auto" }} // optional
               src="https://flowbite.com/docs/images/logo.svg"
-              className="h-8 mr-3"
               alt="Flowbite Logo"
             />
+
             <span className="self-center text-2xl font-semibold whitespace-nowrap ">
               Washington Trout Stats
             </span>
@@ -32,9 +37,9 @@ export default function Header() {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="M1 1h15M1 7h15M1 13h15"
               />
             </svg>

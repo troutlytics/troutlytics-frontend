@@ -1,8 +1,9 @@
+"use client"; // This is a client component 👈🏽
+
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
-import useApiData from "../hooks/useApiData";
-import { DateRange } from "./DateRangePicker";
+import { DateRange, StockedLake } from "../../src/hooks/useApiData";
 
 // Create a custom icon
 const customIcon = L.icon({
@@ -12,33 +13,16 @@ const customIcon = L.icon({
   popupAnchor: [0, -32], // The point from which the popup should open relative to the icon
 });
 
-interface FishingData {
-  latitude: number;
-  longitude: number;
-  date: string;
-  directions: string;
-  hatchery: string;
-  lake: string;
-  species: string;
-  stocked_fish: number;
-  weight: number;
-}
+
 
 interface MapProps {
   selectedDateRange: DateRange;
+  stockedLakesData: StockedLake[];
   loading: boolean;
 }
 
-const Map: React.FC<MapProps> = ({ selectedDateRange }) => {
+const Map: React.FC<MapProps> = ({ selectedDateRange, stockedLakesData, loading }) => {
   const mapRef = useRef<L.Map | null>(null);
-  const {
-    stockedLakesData,
-    // hatcheryTotals,
-    // derbyLakesData,
-    // totalStockedByDate,
-    // dateDataUpdated,
-    loading,
-  } = useApiData(selectedDateRange);
 
   useEffect(() => {
     if (!loading && stockedLakesData && stockedLakesData.length) {
