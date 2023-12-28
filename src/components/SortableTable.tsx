@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { StockedLake, StockedLakesDataProps } from "../hooks/useApiData";
+import React, { ReactNode, useState } from "react";
+import { StockedLake } from "../hooks/useApiData";
 
-const SortableTable: React.FC<StockedLakesDataProps> = ({
-  data,
-  formatDate,
-}) => {
+interface SortableTableProps {
+  data: StockedLake[];
+  formatDate: (arg0: string) => string;
+}
+const SortableTable: React.FC<SortableTableProps> = ({ data, formatDate }) => {
   const [sortedData, setSortedData] = useState<StockedLake[]>(data);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [sortedColumn, setSortedColumn] = useState<string | null>(null);
