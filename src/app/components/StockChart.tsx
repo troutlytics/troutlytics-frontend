@@ -8,8 +8,7 @@ interface StockChartProps {
 
 const StockChart: React.FC<StockChartProps> = ({ lakes }) => {
   Chart.register();
-  if (lakes.length > 0) {
-    const date_format = 'YYYY-MM-DD';
+  if (lakes && lakes.length > 0) {
     const [dates, totalStockedFish] = lakes.reduce(
       (acc, [date, totalStocked]) => {
         acc[0].push(date);
@@ -23,7 +22,7 @@ const StockChart: React.FC<StockChartProps> = ({ lakes }) => {
       labels: dates,
       datasets: [
         {
-          label: 'Total Stocked Trout by Date',
+          label: 'Amount Stocked',
           data: totalStockedFish,
           backgroundColor: '#9fd3c7',
           borderColor: '#9fd3c7',
@@ -46,7 +45,7 @@ const StockChart: React.FC<StockChartProps> = ({ lakes }) => {
 
     return (
       <div className='w-full'>
-        <h2 className='lg:text-5xl md:text-4xl sm:text-2xl'>Amount Stocked by Date</h2>
+        <h2 className='lg:text-5xl md:text-4xl sm:text-2xl'>Total Stocked in Washington by Date</h2>
         <Line className='' data={chartData}  /> {/* options={chartOptions}  */}
       </div>
     );
