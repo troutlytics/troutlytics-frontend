@@ -15,9 +15,7 @@ export interface StockedLake {
   derby_participant: boolean;
 }
 
-export interface StockedLakesDataProps {
-  data: StockedLake[];
-}
+
 
 interface HatcheryTotal {
   date: string;
