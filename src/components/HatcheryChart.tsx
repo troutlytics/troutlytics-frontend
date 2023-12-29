@@ -24,6 +24,7 @@ ChartJS.register(
 // Define a TypeScript type for props
 type TotalStockedByHatcheryChartProps = {
   lakes: Array<{ hatchery: string; sum_1: number }>;
+  loading: boolean;
 };
 
 const TotalStockedByHatcheryChart: React.FC<
@@ -64,7 +65,7 @@ const TotalStockedByHatcheryChart: React.FC<
         <h2 className="lg:text-5xl md:text-4xl sm:text-2xl">
           Total Stocked by hatchery
         </h2>
-        <Bar data={chartData}  />
+        <Bar data={chartData} />
       </div>
     );
   }

@@ -51,11 +51,11 @@ const useApiData = (dateRange: DateRange) => {
       return res.json();
     });
 
-  const [stockedLakesData, setStockedLakesData] = useState(null);
-  const [hatcheryTotals, setHatcheryTotals] = useState(null);
-  const [totalStockedByDate, setTotalStockedByDate] = useState(null);
-  const [derbyLakesData, setDerbyLakesData] = useState(null);
-  const [dateDataUpdated, setDateDataUpdated] = useState(null);
+  const [stockedLakesData, setStockedLakesData] = useState([]);
+  const [hatcheryTotals, setHatcheryTotals] = useState([]);
+  const [totalStockedByDate, setTotalStockedByDate] = useState([]);
+  const [derbyLakesData, setDerbyLakesData] = useState([]);
+  const [dateDataUpdated, setDateDataUpdated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 

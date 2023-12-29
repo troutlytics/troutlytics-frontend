@@ -2,15 +2,16 @@ import React, { ReactNode, useState } from "react";
 import { StockedLake } from "../hooks/useApiData";
 
 interface SortableTableProps {
-  data: StockedLake[];
-  formatDate: (arg0: string) => string;
+  data: StockedLake[] | [];
+  formatDate: (arg0: string | undefined) => string | undefined;
 }
 const SortableTable: React.FC<SortableTableProps> = ({ data, formatDate }) => {
-  const [sortedData, setSortedData] = useState<StockedLake[]>(data);
+  const [sortedData, setSortedData] = useState<StockedLake[] | []>(data);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [sortedColumn, setSortedColumn] = useState<string | null>(null);
 
   const sortData = (field: keyof StockedLake) => {
+    
     const newData = [...sortedData];
     newData.sort((a, b) => {
       if (field === "date") {

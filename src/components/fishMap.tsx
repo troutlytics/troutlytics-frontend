@@ -1,19 +1,19 @@
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
+import "leaflet/dist/leaflet.css";
 import { DateRange } from "./DateRangePicker";
 import { StockedLake } from "../hooks/useApiData";
-// Create a custom icon
+
 const customIcon = L.icon({
-  iconUrl: "point-icon.png", // URL to your custom icon image
-  iconSize: [32, 32], // Icon size in pixels [width, height]
-  iconAnchor: [16, 32], // The point of the icon that corresponds to the marker's location
-  popupAnchor: [0, -32], // The point from which the popup should open relative to the icon
+  iconUrl: "point-icon.png",
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
 });
 
 interface MapProps {
   selectedDateRange: DateRange;
-  stockedLakesData: StockedLake[];
+  stockedLakesData: StockedLake[] | null;
   loading: boolean;
 }
 
@@ -23,56 +23,47 @@ const Map: React.FC<MapProps> = ({
   loading,
 }) => {
   const mapRef = useRef<L.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!loading && stockedLakesData && stockedLakesData.length) {
-      if (!mapRef.current) {
-        // Initialize the map
-        mapRef.current = L.map("map").setView(
-          [stockedLakesData[0].latitude, stockedLakesData[0].longitude],
-          6
-        );
-      }
-      mapRef.current.eachLayer((layer) => {
-        layer.remove();
-      });
-      // Add a tile layer
+    if (mapContainerRef.current && !mapRef.current) {
+      // Initialize the map only once
+      mapRef.current = L.map(mapContainerRef.current).setView([47.7511, -120.7401], 6); // Default center of WA
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(mapRef.current);
+    }
 
-      // Add markers for fishing data
+    if (!loading && stockedLakesData && stockedLakesData.length && mapRef.current) {
+      // Clear existing markers
+      mapRef.current.eachLayer((layer) => {
+        if (layer instanceof L.Marker) {
+          layer.remove();
+        }
+      });
+
+      // Add new markers
       stockedLakesData.forEach((data) => {
-        const marker = L.marker([data.latitude, data.longitude], {
-          icon: customIcon, // Set the custom icon
-        })
-          .addTo(mapRef.current)
+        L.marker([data.latitude, data.longitude], { icon: customIcon })
+          .addTo(mapRef.current!)
           .bindPopup(
             `<div>
-            <h3>${data.lake}</h3>
-            <p>Date: ${data.date}</p>
-            <p>Species: ${data.species}</p>
-            <p>Amount Stocked: ${data.stocked_fish}</p>
-            <p>Weight: ${data.weight} lbs</p>
-            <a href="${data.directions}" target="_blank" rel="noopener noreferrer">Get Directions</a>
-          </div>`
+              <h3>${data.lake}</h3>
+              <p>Date: ${data.date}</p>
+              <p>Species: ${data.species}</p>
+              <p>Amount Stocked: ${data.stocked_fish}</p>
+              <p>Weight: ${data.weight} lbs</p>
+              <a href="${data.directions}" target="_blank" rel="noopener noreferrer">Get Directions</a>
+            </div>`
           );
       });
-      // Calculate the average coordinates
-      const averageLatitude =
-        stockedLakesData.reduce((sum, data) => sum + data.latitude, 0) /
-        stockedLakesData.length;
-      const averageLongitude =
-        stockedLakesData.reduce((sum, data) => sum + data.longitude, 0) /
-        stockedLakesData.length;
 
-      // Set the map center to the average coordinates
-      mapRef.current.setView([averageLatitude, averageLongitude], 7);
+      // Set the map center to the first marker
+      mapRef.current.setView([stockedLakesData[0].latitude, stockedLakesData[0].longitude], 7);
     }
-  }, [stockedLakesData, loading, selectedDateRange]);
+  }, [stockedLakesData, loading]);
 
-  return <div id="map" style={{ height: "500px", width: "100%" }} />;
+  return <div ref={mapContainerRef} style={{ height: "500px", width: "100%" }} />;
 };
 
 export default Map;

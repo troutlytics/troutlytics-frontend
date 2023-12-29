@@ -25,7 +25,7 @@ export default function Home() {
   };
 
   // Function to format a date in a readable way
-  const formatDate = (dateStr: string | null) => {
+  const formatDate = (dateStr: string | undefined | null) => {
     if (dateStr) {
       const date = new Date(dateStr);
       return `${String(date.getMonth() + 1).padStart(2, "0")}/${String(

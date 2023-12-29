@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 interface StockChartProps {
   lakes: [string, number][];
+  loading: boolean
 }
 
 const StockChart: React.FC<StockChartProps> = ({ lakes }) => {
