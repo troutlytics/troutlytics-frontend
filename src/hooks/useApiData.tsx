@@ -42,7 +42,7 @@ export interface DateRange {
 const useApiData = (dateRange: DateRange) => {
   const { mutate } = useSWRConfig();
 
-  const route = 'https://washington-trout-stats.vercel.app'
+  const route = 'https://washington-trout-stats.vercel-backend.app'
   // const route = "http://localhost:5000";
 
   const fetcher = (url: string) =>
