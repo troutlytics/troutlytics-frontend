@@ -1,4 +1,4 @@
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 import { useState, useEffect } from "react";
 
 export interface StockedLake {
@@ -14,8 +14,6 @@ export interface StockedLake {
   directions: string;
   derby_participant: boolean;
 }
-
-
 
 interface HatcheryTotal {
   date: string;
@@ -40,18 +38,6 @@ export interface DateRange {
 }
 
 const useApiData = (dateRange: DateRange) => {
-  const { mutate } = useSWRConfig();
-
-  const route = 'https://trout-tracker-wa-backend.vercel.app'
-  
-  // const route = "http://localhost:5000";
-
-  const fetcher = (url: string) =>
-    fetch(url).then((res) => {
-      // console.log(res.json())
-      return res.json();
-    });
-
   const [stockedLakesData, setStockedLakesData] = useState([]);
   const [hatcheryTotals, setHatcheryTotals] = useState([]);
   const [totalStockedByDate, setTotalStockedByDate] = useState([]);
@@ -59,26 +45,17 @@ const useApiData = (dateRange: DateRange) => {
   const [dateDataUpdated, setDateDataUpdated] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-
+  const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
+  const route =
+    ENVIRONMENT === "dev"
+      ? "http://localhost:5000"
+      : "https://trout-tracker-wa-backend.vercel.app";
   const dateQuery = `?start_date=${dateRange.startDate}&end_date=${dateRange.endDate}`;
 
   // Helper function to handle data fetching
-  const fetchData = async (url: string, setData: (data: any) => void) => {
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      setData(data);
-      console.log(data);
-    } catch (error:any | Error) {
-      setError(error);
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
   // Use useSWR for automatic caching and re-fetching
-
   const { data: stockedLakesDataFromApi, isValidating: stockedLakesLoading } =
     useSWR(route + "/stocked_lakes_data" + dateQuery, fetcher);
 
