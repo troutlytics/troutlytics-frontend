@@ -1,17 +1,27 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { StockedLake } from "../hooks/useApiData";
 
 interface SortableTableProps {
   data: StockedLake[] | [];
   formatDate: (arg0: string | undefined) => string | undefined;
+  loading: boolean;
 }
-const SortableTable: React.FC<SortableTableProps> = ({ data, formatDate }) => {
-  const [sortedData, setSortedData] = useState<StockedLake[] | []>(data);
+const SortableTable: React.FC<SortableTableProps> = ({
+  data,
+  formatDate,
+  loading,
+}) => {
+  const [sortedData, setSortedData] = useState<StockedLake[] | []>([]);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [sortedColumn, setSortedColumn] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!loading) {
+      setSortedData(data);
+    }
+  }, [loading, data]);
+
   const sortData = (field: keyof StockedLake) => {
-    
     const newData = [...sortedData];
     newData.sort((a, b) => {
       if (field === "date") {
@@ -47,25 +57,29 @@ const SortableTable: React.FC<SortableTableProps> = ({ data, formatDate }) => {
   };
 
   return (
-    <div className="max-h-96 overflow-auto">
+    <div className="max-h-96 overflow-auto w-full">
       <table className="min-w-full divide-y divide-gray-300 sticky">
         <thead className="sticky top-0 bg-gray-700">
           <tr>
-            {["date", "hatchery", "lake", "species", "stocked_fish"].map(
-              (field) => (
-                <th
-                  key={field}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider cursor-pointer hover:text-gray-400"
-                  onClick={() => sortData(field as keyof StockedLake)}
-                >
-                  {field.charAt(0).toUpperCase() +
-                    field.slice(1).replaceAll("_", " ")}
-                  {renderSortIcon(field)}
-                </th>
-              )
-            )}
+            {[
+              "date",
+              "hatchery",
+              "lake",
+              "species",
+              "stocked_fish",
+              "weight",
+            ].map((field) => (
+              <th
+                key={field}
+                className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider cursor-pointer hover:text-gray-400"
+                onClick={() => sortData(field as keyof StockedLake)}
+              >
+                {field === 'weight' ? "Fish Per Pound" : field.replaceAll("_", " ")}
+                {renderSortIcon(field)}
+              </th>
+            ))}
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider">
-              Actions
+              Directions
             </th>
           </tr>
         </thead>
@@ -87,6 +101,9 @@ const SortableTable: React.FC<SortableTableProps> = ({ data, formatDate }) => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                   {lake.stocked_fish}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  {lake.weight}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                   <a
