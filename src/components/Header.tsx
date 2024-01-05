@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import troutImage from "public/trout_image.png";
+
 export default function Header() {
   return (
     <header>
@@ -11,14 +13,14 @@ export default function Header() {
               className="w-10 h-8 mr-3"
               width={0}
               height={0}
-              sizes="100vw"
-              style={{ width: "100%", height: "auto" }} // optional
-              src="https://flowbite.com/docs/images/logo.svg"
-              alt="Flowbite Logo"
+              sizes="200"
+              // style={{ width: "100%", height: "auto" }} // optional
+              src={troutImage}
+              alt="Trout Tracker Logo"
             />
 
             <span className="self-center text-2xl font-semibold whitespace-nowrap ">
-              Washington Trout Stats
+              Trout Tracker WA
             </span>
           </Link>
           <button
