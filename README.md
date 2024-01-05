@@ -30,11 +30,11 @@ Follow these steps to get a development environment running:
 
 1.  Clone the repo:
 
-        git clone https://github.com/YourUsername/FishTrackWA.git
+        git clone https://github.com/Thomas-Basham/trout-tracker-wa.git
 
 2.  Navigate to the project directory:
 
-        cd FishTrackWA
+        cd trout-tracker-wa
 
 3.  Install dependencies:
 
@@ -59,18 +59,12 @@ Built With
     Chart.js - For creating interactive data visualizations
     leaflet.js - For creating an interactive map
 
-Contributing
+#### Contributing
 
 Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests.
 Versioning
 
-We use SemVer for versioning. For the versions available, see the tags on this repository.
-Authors
-
-    Your Name - Initial work - YourGitHubProfile
-
-See also the list of contributors who participated in this project.
-License
+#### License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details
 Acknowledgments
