@@ -28,7 +28,7 @@ const handleEmailSending = async (
     });
 
     res.status(200).json({ message: "Email sent successfully" });
-  } catch (error) {
+  } catch (error:any) {
     res.status(500).json({ message: "Error sending email" , error: error.message });
   }
 };
