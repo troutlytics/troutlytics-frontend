@@ -23,3 +23,25 @@ body {
       transparent,
       var(--background-end-rgb)) var(--background-start-rgb);
 }
+
+.species-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  padding: 10px;
+}
+
+.species-image {
+  width: 100%;
+  height: auto;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.species-name {
+  font-size: 1.25rem;
+  color: #333;
+  margin-bottom: 5px;
+}
+
