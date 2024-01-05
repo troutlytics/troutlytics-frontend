@@ -23,17 +23,17 @@ ChartJS.register(
 
 // Define a TypeScript type for props
 type TotalStockedByHatcheryChartProps = {
-  lakes: Array<{ hatchery: string; sum_1: number }>;
+  data: Array<{ hatchery: string; sum_1: number }>;
   loading: boolean;
 };
 
 const TotalStockedByHatcheryChart: React.FC<
   TotalStockedByHatcheryChartProps
-> = ({ lakes }) => {
+> = ({ data }) => {
   // Check if lakes array is not empty
-  if (lakes && lakes.length > 0) {
-    const hatcheries = lakes.map((lake) => lake.hatchery);
-    const totalStockedFish = lakes.map((lake) => lake.sum_1);
+  if (data && data.length > 0) {
+    const hatcheries = data.map((lake) => lake.hatchery);
+    const totalStockedFish = data.map((lake) => lake.sum_1);
 
     const chartData = {
       labels: hatcheries,
