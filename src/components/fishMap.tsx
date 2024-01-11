@@ -63,7 +63,7 @@ const Map: React.FC<MapProps> = ({
     }
   }, [stockedLakesData, loading]);
 
-  return <div ref={mapContainerRef} style={{ height: "500px", width: "100%" }} />;
+  return <div ref={mapContainerRef} style={{ height: "500px", width: "100%" , zIndex:"-10"}} />;
 };
 
 export default Map;
