@@ -58,6 +58,7 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
         <h2 className="lg:text-5xl md:text-4xl sm:text-2xl">
           Total Stocked in Washington by Date
         </h2>
+        {/* @ts-ignore */}
         <Line data={chartData} options={chartOptions} />
       </div>
     );
