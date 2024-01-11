@@ -29,12 +29,16 @@ export default function Home() {
   // Helper Function to format a date in a readable way
   const formatDate = (dateStr: string | undefined | null) => {
     if (dateStr) {
+      // Create a date object in UTC
       const date = new Date(dateStr);
-      return `${String(date.getMonth() + 1).padStart(2, "0")}/${String(
-        date.getDate()
-      ).padStart(2, "0")}/${date.getFullYear()}`;
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // months are 0-indexed
+      const day = String(date.getUTCDate()).padStart(2, '0');
+  
+      return `${month}/${day}/${year}`;
     } else return "";
   };
+  
 
   const {
     stockedLakesData,
@@ -49,7 +53,7 @@ export default function Home() {
     <>
       <section
         id="date-widget"
-        className="z-0 lg:max-w-5xl sm:max-w-screen w-full font-mono text-sm mb-10"
+        className="z-1 lg:max-w-5xl sm:max-w-screen w-full font-mono text-sm mb-10 overflow-auto"
       >
         <h2 className="lg:text-5xl md:text-4xl sm:text-2xl mb-5">
           Trout stocked in Washington State
