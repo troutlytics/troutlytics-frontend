@@ -23,6 +23,7 @@ const SortableTable: React.FC<SortableTableProps> = ({
 
   const sortData = (field: keyof StockedLake) => {
     const newData = [...sortedData];
+    console.log(newData)
     newData.sort((a, b) => {
       if (field === "date") {
         // Parse dates and compare
@@ -88,6 +89,7 @@ const SortableTable: React.FC<SortableTableProps> = ({
             sortedData.map((lake, index) => (
               <tr key={index}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                  {/* {lake.date} */}
                   {formatDate(lake.date)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
