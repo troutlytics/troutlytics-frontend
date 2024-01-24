@@ -50,11 +50,11 @@ const useApiData = (dateRange: DateRange) => {
     ENVIRONMENT === "dev"
       ? "http://localhost:5000"
       : "https://trout-tracker-wa-backend.vercel.app";
-  const dateQuery = `?start_date=${dateRange.startDate}&end_date=${dateRange.endDate}`;
 
   // Helper function to handle data fetching
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
+  
+  const dateQuery = dateRange && `?start_date=${dateRange.startDate}&end_date=${dateRange.endDate}`;
   // Use useSWR for automatic caching and re-fetching
   const { data: stockedLakesDataFromApi, isValidating: stockedLakesLoading } =
     useSWR(route + "/stocked_lakes_data" + dateQuery, fetcher);

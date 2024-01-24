@@ -18,10 +18,11 @@ export default function RootLayout({
       </main>
       <footer>
         <p className="text-center mb-10">
-          Data was last updated {dateDataUpdated} from the{" "}
-          <a href="https://wdfw.wa.gov/fishing/reports/stocking/trout-plants/all">
+          Data was last collected on {dateDataUpdated} from the{" "}
+          <a className=" text-cyan-700 hover:text-cyan-900" href="https://wdfw.wa.gov/fishing/reports/stocking/trout-plants/all">
             WDFW trout plant reports page
           </a>
+          .
         </p>
       </footer>
     </>
