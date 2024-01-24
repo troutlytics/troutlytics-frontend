@@ -1,6 +1,6 @@
 import React from "react";
 
-interface SelectedDateRangeProps {
+export interface SelectedDateRangeProps {
   selectedDateRange: {
     endDate: string | null;
     startDate: string | null;
@@ -15,8 +15,7 @@ const SelectedDateRange: React.FC<SelectedDateRangeProps> = ({
   today,
 }) => {
   return (
-    <div id="selected-date-range" className="text-center w-full mt-5">
-      {/* Display selected date range */}
+    <>
       {selectedDateRange && (
         <p>
           {formatDate(selectedDateRange.endDate)} -{" "}
@@ -26,7 +25,7 @@ const SelectedDateRange: React.FC<SelectedDateRangeProps> = ({
             : formatDate(selectedDateRange.startDate)}
         </p>
       )}
-    </div>
+    </>
   );
 };
 
