@@ -32,13 +32,12 @@ export default function Home() {
       // Create a date object in UTC
       const date = new Date(dateStr);
       const year = date.getUTCFullYear();
-      const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // months are 0-indexed
-      const day = String(date.getUTCDate()).padStart(2, '0');
-  
+      const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // months are 0-indexed
+      const day = String(date.getUTCDate()).padStart(2, "0");
+
       return `${month}/${day}/${year}`;
     } else return "";
   };
-  
 
   const {
     stockedLakesData,
@@ -56,16 +55,21 @@ export default function Home() {
         className="z-1 lg:max-w-5xl sm:max-w-screen w-full font-mono text-sm mb-10 overflow-auto"
       >
         <h2 className="lg:text-5xl md:text-4xl sm:text-2xl mb-5">
-          Trout stocked in Washington State
+          Trout Raised in Washington State
         </h2>
         <DateRangePicker onDateChange={handleDateChange} />
-        <SelectedDateRange
-          formatDate={formatDate}
-          selectedDateRange={selectedDateRange}
-          today={today}
-        />
+        <div id="selected-date-range" className="text-center w-full mt-5">
+          <SelectedDateRange
+            formatDate={formatDate}
+            selectedDateRange={selectedDateRange}
+            today={today}
+          />
+        </div>
       </section>
-      <section id="map-widget" className="z-0  w-screen mb-10">
+      <section
+        id="map-widget"
+        className="z-0 max-w-screen w-full items-center justify-between font-mono text-sm lg:flex flex-col mb-10 gap-10"
+      >
         <FishingMap
           selectedDateRange={selectedDateRange}
           stockedLakesData={stockedLakesData}
