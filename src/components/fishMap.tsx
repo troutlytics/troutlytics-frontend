@@ -17,53 +17,66 @@ interface MapProps {
   loading: boolean;
 }
 
-const Map: React.FC<MapProps> = ({
-  selectedDateRange,
-  stockedLakesData,
-  loading,
-}) => {
+const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (mapContainerRef.current && !mapRef.current) {
-      // Initialize the map only once
-      mapRef.current = L.map(mapContainerRef.current).setView([47.7511, -120.7401], 6); // Default center of WA
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(mapRef.current);
+    initializeMap();
+    if (!loading && stockedLakesData && mapRef.current) {
+      clearMarkers();
+      renderMarkers();
     }
 
-    if (!loading && stockedLakesData && stockedLakesData.length && mapRef.current) {
+    function initializeMap() {
+      if (mapContainerRef.current && !mapRef.current) {
+        // Initialize the map only once
+        mapRef.current = L.map(mapContainerRef.current).setView(
+          [47.3826, -120.4472],
+          7
+        ); // Default center of WA
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(mapRef.current);
+      }
+    }
+
+    function clearMarkers() {
       // Clear existing markers
-      mapRef.current.eachLayer((layer) => {
+      mapRef?.current?.eachLayer((layer) => {
         if (layer instanceof L.Marker) {
           layer.remove();
         }
       });
+    }
 
+    function renderMarkers() {
       // Add new markers
-      stockedLakesData.forEach((data) => {
-        L.marker([data.latitude, data.longitude], { icon: customIcon })
-          .addTo(mapRef.current!)
-          .bindPopup(
-            `<div>
-              <h3>${data.lake}</h3>
-              <p>Date: ${data.date}</p>
-              <p>Species: ${data.species}</p>
-              <p>Amount Stocked: ${data.stocked_fish}</p>
-              <p>Weight: ${data.weight} lbs</p>
-              <a href="${data.directions}" target="_blank" rel="noopener noreferrer">Get Directions</a>
-            </div>`
-          );
-      });
-
-      // Set the map center to the first marker
-      mapRef.current.setView([stockedLakesData[0].latitude, stockedLakesData[0].longitude], 7);
+      stockedLakesData?.length &&
+        stockedLakesData.forEach((data) => {
+          L.marker([data.latitude, data.longitude], { icon: customIcon })
+            .addTo(mapRef.current!)
+            .bindPopup(
+              `<div>
+                <h3>${data.lake}</h3>
+                <p>Date: ${data.date}</p>
+                <p>Species: ${data.species}</p>
+                <p>Amount Produced: ${data.stocked_fish}</p>
+                <p>Weight: ${data.weight} lbs</p>
+                <a href="${data.directions}" target="_blank" rel="noopener noreferrer">Get Directions</a>
+              </div>`
+            );
+        });
     }
   }, [stockedLakesData, loading]);
 
-  return <div ref={mapContainerRef} style={{ height: "500px", width: "100%" , zIndex:"-10"}} />;
+  return (
+    <div
+      ref={mapContainerRef}
+      style={{ height: "500px", width: "100%", zIndex: "-1" }}
+    />
+  );
 };
 
 export default Map;
