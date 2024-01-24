@@ -42,9 +42,7 @@ export default function Home() {
   const {
     stockedLakesData,
     hatcheryTotals,
-    // derbyLakesData,
     totalStockedByDate,
-    dateDataUpdated,
     loading,
   } = useApiData(selectedDateRange);
 
