@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { SelectedDateRangeProps } from "./SelectedDateRange";
 
 // Register Chart.js components
 ChartJS.register(
@@ -31,46 +32,43 @@ const TotalStockedByHatcheryChart: React.FC<
   TotalStockedByHatcheryChartProps
 > = ({ data }) => {
   // Check if lakes array is not empty
-  if (data && data.length > 0) {
-    const hatcheries = data.map((lake) => lake.hatchery);
-    const totalStockedFish = data.map((lake) => lake.sum_1);
 
-    const chartData = {
-      labels: hatcheries,
-      datasets: [
-        {
-          label: "Amount Produced",
-          data: totalStockedFish,
-          borderColor: "#9fd3c7",
-          backgroundColor: "#9fd3c7",
-          borderWidth: 1,
-          pointRadius: 3,
-        },
-      ],
-    };
+  const hatcheries = data.map((lake) => lake.hatchery);
+  const totalStockedFish = data.map((lake) => lake.sum_1);
 
-    const chartOptions = {
-      scales: {
-        y: {
-          ticks: { color: "#ececec", beginAtZero: true },
-        },
-        x: {
-          ticks: { color: "#ececec" },
+  const chartData = {
+    labels: hatcheries,
+    datasets: [
+      {
+        label: "Trout Produced",
+        data: totalStockedFish,
+        borderColor: "#9fd3c7",
+        backgroundColor: "#9fd3c7",
+        borderWidth: 1,
+        pointRadius: 3,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: "Total Produced",
         },
       },
-    };
+    },
+  };
 
-    return (
-      <div className="w-full">
-        <h2 className="lg:text-5xl md:text-4xl sm:text-2xl">
-          Total Stocked by hatchery
-        </h2>
-        <Bar data={chartData} />
-      </div>
-    );
-  }
-
-  return <p>No data available</p>;
+  return (
+    <div className="w-full">
+      <h2 className="lg:text-5xl md:text-4xl sm:text-2xl">
+        Total Trout Raised by Hatchery
+      </h2>
+      <Bar data={chartData} options={chartOptions} />
+    </div>
+  );
 };
 
 export default TotalStockedByHatcheryChart;
