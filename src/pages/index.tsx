@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useApiData from "../hooks/useApiData";
+import { useApiDataContext } from "@/contexts/DataContext";
 
 import { DateRange } from "../components/DateRangePicker";
 import DateRangePicker from "../components/DateRangePicker";
@@ -12,35 +12,21 @@ const FishingMap = dynamic(() => import("../components/fishMap"), {
   ssr: false,
 });
 
-// Helper Function to format a date in a readable way
-export const formatDate = (dateStr: string | undefined | null) => {
-  if (dateStr) {
-    // Create a date object in UTC
-    const date = new Date(dateStr);
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // months are 0-indexed
-    const day = String(date.getUTCDate()).padStart(2, "0");
-
-    return `${month}/${day}/${year}`;
-  } else return "";
-};
-
 export default function Home() {
-  const today = new Date();
-  const sevenDaysAgo = new Date(today);
-  sevenDaysAgo.setDate(today.getDate() - 7);
-
-  const [selectedDateRange, setSelectedDateRange] = useState<DateRange>({
-    startDate: today.toISOString(),
-    endDate: sevenDaysAgo.toISOString(),
-  });
+  // Use context for API data and date range
+  const {
+    stockedLakesData,
+    hatcheryTotals,
+    totalStockedByDate,
+    loading,
+    selectedDateRange,
+    setSelectedDateRange,
+    today,
+  } = useApiDataContext();
 
   const handleDateChange = (dateRange: DateRange) => {
     setSelectedDateRange(dateRange);
   };
-
-  const { stockedLakesData, hatcheryTotals, totalStockedByDate, loading } =
-    useApiData(selectedDateRange);
 
   return (
     <>
@@ -51,10 +37,12 @@ export default function Home() {
         <h2 className="lg:text-5xl md:text-4xl sm:text-2xl mb-5">
           Trout Raised in Washington State
         </h2>
-        <DateRangePicker onDateChange={handleDateChange} />
+        <DateRangePicker
+          selectedDateRange={selectedDateRange}
+          handleDateChange={handleDateChange}
+        />
         <div id="selected-date-range" className="text-center w-full mt-5">
           <SelectedDateRange
-            formatDate={formatDate}
             selectedDateRange={selectedDateRange}
             today={today}
           />
@@ -74,13 +62,9 @@ export default function Home() {
         id="table-and-charts"
         className="z-0 max-w-screen w-full items-center justify-between font-mono text-sm lg:flex flex-col mb-10 gap-10"
       >
-        <SortableTable
-          data={stockedLakesData}
-          formatDate={formatDate}
-          loading={loading}
-        />
+        <SortableTable data={stockedLakesData} loading={loading} />
 
-        <StockChart data={totalStockedByDate} loading={loading} />
+        <StockChart data={totalStockedByDate} />
 
         <TotalStockedByHatcheryChart data={hatcheryTotals} loading={loading} />
       </section>
