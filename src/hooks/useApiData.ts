@@ -20,6 +20,20 @@ export interface DateRange {
   endDate: string | null;
 }
 
+export interface HatcheryTotal {
+  hatchery: string;
+  sum_1: number;
+}
+
+export interface DerbyLake {
+  lake: string
+}
+
+export interface TotalStockedByDate {
+  date: string;
+  stocked_fish: number;
+}
+
 const useApiData = (dateRange: DateRange) => {
   const [stockedLakesData, setStockedLakesData] = useState([]);
   const [hatcheryTotals, setHatcheryTotals] = useState([]);
