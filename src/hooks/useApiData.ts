@@ -15,23 +15,6 @@ export interface StockedLake {
   derby_participant: boolean;
 }
 
-interface HatcheryTotal {
-  date: string;
-  amount: number;
-}
-
-interface DerbyLake {
-  // Define the structure of derby lake data here
-}
-
-interface TotalStockedByDate {
-  // Define the structure of total stocked by date data here
-}
-
-interface DateDataUpdated {
-  // Define the structure of date data updated here
-}
-
 export interface DateRange {
   startDate: string | null;
   endDate: string | null;
@@ -42,7 +25,7 @@ const useApiData = (dateRange: DateRange) => {
   const [hatcheryTotals, setHatcheryTotals] = useState([]);
   const [totalStockedByDate, setTotalStockedByDate] = useState([]);
   const [derbyLakesData, setDerbyLakesData] = useState([]);
-  const [dateDataUpdated, setDateDataUpdated] = useState([]);
+  const [dateDataUpdated, setDateDataUpdated] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
@@ -53,8 +36,11 @@ const useApiData = (dateRange: DateRange) => {
 
   // Helper function to handle data fetching
   const fetcher = (url: string) => fetch(url).then((res) => res.json());
-  
-  const dateQuery = dateRange && `?start_date=${dateRange.startDate}&end_date=${dateRange.endDate}`;
+
+  const dateQuery =
+    dateRange &&
+    `?start_date=${dateRange.startDate}&end_date=${dateRange.endDate}`;
+
   // Use useSWR for automatic caching and re-fetching
   const { data: stockedLakesDataFromApi, isValidating: stockedLakesLoading } =
     useSWR(route + "/stocked_lakes_data" + dateQuery, fetcher);
