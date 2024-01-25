@@ -1,16 +1,13 @@
 // import type { Metadata } from "next";
 import Header from "./Header";
-import useApiData from "@/hooks/useApiData";
-import { formatDate } from "@/pages";
+import { useApiDataContext } from "@/contexts/DataContext";
+import { formatDate } from "@/utils";
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { dateDataUpdated } = useApiData({
-    startDate: new Date().toISOString(),
-    endDate: new Date().toISOString(),
-  });
+  const { dateDataUpdated } = useApiDataContext();
   return (
     <>
       <Header />
