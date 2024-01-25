@@ -12,6 +12,19 @@ const FishingMap = dynamic(() => import("../components/fishMap"), {
   ssr: false,
 });
 
+// Helper Function to format a date in a readable way
+export const formatDate = (dateStr: string | undefined | null) => {
+  if (dateStr) {
+    // Create a date object in UTC
+    const date = new Date(dateStr);
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // months are 0-indexed
+    const day = String(date.getUTCDate()).padStart(2, "0");
+
+    return `${month}/${day}/${year}`;
+  } else return "";
+};
+
 export default function Home() {
   const today = new Date();
   const sevenDaysAgo = new Date(today);
@@ -24,19 +37,6 @@ export default function Home() {
 
   const handleDateChange = (dateRange: DateRange) => {
     setSelectedDateRange(dateRange);
-  };
-
-  // Helper Function to format a date in a readable way
-  const formatDate = (dateStr: string | undefined | null) => {
-    if (dateStr) {
-      // Create a date object in UTC
-      const date = new Date(dateStr);
-      const year = date.getUTCFullYear();
-      const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // months are 0-indexed
-      const day = String(date.getUTCDate()).padStart(2, "0");
-
-      return `${month}/${day}/${year}`;
-    } else return "";
   };
 
   const { stockedLakesData, hatcheryTotals, totalStockedByDate, loading } =
