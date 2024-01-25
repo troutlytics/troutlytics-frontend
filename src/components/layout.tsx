@@ -1,6 +1,7 @@
 // import type { Metadata } from "next";
 import Header from "./Header";
 import useApiData from "@/hooks/useApiData";
+import { formatDate } from "@/pages";
 export default function RootLayout({
   children,
 }: {
@@ -18,8 +19,13 @@ export default function RootLayout({
       </main>
       <footer>
         <p className="text-center mb-10">
-          Data was last collected on {dateDataUpdated} from the{" "}
-          <a className=" text-cyan-700 hover:text-cyan-900" href="https://wdfw.wa.gov/fishing/reports/stocking/trout-plants/all">
+          Data was last collected on {formatDate(dateDataUpdated)} from the{" "}
+          <a
+            className=" text-cyan-700 hover:text-cyan-900"
+            href="https://wdfw.wa.gov/fishing/reports/stocking/trout-plants/all"
+            target="_blank"
+            rel="noreferrer nofollow"
+          >
             WDFW trout plant reports page
           </a>
           .
