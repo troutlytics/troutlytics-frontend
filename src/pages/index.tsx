@@ -39,12 +39,8 @@ export default function Home() {
     } else return "";
   };
 
-  const {
-    stockedLakesData,
-    hatcheryTotals,
-    totalStockedByDate,
-    loading,
-  } = useApiData(selectedDateRange);
+  const { stockedLakesData, hatcheryTotals, totalStockedByDate, loading } =
+    useApiData(selectedDateRange);
 
   return (
     <>
@@ -66,7 +62,7 @@ export default function Home() {
       </section>
       <section
         id="map-widget"
-        className="z-0 max-w-screen w-full items-center justify-between font-mono text-sm lg:flex flex-col mb-10 gap-10"
+        className="z-0 max-w-screen w-full text-sm mb-10 "
       >
         <FishingMap
           selectedDateRange={selectedDateRange}
