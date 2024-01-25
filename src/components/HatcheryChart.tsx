@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import { SelectedDateRangeProps } from "./SelectedDateRange";
 
+import { HatcheryTotal } from "@/hooks/useApiData";
 // Register Chart.js components
 ChartJS.register(
   CategoryScale,
@@ -24,7 +25,7 @@ ChartJS.register(
 
 // Define a TypeScript type for props
 type TotalStockedByHatcheryChartProps = {
-  data: Array<{ hatchery: string; sum_1: number }>;
+  data: HatcheryTotal[];
   loading: boolean;
 };
 
