@@ -1,16 +1,14 @@
 import React from "react";
-
+import { formatDate } from "@/utils";
 export interface SelectedDateRangeProps {
   selectedDateRange: {
     endDate: string | null;
     startDate: string | null;
   };
-  formatDate: (dateStr: string | null) => string | undefined;
   today: Date;
 }
 
 const SelectedDateRange: React.FC<SelectedDateRangeProps> = ({
-  formatDate,
   selectedDateRange,
   today,
 }) => {

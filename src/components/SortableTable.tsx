@@ -1,14 +1,12 @@
 import React, { ReactNode, useState, useEffect } from "react";
 import { StockedLake } from "../hooks/useApiData";
-
+import { formatDate } from "@/utils";
 interface SortableTableProps {
   data: StockedLake[] | [];
-  formatDate: (arg0: string | undefined) => string | undefined;
   loading: boolean;
 }
 const SortableTable: React.FC<SortableTableProps> = ({
   data,
-  formatDate,
   loading,
 }) => {
   const [sortedData, setSortedData] = useState<StockedLake[] | []>([]);
