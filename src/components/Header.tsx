@@ -1,78 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
+import NavLink from "./NavLink"; // Adjust the import path as needed
 import Image from "next/image";
+import troutImage from "public/trout_image.png"; // Update the path as necessary
 import Link from "next/link";
-import troutImage from "public/trout_image.png";
 
-export default function Header() {
+const Header: React.FC = () => {
+  // State to manage the visibility of the menu on mobile
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Function to toggle the menu visibility
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <header>
-      <nav className="bg-white border-gray-200 ">
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <nav className="bg-white ">
+        <div className="flex lg:mx-20 flex-wrap items-center justify-between p-4">
           <Link href="/" className="flex items-center">
             <Image
               className="w-10 h-8 mr-3"
-              width={0}
-              height={0}
-              sizes="200"
-              // style={{ width: "100%", height: "auto" }} // optional
+              width={40}
+              height={32}
               src={troutImage}
               alt="Trout Tracker Logo"
             />
-
-            <span className="self-center text-2xl font-semibold whitespace-nowrap ">
+            <span className="self-center text-2xl font-semibold whitespace-nowrap">
               Trout Tracker WA
             </span>
           </Link>
+
           <button
-            data-collapse-toggle="navbar-default"
-            type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 "
-            aria-controls="navbar-default"
-            aria-expanded="false"
+            className="md:hidden" // Button visible only on mobile
+            onClick={toggleMenu}
           >
-            <span className="sr-only">Open main menu</span>
+            {/* Icon for the menu button */}
             <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
+              className="w-6 h-6"
               fill="none"
-              viewBox="0 0 17 14"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
+                d="M4 6h16M4 12h16m-7 6h7"
               />
             </svg>
           </button>
-          <div className="hidden w-full md:block md:w-auto" id="navbar-default">
-            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white ">
+
+          {/* Menu items - visibility toggled on mobile */}
+          <div
+            className={`${
+              isMenuOpen ? "block" : "hidden"
+            } w-full md:block md:w-auto`}
+            id="navbar-default"
+          >
+            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0">
               <li>
-                <Link
-                  href="/"
-                  className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:hover:text-blue-700 "
-                  aria-current="page"
-                >
-                  Home
-                </Link>
+                <NavLink href="/">Home</NavLink>
               </li>
               <li>
-                <Link
-                  href="/about"
-                  className="md:hover:text-blue-700 block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0  md:p-0 "
-                >
-                  About
-                </Link>
+                <NavLink href="/about">About</NavLink>
               </li>
               <li>
-                <Link
-                  href="/contact"
-                  className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
-                >
-                  Contact
-                </Link>
+                <NavLink href="/contact">Contact</NavLink>
               </li>
             </ul>
           </div>
@@ -80,4 +74,6 @@ export default function Header() {
       </nav>
     </header>
   );
-}
+};
+
+export default Header;
