@@ -11,7 +11,6 @@ import dynamic from "next/dynamic";
 const FishingMap = dynamic(() => import("../components/fishMap"), {
   ssr: false,
 });
-
 export default function Home() {
   // Use context for API data and date range
   const {
