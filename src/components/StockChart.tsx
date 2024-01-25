@@ -2,10 +2,10 @@ import React from "react";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import "chartjs-adapter-date-fns";
+import { TotalStockedByDate } from "@/hooks/useApiData";
 
 interface StockChartProps {
-  data: [string, number][];
-  loading: boolean;
+  data: TotalStockedByDate[];
 }
 
 const StockChart: React.FC<StockChartProps> = ({ data }) => {
@@ -19,7 +19,7 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
         borderColor: "#9fd3c7",
         borderWidth: 1,
         pointRadius: 2,
-        data: data.map(([date, totalStocked]) => ({
+        data: data.map((date, totalStocked) => ({
           x: date,
           y: totalStocked,
         })),
