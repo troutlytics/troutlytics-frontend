@@ -5,12 +5,12 @@ import "chartjs-adapter-date-fns";
 import { TotalStockedByDate } from "@/hooks/useApiData";
 
 interface StockChartProps {
-  data: [TotalStockedByDate[]] | [];
+  data: TotalStockedByDate[] | [];
 }
 
 const StockChart: React.FC<StockChartProps> = ({ data }) => {
   Chart.register();
-
+  console.log(data);
   const chartData = {
     datasets: [
       {
@@ -19,9 +19,9 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
         borderColor: "#9fd3c7",
         borderWidth: 1,
         pointRadius: 2,
-        data: data.map(([date, stocked_fish]) => ({
-          x: date,
-          y: stocked_fish,
+        data: data.map((obj) => ({
+          x: obj.date,
+          y: obj.stocked_fish,
         })),
       },
     ],
