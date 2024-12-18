@@ -3,18 +3,24 @@ import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import "chartjs-adapter-date-fns";
 import { TotalStockedByDate } from "@/hooks/useApiData";
+import { useApiDataContext } from "@/contexts/DataContext";
+import { formatDate } from "@/utils";
 
 interface StockChartProps {
   data: TotalStockedByDate[] | [];
 }
 
 const StockChart: React.FC<StockChartProps> = ({ data }) => {
+  const { selectedDateRange } = useApiDataContext();
+
   Chart.register();
-  console.log(data);
+
   const chartData = {
     datasets: [
       {
-        label: "Trout Produced",
+        label: `Total Released ${formatDate(
+          selectedDateRange.pastDate
+        )} - ${formatDate(selectedDateRange.recentDate)}`,
         backgroundColor: "#9fd3c7",
         borderColor: "#9fd3c7",
         borderWidth: 1,
@@ -45,7 +51,7 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
       y: {
         title: {
           display: true,
-          text: "Total Produced",
+          text: "Total Released",
         },
       },
     },
@@ -53,11 +59,12 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
 
   return (
     <div className="w-full">
-      <h2 className="lg:text-5xl md:text-4xl sm:text-2xl">
-        Total Trout Raised by Date
-      </h2>
       {/* @ts-ignore */}
       <Line data={chartData} options={chartOptions} />
+      <p className="text-center text-gray-600">
+        This chart shows the accumulative number of trout released by each
+        hatchery over time.
+      </p>
     </div>
   );
 };
