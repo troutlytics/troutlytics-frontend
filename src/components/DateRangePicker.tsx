@@ -41,43 +41,43 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   };
 
   return (
-    <div className="container mx-auto px-4 pb-8">
+    <div className="container mx-auto  px-0 md:px-4">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">
         Select Date Range
       </h2>
       <div className="flex space-x-4 mb-4">
         <button
           onClick={() => handlePresetClick(7)}
-          className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200"
+          className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200 text-xs md:text-sm"
         >
           Last 7 Days
         </button>
         <button
           onClick={() => handlePresetClick(30)}
-          className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200"
+          className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200  text-xs md:text-sm"
         >
           Last 30 Days
         </button>
         <button
           onClick={() => handlePresetClick(90)}
-          className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200"
+          className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200  text-xs md:text-sm"
         >
           Last 90 Days
         </button>
         <button
           onClick={() => handlePresetClick(365)}
-          className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200"
+          className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200  text-xs md:text-sm"
         >
           Last Year
         </button>
         <button
           onClick={() => handlePresetClick(730)}
-          className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200"
+          className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200  text-xs md:text-sm"
         >
           Last 2 Years
         </button>
       </div>
-      <div className="flex space-x-4">
+      <div className="flex space-x-0 md:space-x-4">
         <DatePicker
           selected={pastDate}
           onChange={(date) => handleCustomDateChange(date, recentDate)}
