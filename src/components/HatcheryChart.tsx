@@ -1,4 +1,3 @@
-// Import necessary modules
 import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -10,10 +9,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { SelectedDateRangeProps } from "./SelectedDateRange";
-
 import { HatcheryTotal } from "@/hooks/useApiData";
-// Register Chart.js components
+import { formatDate } from "@/utils";
+import { useApiDataContext } from "@/contexts/DataContext";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,7 +21,6 @@ ChartJS.register(
   Legend
 );
 
-// Define a TypeScript type for props
 type TotalStockedByHatcheryChartProps = {
   data: HatcheryTotal[];
   loading: boolean;
@@ -32,8 +29,7 @@ type TotalStockedByHatcheryChartProps = {
 const TotalStockedByHatcheryChart: React.FC<
   TotalStockedByHatcheryChartProps
 > = ({ data }) => {
-  // Check if lakes array is not empty
-
+  const { selectedDateRange } = useApiDataContext();
   const hatcheries = data.map((lake) => lake.hatchery);
   const totalStockedFish = data.map((lake) => lake.sum_1);
 
@@ -41,7 +37,9 @@ const TotalStockedByHatcheryChart: React.FC<
     labels: hatcheries,
     datasets: [
       {
-        label: "Trout Produced",
+        label: `Total Released ${formatDate(
+          selectedDateRange.pastDate
+        )} - ${formatDate(selectedDateRange.recentDate)}`,
         data: totalStockedFish,
         borderColor: "#9fd3c7",
         backgroundColor: "#9fd3c7",
@@ -56,7 +54,7 @@ const TotalStockedByHatcheryChart: React.FC<
       y: {
         title: {
           display: true,
-          text: "Total Produced",
+          text: "Total Released",
         },
       },
     },
@@ -64,10 +62,10 @@ const TotalStockedByHatcheryChart: React.FC<
 
   return (
     <div className="w-full">
-      <h2 className="lg:text-5xl md:text-4xl sm:text-2xl">
-        Total Trout Raised by Hatchery
-      </h2>
       <Bar data={chartData} options={chartOptions} />
+      <p className="text-center text-gray-600 ">
+        This chart shows the total number of trout released by each hatchery.
+      </p>
     </div>
   );
 };
