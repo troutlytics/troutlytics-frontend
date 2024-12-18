@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useApiDataContext } from "@/contexts/DataContext";
 
-import DateRange from "../components/DateRangePicker";
+import { DateRange } from "@/hooks/useApiData";
 import DateRangePicker from "../components/DateRangePicker";
 import SelectedDateRange from "@/components/SelectedDateRange";
 import StockChart from "../components/StockChart";
