@@ -33,12 +33,12 @@ const defaultState: ApiDataContextType = {
   hatcheryTotals: [],
   totalStockedByDate: [],
   loading: false,
+  today: new Date(),
   selectedDateRange: {
-    startDate: new Date().toISOString(),
-    endDate: calculateDate(7).toISOString(),
+    recentDate: new Date().toISOString(),
+    pastDate: calculateDate(7).toISOString(),
   },
   setSelectedDateRange: () => {},
-  today: new Date(),
   dateDataUpdated: "",
 };
 
