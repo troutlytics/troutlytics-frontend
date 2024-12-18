@@ -16,8 +16,8 @@ export interface StockedLake {
 }
 
 export interface DateRange {
-  startDate: string | null;
-  endDate: string | null;
+  recentDate: string | null;
+  pastDate: string | null;
 }
 
 export interface HatcheryTotal {
@@ -53,7 +53,7 @@ const useApiData = (dateRange: DateRange) => {
 
   const dateQuery =
     dateRange &&
-    `?start_date=${dateRange.startDate}&end_date=${dateRange.endDate}`;
+    `?start_date=${dateRange.recentDate}&end_date=${dateRange.pastDate}`;
 
   // Use useSWR for automatic caching and re-fetching
   const { data: stockedLakesDataFromApi, isValidating: stockedLakesLoading } =
