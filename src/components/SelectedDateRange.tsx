@@ -2,8 +2,8 @@ import React from "react";
 import { formatDate } from "@/utils";
 export interface SelectedDateRangeProps {
   selectedDateRange: {
-    endDate: string | null;
-    startDate: string | null;
+    pastDate: string | null;
+    recentDate: string | null;
   };
   today: Date;
 }
@@ -16,11 +16,11 @@ const SelectedDateRange: React.FC<SelectedDateRangeProps> = ({
     <>
       {selectedDateRange && (
         <p>
-          {formatDate(selectedDateRange.endDate)} -{" "}
-          {formatDate(selectedDateRange.startDate) ===
+          {formatDate(selectedDateRange.pastDate)} -{" "}
+          {formatDate(selectedDateRange.recentDate) ===
           formatDate(today.toISOString())
             ? "Today"
-            : formatDate(selectedDateRange.startDate)}
+            : formatDate(selectedDateRange.recentDate)}
         </p>
       )}
     </>
