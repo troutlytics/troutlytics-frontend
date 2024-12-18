@@ -11,7 +11,7 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      <main className="main mx-auto  flex min-h-screen flex-col items-center justify-between lg:p-24 ">
+      <main className="main mx-auto  flex min-h-screen flex-col items-center justify-between lg:px-24 py-8">
         {children}
       </main>
       <footer>
