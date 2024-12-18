@@ -13,7 +13,7 @@ import {
   TotalStockedByDate,
 } from "@/hooks/useApiData";
 
-import { DateRange } from "@/components/DateRangePicker";
+import { DateRange } from "@/hooks/useApiData";
 
 import { calculateDate } from "@/utils";
 
