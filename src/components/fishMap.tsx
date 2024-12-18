@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { DateRange } from "./DateRangePicker";
+import { DateRange } from "@/hooks/useApiData";
 import { StockedLake } from "../hooks/useApiData";
 import { formatDate } from "@/utils";
 
