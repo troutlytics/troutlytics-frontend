@@ -8,11 +8,12 @@ import StockChart from "../components/StockChart";
 import TotalStockedByHatcheryChart from "../components/HatcheryChart";
 import SortableTable from "../components/SortableTable";
 import dynamic from "next/dynamic";
+
 const FishingMap = dynamic(() => import("../components/fishMap"), {
   ssr: false,
 });
+
 export default function Home() {
-  // Use context for API data and date range
   const {
     stockedLakesData,
     hatcheryTotals,
@@ -28,45 +29,46 @@ export default function Home() {
   };
 
   return (
-    <>
-      <section
-        id="date-widget"
-        className="z-1 lg:max-w-5xl sm:max-w-screen w-full font-mono text-sm mb-10 overflow-auto"
-      >
-        <h2 className="lg:text-5xl md:text-4xl sm:text-2xl mb-5">
-          Trout Raised in Washington State
-        </h2>
-        <DateRangePicker
-          selectedDateRange={selectedDateRange}
-          handleDateChange={handleDateChange}
-        />
-        <div id="selected-date-range" className="text-center w-full mt-5">
-          <SelectedDateRange
+    <div className="container mx-auto px-4 pb-8">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+        Trout Raised in Washington State
+      </h1>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <section id="date-widget" className="col-span-1 lg:col-span-2">
+          <DateRangePicker
             selectedDateRange={selectedDateRange}
-            today={today}
+            handleDateChange={handleDateChange}
           />
-        </div>
-      </section>
-      <section
-        id="map-widget"
-        className="z-0 max-w-screen w-full text-sm mb-10 "
-      >
-        <FishingMap
-          selectedDateRange={selectedDateRange}
-          stockedLakesData={stockedLakesData}
-          loading={loading}
-        />
-      </section>
-      <section
-        id="table-and-charts"
-        className="z-0 max-w-screen w-full items-center justify-between font-mono text-sm lg:flex flex-col mb-10 gap-10"
-      >
-        <SortableTable data={stockedLakesData} loading={loading} />
-
-        <StockChart data={totalStockedByDate} />
-
-        <TotalStockedByHatcheryChart data={hatcheryTotals} loading={loading} />
-      </section>
-    </>
+          <div id="selected-date-range" className="text-center w-full mt-5">
+            <SelectedDateRange
+              selectedDateRange={selectedDateRange}
+              today={today}
+            />
+          </div>
+        </section>
+        <section id="map-widget" className="col-span-1 lg:col-span-2">
+          <FishingMap
+            selectedDateRange={selectedDateRange}
+            stockedLakesData={stockedLakesData}
+            loading={loading}
+          />
+        </section>
+        <section id="table-widget" className="col-span-1 lg:col-span-1">
+          <SortableTable data={stockedLakesData} loading={loading} />
+        </section>
+        <section id="stock-chart-widget" className="col-span-1 lg:col-span-1">
+          <StockChart data={totalStockedByDate} />
+        </section>
+        <section
+          id="hatchery-chart-widget"
+          className="col-span-1 lg:col-span-2"
+        >
+          <TotalStockedByHatcheryChart
+            data={hatcheryTotals}
+            loading={loading}
+          />
+        </section>
+      </div>
+    </div>
   );
 }
