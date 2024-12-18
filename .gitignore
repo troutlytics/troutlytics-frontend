@@ -12,6 +12,9 @@
 /.next/
 /out/
 
+# Jest
+src/components/__snapshots__/
+
 # production
 /build
 
