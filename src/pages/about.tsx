@@ -9,122 +9,21 @@ const AboutPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 pb-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        About Trout Tracker WA
+        About Trout Tracker
       </h1>
-
-      <Image
-        src={troutImage}
-        alt="Scenic Washington State landscape with various trout species"
-        layout="responsive"
-      />
-
       <section className="text-gray-600 text-lg mb-4">
         <p>
-          Welcome to Trout Tracker WA, a digital haven crafted for anglers and
-          wildlife enthusiasts who cherish the bountiful waters of Washington
-          State. As a software developer and avid angler, I've merged my
-          technical expertise with my love for the outdoors to bring you this
-          unique tool.
+          Welcome to Trout Tracker, your ultimate resource for stocked trout
+          data in Washington State. Whether you're a seasoned angler or a
+          beginner, our platform provides valuable information to enhance your
+          fishing experience.
         </p>
-
         <p>
-          Our mission is to serve as a bridge, connecting you to the valuable
-          data provided by the Washington Department of Fish and Wildlife
-          (WDFW). This platform is not only about disseminating information but
-          also about enhancing the angling experience for enthusiasts like you.
+          Our mission is to offer comprehensive guides, tips, and real-time
+          updates on stocked trout fishing locations, species, and regulations.
+          We aim to foster a community of passionate anglers who share their
+          experiences and knowledge.
         </p>
-      </section>
-      <section className="mt-8">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          Diverse Species for Anglers
-        </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="species-card">
-            <Image
-              src={rainbowTrout}
-              alt="Rainbow Trout"
-              className="species-image"
-              layout="responsive"
-            />
-            <h3 className="species-name">Rainbow Trout</h3>
-            <p>Popular for their striking coloration and spirited nature.</p>
-          </div>
-          <div className="species-card">
-            <Image
-              src={steelheadTrout}
-              alt="Steelhead"
-              className="species-image"
-              layout="responsive"
-            />
-            <h3 className="species-name">Steelhead</h3>
-            <p>
-              A migratory form of the rainbow trout, renowned for their size and
-              fighting ability.
-            </p>
-          </div>
-          <div className="species-card">
-            <Image
-              src={cutthroatTrout}
-              alt="Cutthroat Trout"
-              className="species-image"
-              layout="responsive"
-            />
-            <h3 className="species-name">Cutthroat Trout</h3>
-            <p>Known for their distinctive red slashes near the throat.</p>
-          </div>
-          {/* <div className="species-card">
-            <Image
-              src="/path-to-brown-trout-image.jpg"
-              alt="Brown Trout"
-              className="species-image"
-              layout="responsive"
-            />
-            <h3 className="species-name">Brown Trout</h3>
-            <p>
-              Admired for their wariness and strength, offering a challenging
-              fishing experience.
-            </p>
-          </div>
-          <div className="species-card">
-            <Image
-              src="/path-to-brook-trout-image.jpg"
-              alt="Brook Trout"
-              className="species-image"
-              layout="responsive"
-            />
-            <h3 className="species-name">Brook Trout</h3>
-            <p>
-              Often found in smaller streams, appreciated for their beautiful
-              markings.
-            </p>
-          </div>
-          <div className="species-card">
-            <Image
-              src="/path-to-kokanee-salmon-image.jpg"
-              alt="Kokanee Salmon"
-              className="species-image"
-              layout="responsive"
-            />
-            <h3 className="species-name">Kokanee Salmon</h3>
-            <p>
-              Landlocked relatives of sockeye salmon, treasured for their taste
-              and vibrant colors.
-            </p>
-          </div>
-          <div className="species-card">
-            <Image
-              src="/path-to-tiger-trout-image.jpg"
-              alt="Tiger Trout"
-              className="species-image"
-              layout="responsive"
-            />
-            <h3 className="species-name">Tiger Trout and Hybrid Species</h3>
-            <p>
-              Providing a diverse angling experience with their unique
-              characteristics.
-            </p>
-          </div> */}
-        </div>
       </section>
 
       <section className="mt-8">
@@ -149,10 +48,10 @@ const AboutPage: React.FC = () => {
           Join Our Community
         </h2>
         <p className="text-gray-600 text-lg mb-4">
-          As a Full Stack Software Developer, I have created this app to bridge
-          the gap between technology and nature. My goal is to foster a
-          community space where anglers, conservationists, and nature
-          enthusiasts can share experiences and knowledge.
+          As a Software Developer, I created this app to bridge the gap between
+          technology and nature. My goal is to foster a community space where
+          anglers, conservationists, and nature enthusiasts can share
+          experiences and knowledge.
         </p>
 
         <p className="text-gray-600 text-lg mb-4">
