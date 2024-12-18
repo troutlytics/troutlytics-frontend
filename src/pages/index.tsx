@@ -30,9 +30,14 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 pb-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-        Trout Raised in Washington State
-      </h1>
+      <header className="text-center mb-4">
+        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          Washington State DFW Trout Stocking Data
+        </h1>
+        <p className="text-lg text-gray-600">
+          Explore the data on trout stocking in Washington State, including locations, hatcheries, and trends over time.
+        </p>
+      </header>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <section id="date-widget" className="col-span-1 lg:col-span-2">
           <DateRangePicker
@@ -54,7 +59,10 @@ export default function Home() {
           />
         </section>
         <section id="table-widget" className="col-span-1 lg:col-span-1">
-          <SortableTable data={stockedLakesData} loading={loading} />
+          <TotalStockedByHatcheryChart
+            data={hatcheryTotals}
+            loading={loading}
+          />
         </section>
         <section id="stock-chart-widget" className="col-span-1 lg:col-span-1">
           <StockChart data={totalStockedByDate} />
@@ -63,10 +71,7 @@ export default function Home() {
           id="hatchery-chart-widget"
           className="col-span-1 lg:col-span-2"
         >
-          <TotalStockedByHatcheryChart
-            data={hatcheryTotals}
-            loading={loading}
-          />
+          <SortableTable data={stockedLakesData} loading={loading} />
         </section>
       </div>
     </div>
