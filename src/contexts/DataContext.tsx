@@ -36,7 +36,7 @@ const defaultState: ApiDataContextType = {
   today: new Date(),
   selectedDateRange: {
     recentDate: new Date().toISOString(),
-    pastDate: calculateDate(7).toISOString(),
+    pastDate: calculateDate(30).toISOString(),
   },
   setSelectedDateRange: () => {},
   dateDataUpdated: "",
