@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { DateRange } from "@/hooks/useApiData";
-import { StockedLake } from "../hooks/useApiData";
+import { useApiDataContext } from "@/contexts/DataContext";
 import { formatDate } from "@/utils";
 
 const customIcon = L.icon({
@@ -20,48 +19,25 @@ interface MapProps {
 
 const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
   const mapRef = useRef<L.Map | null>(null);
-  const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    initializeMap();
-    if (!loading && stockedLakesData && mapRef.current) {
-      clearMarkers();
-      renderMarkers();
-    }
-
-    function initializeMap() {
-      if (mapContainerRef.current && !mapRef.current) {
-        mapRef.current = L.map(mapContainerRef.current).setView(
-          [47.3826, -120.4472],
-          7
-        );
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }).addTo(mapRef.current);
-      }
-    }
-
-    function clearMarkers() {
-      mapRef?.current?.eachLayer((layer) => {
-        if (layer instanceof L.Marker) {
-          layer.remove();
-        }
+    if (!mapRef.current) {
+      mapRef.current = L.map("map", {
+        center: [47.6062, -122.3321], // Default center (Seattle)
+        zoom: 8,
       });
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(mapRef.current);
     }
 
-    function renderMarkers() {
-      if (!stockedLakesData) return;
-
-      type CoordinateKey = string;
-      interface GroupedData {
-        [key: CoordinateKey]: StockedLake[];
-      }
-
-      const markersGroupedByCoordinates: GroupedData = {};
+    if (stockedLakesData && mapRef.current) {
+      const markersGroupedByCoordinates: { [key: string]: StockedLake[] } = {};
 
       stockedLakesData.forEach((data) => {
-        const coordinateKey: CoordinateKey = `${data.latitude},${data.longitude}`;
+        const coordinateKey: string = `${data.latitude},${data.longitude}`;
         if (!markersGroupedByCoordinates[coordinateKey]) {
           markersGroupedByCoordinates[coordinateKey] = [];
         }
@@ -72,40 +48,46 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
         ([key, groupData]) => {
           const [latitude, longitude] = key.split(",").map(Number);
           const popupContent = `
-          <div class="scrollable-popup">
-          <strong><h2>${groupData[0].lake}</h2></strong>
-            <a href="${
-              groupData[0].directions
-            }" target="_blank" rel="noopener noreferrer">Get Directions</a>
-            <hr>
-            ${groupData
-              .map(
-                (data) => `
-              <div>
-                <p>Release Date: ${formatDate(data.date)}</p>
-                <p>Species: ${data.species}</p>
-                <p>Amount Produced: ${data.stocked_fish}</p>
-                <p>Fish Per Pound: ${data.weight}</p>
-              </div>
-            `
-              )
-              .join("<hr>")}
-          </div>`;
+            <div class="scrollable-popup">
+              <strong><h2>${groupData[0].lake}</h2></strong>
+              <a href="${
+                groupData[0].directions
+              }" target="_blank" rel="noopener noreferrer">Get Directions</a>
+              <hr>
+              ${groupData
+                .map(
+                  (data) => `
+                    <div>
+                      <p>Release Date: ${formatDate(data.date)}</p>
+                      <p>Species: ${data.species}</p>
+                      <p>Amount Produced: ${data.stocked_fish}</p>
+                      <p>Fish Per Pound: ${data.weight}</p>
+                      <hr>
+                    </div>
+                  `
+                )
+                .join("")}
+            </div>
+          `;
 
-          L.marker([latitude, longitude], { icon: customIcon })
-            .addTo(mapRef.current!)
-            .bindPopup(popupContent);
+          const marker = L.marker([latitude, longitude], {
+            icon: customIcon,
+          }).addTo(mapRef.current!);
+          marker.bindPopup(popupContent);
         }
       );
     }
-  }, [stockedLakesData, loading]);
 
-  return (
-    <div
-      ref={mapContainerRef}
-      style={{ height: "500px", width: "100%", zIndex: "-1" }}
-    />
-  );
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.off();
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, [stockedLakesData]);
+
+  return <div id="map" className="w-full h-full" style={{ height: "500px" }} />;
 };
 
 export default Map;
