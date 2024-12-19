@@ -5,10 +5,7 @@ interface SortableTableProps {
   data: StockedLake[] | [];
   loading: boolean;
 }
-const SortableTable: React.FC<SortableTableProps> = ({
-  data,
-  loading,
-}) => {
+const SortableTable: React.FC<SortableTableProps> = ({ data, loading }) => {
   const [sortedData, setSortedData] = useState<StockedLake[] | []>([]);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [sortedColumn, setSortedColumn] = useState<string | null>(null);
@@ -23,34 +20,25 @@ const SortableTable: React.FC<SortableTableProps> = ({
     const newData = [...sortedData];
     newData.sort((a, b) => {
       if (field === "date") {
-        // Parse dates and compare
-        const dateA = new Date(a[field]);
-        const dateB = new Date(b[field]);
-        return sortDirection === "desc"
-          ? dateA.getDate() - dateB.getDate()
-          : dateB.getDate() - dateA.getDate();
+        const dateA = new Date(a[field]).getTime();
+        const dateB = new Date(b[field]).getTime();
+        return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
       } else {
-        // Existing logic for other fields
-        if (a[field] < b[field]) {
-          return sortDirection === "asc" ? -1 : 1;
-        }
-        if (a[field] > b[field]) {
-          return sortDirection === "asc" ? 1 : -1;
-        }
+        if (a[field] < b[field]) return sortDirection === "asc" ? -1 : 1;
+        if (a[field] > b[field]) return sortDirection === "asc" ? 1 : -1;
+        return 0;
       }
-      return 0;
     });
-
     setSortedData(newData);
     setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    setSortedColumn(field as string);
+    setSortedColumn(field);
   };
 
   const renderSortIcon = (field: string) => {
     return sortedColumn === field
       ? sortDirection === "asc"
-        ? " ↑"
-        : " ↓"
+        ? " ↓"
+        : " ↑"
       : "";
   };
 
@@ -117,7 +105,7 @@ const SortableTable: React.FC<SortableTableProps> = ({
           <HeaderRow />
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {(loading || data.length == 0) && <SkeletonBody />}
+          {loading && <SkeletonBody />}
           {sortedData &&
             sortedData.map((lake, index) => (
               <tr key={index}>
