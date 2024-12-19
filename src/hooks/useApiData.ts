@@ -26,7 +26,7 @@ export interface HatcheryTotal {
 }
 
 export interface DerbyLake {
-  lake: string
+  lake: string;
 }
 
 export interface TotalStockedByDate {
@@ -39,6 +39,7 @@ const useApiData = (dateRange: DateRange) => {
   const [hatcheryTotals, setHatcheryTotals] = useState([]);
   const [totalStockedByDate, setTotalStockedByDate] = useState([]);
   const [derbyLakesData, setDerbyLakesData] = useState([]);
+  const [hatcheryNames, setHatcheryNames] = useState([]);
   const [dateDataUpdated, setDateDataUpdated] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -49,7 +50,10 @@ const useApiData = (dateRange: DateRange) => {
       : "https://trout-tracker-wa-backend.vercel.app";
 
   // Helper function to handle data fetching
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
+  const fetcher = (url: string) =>
+    fetch(url)
+      .then((res) => res.json())
+      .then((res) => res);
 
   const dateQuery =
     dateRange &&
@@ -73,8 +77,11 @@ const useApiData = (dateRange: DateRange) => {
   const { data: dateDataUpdatedFromApi, isValidating: dateDataUpdatedLoading } =
     useSWR(route + "/date_data_updated", fetcher);
 
+  const { data: hatcheryNamesFromApi, isValidating: hatcheryNamesLoading } =
+    useSWR(route + "/hatchery_names", fetcher);
+
+  // Update loading state when data is fetched
   useEffect(() => {
-    // Update state when data is fetched
     if (!stockedLakesLoading && stockedLakesDataFromApi) {
       setStockedLakesData(stockedLakesDataFromApi);
     }
@@ -91,6 +98,10 @@ const useApiData = (dateRange: DateRange) => {
       setDerbyLakesData(derbyLakesDataFromApi);
     }
 
+    if (!hatcheryNamesLoading && hatcheryNamesFromApi) {
+      setHatcheryNames(hatcheryNamesFromApi);
+    }
+
     if (!dateDataUpdatedLoading && dateDataUpdatedFromApi) {
       setDateDataUpdated(dateDataUpdatedFromApi);
     }
@@ -101,7 +112,8 @@ const useApiData = (dateRange: DateRange) => {
         hatcheryTotalsLoading ||
         totalStockedByDateLoading ||
         derbyLakesLoading ||
-        dateDataUpdatedLoading
+        dateDataUpdatedLoading ||
+        hatcheryNamesLoading
     );
   }, [
     stockedLakesLoading,
@@ -112,12 +124,15 @@ const useApiData = (dateRange: DateRange) => {
     totalStockedByDateFromApi,
     derbyLakesLoading,
     derbyLakesDataFromApi,
+    hatcheryNamesLoading,
+    hatcheryNamesFromApi,
     dateDataUpdatedLoading,
     dateDataUpdatedFromApi,
   ]);
 
   return {
     stockedLakesData,
+    hatcheryNames,
     hatcheryTotals,
     derbyLakesData,
     totalStockedByDate,
@@ -126,4 +141,5 @@ const useApiData = (dateRange: DateRange) => {
     error,
   };
 };
+
 export default useApiData;

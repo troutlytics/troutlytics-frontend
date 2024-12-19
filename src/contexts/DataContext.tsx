@@ -26,6 +26,7 @@ interface ApiDataContextType {
   setSelectedDateRange: React.Dispatch<React.SetStateAction<DateRange>>;
   today: Date;
   dateDataUpdated: string;
+  hatcheryNames: string[];
 }
 
 const defaultState: ApiDataContextType = {
@@ -40,6 +41,7 @@ const defaultState: ApiDataContextType = {
   },
   setSelectedDateRange: () => {},
   dateDataUpdated: "",
+  hatcheryNames: [],
 };
 
 const ApiDataContext = createContext<ApiDataContextType>(defaultState);
@@ -58,13 +60,14 @@ export const ApiDataProvider: React.FC<ApiDataProviderProps> = ({
   );
   const today = defaultState.today;
   const {
+    hatcheryNames,
     stockedLakesData,
     hatcheryTotals,
     totalStockedByDate,
     loading,
     dateDataUpdated,
   } = useApiData(selectedDateRange);
-
+  console.log(hatcheryNames)
   return (
     <ApiDataContext.Provider
       value={{
@@ -76,6 +79,7 @@ export const ApiDataProvider: React.FC<ApiDataProviderProps> = ({
         setSelectedDateRange,
         today,
         dateDataUpdated,
+        hatcheryNames
       }}
     >
       {children}
