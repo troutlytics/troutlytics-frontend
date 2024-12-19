@@ -62,8 +62,8 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
       {/* @ts-ignore */}
       <Line data={chartData} options={chartOptions} />
       <p className="text-center text-gray-600">
-        This chart shows the accumulative number of trout released by each
-        hatchery over time.
+        This chart shows the accumulative number of trout released in Washington
+        in the time period selected.
       </p>
     </div>
   );
