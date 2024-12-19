@@ -64,7 +64,7 @@ const TotalStockedByHatcheryChart: React.FC<
     <div className="w-full">
       <Bar data={chartData} options={chartOptions} />
       <p className="text-center text-gray-600 ">
-        This chart shows the total number of trout released by each hatchery.
+        This chart shows the total number of trout released by each hatchery in the time period selected.
       </p>
     </div>
   );
