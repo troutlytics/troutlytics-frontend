@@ -1,10 +1,7 @@
 // AboutPage.tsx
 import React from "react";
 import Image from "next/image";
-import troutImage from "public/trout_image.png";
-import rainbowTrout from "public/rainbow_trout.jpg";
-import steelheadTrout from "public/steelhead_trout.jpg";
-import cutthroatTrout from "public/cutthroat_trout.jpg";
+
 const AboutPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 pb-8">

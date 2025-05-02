@@ -67,7 +67,7 @@ export const ApiDataProvider: React.FC<ApiDataProviderProps> = ({
     loading,
     dateDataUpdated,
   } = useApiData(selectedDateRange);
-  console.log(hatcheryNames)
+  console.log(stockedLakesData)
   return (
     <ApiDataContext.Provider
       value={{

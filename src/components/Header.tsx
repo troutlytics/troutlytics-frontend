@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import NavLink from "./NavLink"; // Adjust the import path as needed
 import Image from "next/image";
-import troutImage from "public/trout_image.png"; // Update the path as necessary
+// import troutImage from "../public/trout_image.png"; // Update the path as necessary
+
 import Link from "next/link";
 
 const Header: React.FC = () => {
@@ -22,7 +23,7 @@ const Header: React.FC = () => {
               className="w-10 h-8 mr-3"
               width={40}
               height={32}
-              src={troutImage}
+              src={"/trout_image.png"}
               alt="Trout Tracker Logo"
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap">

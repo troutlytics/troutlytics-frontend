@@ -33,6 +33,15 @@ export interface TotalStockedByDate {
   date: string;
   stocked_fish: number;
 }
+const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
+
+export const route =
+  ENVIRONMENT === "dev"
+    ? "http://localhost:5050"
+    : "https://trout-tracker-wa-backend.vercel.app";
+
+// Helper function to handle data fetching
+export const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const useApiData = (dateRange: DateRange) => {
   const [stockedLakesData, setStockedLakesData] = useState([]);
@@ -43,21 +52,10 @@ const useApiData = (dateRange: DateRange) => {
   const [dateDataUpdated, setDateDataUpdated] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
-  const route =
-    ENVIRONMENT === "dev"
-      ? "http://localhost:5000"
-      : "https://trout-tracker-wa-backend.vercel.app";
-
-  // Helper function to handle data fetching
-  const fetcher = (url: string) =>
-    fetch(url)
-      .then((res) => res.json())
-      .then((res) => res);
 
   const dateQuery =
     dateRange &&
-    `?start_date=${dateRange.recentDate}&end_date=${dateRange.pastDate}`;
+    `?start_date=${dateRange.pastDate}&end_date=${dateRange.recentDate}`;
 
   // Use useSWR for automatic caching and re-fetching
   const { data: stockedLakesDataFromApi, isValidating: stockedLakesLoading } =

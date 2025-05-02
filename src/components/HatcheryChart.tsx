@@ -30,8 +30,8 @@ const TotalStockedByHatcheryChart: React.FC<
   TotalStockedByHatcheryChartProps
 > = ({ data }) => {
   const { selectedDateRange } = useApiDataContext();
-  const hatcheries = data.map((lake) => lake.hatchery);
-  const totalStockedFish = data.map((lake) => lake.sum_1);
+  const hatcheries = data?.map((lake) => lake.hatchery);
+  const totalStockedFish = data?.map((lake) => lake.sum_1);
 
   const chartData = {
     labels: hatcheries,
@@ -57,6 +57,12 @@ const TotalStockedByHatcheryChart: React.FC<
           text: "Total Released",
         },
       },
+      x: {
+        title: {
+          display: true,
+          text: "Hatchery",
+        },
+      },
     },
   };
 
@@ -64,7 +70,8 @@ const TotalStockedByHatcheryChart: React.FC<
     <div className="w-full">
       <Bar data={chartData} options={chartOptions} />
       <p className="text-center text-gray-600 ">
-        This chart shows the total number of trout released by each hatchery in the time period selected.
+        This chart shows the total number of trout released by each hatchery in
+        the time period selected.
       </p>
     </div>
   );

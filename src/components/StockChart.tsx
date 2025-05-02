@@ -25,7 +25,7 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
         borderColor: "#9fd3c7",
         borderWidth: 1,
         pointRadius: 2,
-        data: data.map((obj) => ({
+        data: data?.map((obj) => ({
           x: obj.date,
           y: obj.stocked_fish,
         })),
@@ -63,7 +63,7 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
       <Line data={chartData} options={chartOptions} />
       <p className="text-center text-gray-600">
         This chart shows the accumulative number of trout released in Washington
-        in the time period selected.
+        in the time period selected .
       </p>
     </div>
   );

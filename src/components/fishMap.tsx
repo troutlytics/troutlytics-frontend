@@ -3,7 +3,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useApiDataContext } from "@/contexts/DataContext";
 import { formatDate } from "@/utils";
-
+import { DateRange, StockedLake } from "@/hooks/useApiData";
 const customIcon = L.icon({
   iconUrl: "point-icon.png",
   iconSize: [32, 32],
