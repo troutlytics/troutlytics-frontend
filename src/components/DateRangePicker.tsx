@@ -12,8 +12,8 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   selectedDateRange,
   handleDateChange,
 }) => {
-  const [recentDate, setrecentDate] = useState<Date | null>(null);
-  const [pastDate, setpastDate] = useState<Date | null>(null);
+  const [recentDate, setrecentDate] = useState<Date | null | undefined>(null);
+  const [pastDate, setpastDate] = useState<Date | null | undefined>(null);
 
   useEffect(() => {
     if (selectedDateRange.recentDate) {
@@ -24,7 +24,10 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     }
   }, [selectedDateRange]);
 
-  const handleCustomDateChange = (pastDate: Date | null, recentDate: Date | null) => {
+  const handleCustomDateChange = (
+    pastDate: Date | null | undefined,
+    recentDate: Date | null | undefined
+  ) => {
     setrecentDate(recentDate);
     setpastDate(pastDate);
     handleDateChange({
@@ -82,7 +85,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
           selected={pastDate}
           onChange={(date) => handleCustomDateChange(date, recentDate)}
           selectsStart
-          maxDate={recentDate}
+          maxDate={recentDate ?? undefined}
           className="form-input rounded-md"
           isClearable
         />
