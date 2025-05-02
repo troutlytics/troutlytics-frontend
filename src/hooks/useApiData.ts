@@ -1,5 +1,17 @@
 import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import { useState, useEffect } from "react";
+
+const swrOptionsStatic = {
+  revalidateOnFocus: false,
+  revalidateOnReconnect: false,
+};
+
+const swrOptionsDynamic = {
+  revalidateOnFocus: false,
+  revalidateOnReconnect: false,
+  dedupingInterval: 600000,
+};
 
 export interface StockedLake {
   id: number;
@@ -59,24 +71,24 @@ const useApiData = (dateRange: DateRange) => {
 
   // Use useSWR for automatic caching and re-fetching
   const { data: stockedLakesDataFromApi, isValidating: stockedLakesLoading } =
-    useSWR(route + "/stocked_lakes_data" + dateQuery, fetcher);
+    useSWR(route + "/stocked_lakes_data" + dateQuery, fetcher, swrOptionsDynamic);
 
   const { data: hatcheryTotalsFromApi, isValidating: hatcheryTotalsLoading } =
-    useSWR(route + "/hatchery_totals" + dateQuery, fetcher);
+    useSWR(route + "/hatchery_totals" + dateQuery, fetcher, swrOptionsDynamic);
 
   const {
     data: totalStockedByDateFromApi,
     isValidating: totalStockedByDateLoading,
-  } = useSWR(route + "/total_stocked_by_date_data" + dateQuery, fetcher);
+  } = useSWR(route + "/total_stocked_by_date_data" + dateQuery, fetcher, swrOptionsDynamic);
 
   const { data: derbyLakesDataFromApi, isValidating: derbyLakesLoading } =
-    useSWR(route + "/derby_lakes_data", fetcher);
+    useSWRImmutable(route + "/derby_lakes_data", fetcher);
 
   const { data: dateDataUpdatedFromApi, isValidating: dateDataUpdatedLoading } =
-    useSWR(route + "/date_data_updated", fetcher);
+    useSWRImmutable(route + "/date_data_updated", fetcher);
 
   const { data: hatcheryNamesFromApi, isValidating: hatcheryNamesLoading } =
-    useSWR(route + "/hatchery_names", fetcher);
+    useSWRImmutable(route + "/hatchery_names", fetcher);
 
   // Update loading state when data is fetched
   useEffect(() => {

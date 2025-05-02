@@ -67,7 +67,11 @@ export const ApiDataProvider: React.FC<ApiDataProviderProps> = ({
     loading,
     dateDataUpdated,
   } = useApiData(selectedDateRange);
-  console.log(stockedLakesData)
+  useEffect(() => {
+    if (stockedLakesData.length > 0) {
+      console.log("StockedLakesData loaded:", stockedLakesData);
+    }
+  }, [stockedLakesData]);
   return (
     <ApiDataContext.Provider
       value={{

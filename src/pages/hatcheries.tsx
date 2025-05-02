@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { useApiDataContext } from "@/contexts/DataContext";
 
@@ -16,13 +18,8 @@ const HatcheriesPage: React.FC = () => {
       recentDate: new Date().toISOString(),
       pastDate: new Date("1995-01-01").toISOString(),
     };
-    if (
-      selectedDateRange.recentDate != allTimeDataDate.recentDate ||
-      selectedDateRange.pastDate != allTimeDataDate.pastDate
-    ) {
-      setSelectedDateRange(allTimeDataDate);
-    }
-  }, [selectedDateRange.pastDate, selectedDateRange.recentDate, setSelectedDateRange]);
+    setSelectedDateRange(allTimeDataDate);
+  }, []);
 
   useEffect(() => {
     if (!loading && hatcheryNames) setSelectedHatchery(hatcheryNames[0]);
