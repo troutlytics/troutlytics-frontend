@@ -48,7 +48,7 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
         ([key, groupData]) => {
           const [latitude, longitude] = key.split(",").map(Number);
           const popupContent = `
-            <div class="scrollable-popup">
+            <div class="scrollable-popup overflow-visible">
               <strong><h2>${groupData[0].lake}</h2></strong>
               <a href="${
                 groupData[0].directions
@@ -56,13 +56,13 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
               <hr>
               ${groupData
                 .map(
-                  (data) => `
+                  (data, index) => `
                     <div>
                       <p>Release Date: ${formatDate(data.date)}</p>
                       <p>Species: ${data.species}</p>
                       <p>Amount Produced: ${data.stocked_fish}</p>
                       <p>Fish Per Pound: ${data.weight}</p>
-                      <hr>
+                     ${index != groupData.length - 1 && "<hr />"} 
                     </div>
                   `
                 )
