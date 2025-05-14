@@ -49,8 +49,9 @@ const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
 
 export const route =
   ENVIRONMENT === "dev"
-    ? "http://localhost:5050"
-    : "https://trout-tracker-wa-backend.vercel.app";
+    ? "http://localhost:8080"
+    : "https://xtczssso08.execute-api.us-west-2.amazonaws.com";
+    // : "https://trout-tracker-wa-backend.vercel.app"; // old vercel backend
 
 // Helper function to handle data fetching
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
