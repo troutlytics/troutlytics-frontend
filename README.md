@@ -1,6 +1,6 @@
 # Trout Tracker WA
 
-[trout-tracker-wa.vercel.app](https://trout-tracker-wa.vercel.app/)
+[main.d3prophq9tawj4.amplifyapp.com/](https://main.d3prophq9tawj4.amplifyapp.com/)
 
 [Back End Code](https://github.com/Thomas-Basham/trout-tracker-wa-backend)
 
@@ -12,6 +12,7 @@ Trout Tracker WA is a web application designed for anglers and wildlife enthusia
 - **Species Information**: Detailed insights into the habitat and behavior of various fish species stocked in Washington waters.
 - **Responsive Design**: Optimized for both mobile and desktop devices, ensuring a seamless user experience.
 - **User-Friendly Interface**: Easy navigation and intuitive layout, designed for users of all tech levels.
+- **Hosted With AWS Amplify**: Simplified front-end hosting
 
 ## Getting Started
 
@@ -58,6 +59,7 @@ Built With
     TypeScript - Used for adding type safety to JavaScript
     Chart.js - For creating interactive data visualizations
     leaflet.js - For creating an interactive map
+    SWR - For fetching, error handling, loading, and caching data
 
 #### Contributing
 
@@ -71,3 +73,4 @@ Acknowledgments
 
 Thanks to the Washington Department of Fish and Wildlife for providing the data.
 Inspired by the diverse angling community in Washington State.
+[WDFW trout plant data](https://wdfw.wa.gov/fishing/reports/stocking/trout-plants)
