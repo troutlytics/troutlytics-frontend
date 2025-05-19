@@ -44,10 +44,11 @@ const SortableTable: React.FC<SortableTableProps> = ({ data, loading }) => {
 
   const thNames = {
     date: "date",
-    lake: "lake",
+    // lake: "lake",
+    water_name_cleaned: "body of water",
     hatchery: "hatchery",
     species: "species",
-    stocked_fish: "amount produced",
+    stocked_fish: "amount stocked",
     weight: "fish per pound",
     directions: "directions",
   };
@@ -113,7 +114,7 @@ const SortableTable: React.FC<SortableTableProps> = ({ data, loading }) => {
                   {formatDate(lake.date)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                  {lake.lake}
+                  {lake.water_name_cleaned}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                   {lake.hatchery}

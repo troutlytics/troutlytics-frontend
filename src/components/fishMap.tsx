@@ -49,7 +49,7 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
           const [latitude, longitude] = key.split(",").map(Number);
           const popupContent = `
             <div class="scrollable-popup overflow-visible">
-              <strong><h2>${groupData[0].lake}</h2></strong>
+              <strong><h2>${groupData[0].water_name_cleaned}</h2></strong>
               <a href="${
                 groupData[0].directions
               }" target="_blank" rel="noopener noreferrer">Get Directions</a>

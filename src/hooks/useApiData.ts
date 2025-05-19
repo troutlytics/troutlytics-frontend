@@ -15,7 +15,8 @@ const swrOptionsDynamic = {
 
 export interface StockedLake {
   id: number;
-  lake: string;
+  // lake: string;
+  water_name_cleaned: string; // switched from lake to water_name_cleaned
   stocked_fish: number;
   species: string;
   weight: number;
