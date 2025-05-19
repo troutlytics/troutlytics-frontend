@@ -1,10 +1,10 @@
-# Trout Tracker WA
+# Troutlytics Frontend
 
-[main.d3prophq9tawj4.amplifyapp.com/](https://main.d3prophq9tawj4.amplifyapp.com/)
+[troutlytics.com](https://troutlytics.com)
 
-[Back End Code](https://github.com/Thomas-Basham/trout-tracker-wa-backend)
+[Back End Code](https://github.com/troutlytics/troutlytics-backend)
 
-Trout Tracker WA is a web application designed for anglers and wildlife enthusiasts in Washington State. It provides comprehensive, up-to-date information about fish stocking across various water bodies, enhancing the angling experience and promoting environmental awareness.
+Troutlytics is a web application designed for anglers and wildlife enthusiasts in Washington State. It provides comprehensive, up-to-date information about fish stocking across various water bodies, enhancing the angling experience and promoting environmental awareness.
 
 ## Features
 
@@ -31,11 +31,7 @@ Follow these steps to get a development environment running:
 
 1.  Clone the repo:
 
-        git clone https://github.com/Thomas-Basham/trout-tracker-wa.git
-
 2.  Navigate to the project directory:
-
-        cd trout-tracker-wa
 
 3.  Install dependencies:
 
@@ -45,7 +41,8 @@ Follow these steps to get a development environment running:
 
          npm run dev
 
-The application should now be running on http://localhost:3000.
+The application should now be running on http://localhost:3000
+
 Running the Tests
 
 To run the automated tests, use the following command:
@@ -54,12 +51,12 @@ To run the automated tests, use the following command:
 
 Built With
 
-    Next.js - The React framework for server-side rendering
-    Tailwind CSS - For utility-first styling
-    TypeScript - Used for adding type safety to JavaScript
+    TypeScript - For adding type safety to JavaScript
+    Next.js - React framework for server-side rendering
+    SWR - For fetching, error handling, loading, and caching data
+    Tailwind CSS - For styling
     Chart.js - For creating interactive data visualizations
     leaflet.js - For creating an interactive map
-    SWR - For fetching, error handling, loading, and caching data
 
 #### Contributing
 
