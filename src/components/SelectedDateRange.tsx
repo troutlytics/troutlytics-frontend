@@ -18,7 +18,7 @@ const SelectedDateRange: React.FC<SelectedDateRangeProps> = ({
         <p>
           {formatDate(selectedDateRange.pastDate)} -{" "}
           {formatDate(selectedDateRange.recentDate) ===
-          formatDate(today.toISOString())
+          formatDate(today.toDateString())
             ? "Today"
             : formatDate(selectedDateRange.recentDate)}
         </p>

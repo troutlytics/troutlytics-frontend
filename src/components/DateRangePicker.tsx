@@ -31,8 +31,8 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     setrecentDate(recentDate);
     setpastDate(pastDate);
     handleDateChange({
-      recentDate: recentDate ? recentDate.toISOString() : null,
-      pastDate: pastDate ? pastDate.toISOString() : null,
+      recentDate: recentDate ? recentDate.toDateString() : null,
+      pastDate: pastDate ? pastDate.toDateString() : null,
     });
   };
 

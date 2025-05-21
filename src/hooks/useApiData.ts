@@ -1,22 +1,9 @@
-import useSWR from "swr";
+"use client";
 import useSWRImmutable from "swr/immutable";
-import { useState, useEffect } from "react";
-
-const swrOptionsStatic = {
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false,
-};
-
-const swrOptionsDynamic = {
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false,
-  dedupingInterval: 600000,
-};
 
 export interface StockedLake {
   id: number;
-  // lake: string;
-  water_name_cleaned: string; // switched from lake to water_name_cleaned
+  water_name_cleaned: string;
   stocked_fish: number;
   species: string;
   weight: number;
@@ -46,111 +33,101 @@ export interface TotalStockedByDate {
   date: string;
   stocked_fish: number;
 }
+
 const ENVIRONMENT = process.env.NEXT_PUBLIC_ENVIRONMENT;
 
 export const route =
   ENVIRONMENT === "dev"
     ? "http://localhost:8080"
     : "https://xtczssso08.execute-api.us-west-2.amazonaws.com";
-    // : "https://trout-tracker-wa-backend.vercel.app"; // old vercel backend
 
-// Helper function to handle data fetching
+const swrOptionsDynamic = {
+  revalidateOnFocus: false,
+  revalidateOnReconnect: false,
+  dedupingInterval: 10 * 60 * 1000, // 10 minutes
+  cacheTTL: 60 * 60 * 1000, // 1 hour (with SWR v2+)
+};
+
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const useApiData = (dateRange: DateRange) => {
-  const [stockedLakesData, setStockedLakesData] = useState([]);
-  const [hatcheryTotals, setHatcheryTotals] = useState([]);
-  const [totalStockedByDate, setTotalStockedByDate] = useState([]);
-  const [derbyLakesData, setDerbyLakesData] = useState([]);
-  const [hatcheryNames, setHatcheryNames] = useState([]);
-  const [dateDataUpdated, setDateDataUpdated] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
   const dateQuery =
-    dateRange &&
-    `?start_date=${dateRange.pastDate}&end_date=${dateRange.recentDate}`;
-
-  // Use useSWR for automatic caching and re-fetching
-  const { data: stockedLakesDataFromApi, isValidating: stockedLakesLoading } =
-    useSWR(route + "/stocked_lakes_data" + dateQuery, fetcher, swrOptionsDynamic);
-
-  const { data: hatcheryTotalsFromApi, isValidating: hatcheryTotalsLoading } =
-    useSWR(route + "/hatchery_totals" + dateQuery, fetcher, swrOptionsDynamic);
+    dateRange?.pastDate && dateRange?.recentDate
+      ? `?start_date=${dateRange.pastDate}&end_date=${dateRange.recentDate}`
+      : "";
 
   const {
-    data: totalStockedByDateFromApi,
-    isValidating: totalStockedByDateLoading,
-  } = useSWR(route + "/total_stocked_by_date_data" + dateQuery, fetcher, swrOptionsDynamic);
+    data: stockedLakesData = [],
+    error: stockedLakesError,
+    isLoading: stockedLakesLoading,
+  } = useSWRImmutable(
+    `${route}/stocked_lakes_data${dateQuery}`,
+    fetcher,
+    swrOptionsDynamic
+  );
 
-  const { data: derbyLakesDataFromApi, isValidating: derbyLakesLoading } =
-    useSWRImmutable(route + "/derby_lakes_data", fetcher);
+  const {
+    data: hatcheryTotals = [],
+    error: hatcheryTotalsError,
+    isLoading: hatcheryTotalsLoading,
+  } = useSWRImmutable(
+    `${route}/hatchery_totals${dateQuery}`,
+    fetcher,
+    swrOptionsDynamic
+  );
 
-  const { data: dateDataUpdatedFromApi, isValidating: dateDataUpdatedLoading } =
-    useSWRImmutable(route + "/date_data_updated", fetcher);
+  const {
+    data: totalStockedByDate = [],
+    error: totalStockedByDateError,
+    isLoading: totalStockedByDateLoading,
+  } = useSWRImmutable(
+    `${route}/total_stocked_by_date_data${dateQuery}`,
+    fetcher,
+    swrOptionsDynamic
+  );
 
-  const { data: hatcheryNamesFromApi, isValidating: hatcheryNamesLoading } =
-    useSWRImmutable(route + "/hatchery_names", fetcher);
+  const {
+    data: derbyLakesData = [],
+    error: derbyLakesError,
+    isLoading: derbyLakesLoading,
+  } = useSWRImmutable(`${route}/derby_lakes_data`, fetcher);
 
-  // Update loading state when data is fetched
-  useEffect(() => {
-    if (!stockedLakesLoading && stockedLakesDataFromApi) {
-      setStockedLakesData(stockedLakesDataFromApi);
-    }
+  const {
+    data: dateDataUpdated = "",
+    error: dateDataUpdatedError,
+    isLoading: dateDataUpdatedLoading,
+  } = useSWRImmutable(`${route}/date_data_updated`, fetcher);
 
-    if (!hatcheryTotalsLoading && hatcheryTotalsFromApi) {
-      setHatcheryTotals(hatcheryTotalsFromApi);
-    }
-
-    if (!totalStockedByDateLoading && totalStockedByDateFromApi) {
-      setTotalStockedByDate(totalStockedByDateFromApi);
-    }
-
-    if (!derbyLakesLoading && derbyLakesDataFromApi) {
-      setDerbyLakesData(derbyLakesDataFromApi);
-    }
-
-    if (!hatcheryNamesLoading && hatcheryNamesFromApi) {
-      setHatcheryNames(hatcheryNamesFromApi);
-    }
-
-    if (!dateDataUpdatedLoading && dateDataUpdatedFromApi) {
-      setDateDataUpdated(dateDataUpdatedFromApi);
-    }
-
-    // Update loading state
-    setLoading(
-      stockedLakesLoading ||
-        hatcheryTotalsLoading ||
-        totalStockedByDateLoading ||
-        derbyLakesLoading ||
-        dateDataUpdatedLoading ||
-        hatcheryNamesLoading
-    );
-  }, [
-    stockedLakesLoading,
-    stockedLakesDataFromApi,
-    hatcheryTotalsLoading,
-    hatcheryTotalsFromApi,
-    totalStockedByDateLoading,
-    totalStockedByDateFromApi,
-    derbyLakesLoading,
-    derbyLakesDataFromApi,
-    hatcheryNamesLoading,
-    hatcheryNamesFromApi,
-    dateDataUpdatedLoading,
-    dateDataUpdatedFromApi,
-  ]);
+  const {
+    data: hatcheryNames = [],
+    error: hatcheryNamesError,
+    isLoading: hatcheryNamesLoading,
+  } = useSWRImmutable(`${route}/hatchery_names`, fetcher);
 
   return {
+    // Data
     stockedLakesData,
-    hatcheryNames,
     hatcheryTotals,
-    derbyLakesData,
     totalStockedByDate,
+    derbyLakesData,
     dateDataUpdated,
-    loading,
-    error,
+    hatcheryNames,
+
+    // Loading flags
+    stockedLakesLoading,
+    hatcheryTotalsLoading,
+    totalStockedByDateLoading,
+    derbyLakesLoading,
+    dateDataUpdatedLoading,
+    hatcheryNamesLoading,
+
+    // Errors
+    stockedLakesError,
+    hatcheryTotalsError,
+    totalStockedByDateError,
+    derbyLakesError,
+    dateDataUpdatedError,
+    hatcheryNamesError,
   };
 };
 

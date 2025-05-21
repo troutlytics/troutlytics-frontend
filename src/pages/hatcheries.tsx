@@ -15,8 +15,8 @@ const HatcheriesPage: React.FC = () => {
 
   useEffect(() => {
     const allTimeDataDate = {
-      recentDate: new Date().toISOString(),
-      pastDate: new Date("1995-01-01").toISOString(),
+      recentDate: new Date().toDateString(),
+      pastDate: new Date("1995-01-01").toDateString(),
     };
     setSelectedDateRange(allTimeDataDate);
   }, []);

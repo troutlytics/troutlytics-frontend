@@ -1,4 +1,3 @@
-// DataContext.tsx
 import React, {
   createContext,
   useContext,
@@ -6,42 +5,45 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import useApiData from "@/hooks/useApiData";
-import {
+import useApiData, {
   StockedLake,
   HatcheryTotal,
   TotalStockedByDate,
+  DateRange,
 } from "@/hooks/useApiData";
-
-import { DateRange } from "@/hooks/useApiData";
-
 import { calculateDate } from "@/utils";
 
 interface ApiDataContextType {
-  stockedLakesData: StockedLake[] | [];
-  hatcheryTotals: HatcheryTotal[] | [];
-  totalStockedByDate: TotalStockedByDate[] | [];
-  loading: boolean;
+  stockedLakesData: StockedLake[];
+  hatcheryTotals: HatcheryTotal[];
+  totalStockedByDate: TotalStockedByDate[];
   selectedDateRange: DateRange;
   setSelectedDateRange: React.Dispatch<React.SetStateAction<DateRange>>;
   today: Date;
   dateDataUpdated: string;
   hatcheryNames: string[];
+
+  // Loading states
+  isLoading: boolean;
+
+  // Error flags (could expose more granularity if needed)
+  hasError: boolean;
 }
 
 const defaultState: ApiDataContextType = {
   stockedLakesData: [],
   hatcheryTotals: [],
   totalStockedByDate: [],
-  loading: false,
   today: new Date(),
   selectedDateRange: {
-    recentDate: new Date().toISOString(),
-    pastDate: calculateDate(30).toISOString(),
+    recentDate: new Date().toDateString(),
+    pastDate: calculateDate(7).toDateString(),
   },
   setSelectedDateRange: () => {},
   dateDataUpdated: "",
   hatcheryNames: [],
+  isLoading: false,
+  hasError: false,
 };
 
 const ApiDataContext = createContext<ApiDataContextType>(defaultState);
@@ -58,32 +60,69 @@ export const ApiDataProvider: React.FC<ApiDataProviderProps> = ({
   const [selectedDateRange, setSelectedDateRange] = useState<DateRange>(
     defaultState.selectedDateRange
   );
+
   const today = defaultState.today;
+
   const {
     hatcheryNames,
     stockedLakesData,
     hatcheryTotals,
     totalStockedByDate,
-    loading,
     dateDataUpdated,
+
+    // New from hook
+    stockedLakesLoading,
+    hatcheryTotalsLoading,
+    totalStockedByDateLoading,
+    dateDataUpdatedLoading,
+    hatcheryNamesLoading,
+
+    stockedLakesError,
+    hatcheryTotalsError,
+    totalStockedByDateError,
+    dateDataUpdatedError,
+    hatcheryNamesError,
   } = useApiData(selectedDateRange);
+
+  const isLoading =
+    stockedLakesLoading ||
+    hatcheryTotalsLoading ||
+    totalStockedByDateLoading ||
+    dateDataUpdatedLoading ||
+    hatcheryNamesLoading;
+
+  const hasError =
+    !!stockedLakesError ||
+    !!hatcheryTotalsError ||
+    !!totalStockedByDateError ||
+    !!dateDataUpdatedError ||
+    !!hatcheryNamesError;
+
   useEffect(() => {
-    if (stockedLakesData.length > 0) {
-      console.log("StockedLakesData loaded:", stockedLakesData);
+    if (hasError) {
+      console.error("Error loading API data", {
+        stockedLakesError,
+        hatcheryTotalsError,
+        totalStockedByDateError,
+        dateDataUpdatedError,
+        hatcheryNamesError,
+      });
     }
-  }, [stockedLakesData]);
+  }, [hasError]);
+
   return (
     <ApiDataContext.Provider
       value={{
         stockedLakesData,
         hatcheryTotals,
         totalStockedByDate,
-        loading,
         selectedDateRange,
         setSelectedDateRange,
         today,
         dateDataUpdated,
-        hatcheryNames
+        hatcheryNames,
+        isLoading,
+        hasError,
       }}
     >
       {children}

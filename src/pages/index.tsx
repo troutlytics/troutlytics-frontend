@@ -18,7 +18,7 @@ export default function Home() {
     stockedLakesData,
     hatcheryTotals,
     totalStockedByDate,
-    loading,
+    isLoading,
     selectedDateRange,
     setSelectedDateRange,
     today,
@@ -55,13 +55,13 @@ export default function Home() {
           <FishingMap
             selectedDateRange={selectedDateRange}
             stockedLakesData={stockedLakesData}
-            loading={loading}
+            loading={isLoading}
           />
         </section>
         <section id="table-widget" className="col-span-1 lg:col-span-1">
           <TotalStockedByHatcheryChart
             data={hatcheryTotals}
-            loading={loading}
+            loading={isLoading}
           />
         </section>
         <section id="stock-chart-widget" className="col-span-1 lg:col-span-1">
@@ -71,7 +71,7 @@ export default function Home() {
           id="hatchery-chart-widget"
           className="col-span-1 lg:col-span-2"
         >
-          <SortableTable data={stockedLakesData} loading={loading} />
+          <SortableTable data={stockedLakesData} loading={isLoading} />
         </section>
       </div>
     </div>
