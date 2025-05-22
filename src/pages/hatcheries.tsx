@@ -9,7 +9,7 @@ const HatcheriesPage: React.FC = () => {
     stockedLakesData,
     selectedDateRange,
     setSelectedDateRange,
-    loading,
+    isLoading,
   } = useApiDataContext();
   const [selectedHatchery, setSelectedHatchery] = useState<string | null>(null);
 
@@ -22,8 +22,8 @@ const HatcheriesPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!loading && hatcheryNames) setSelectedHatchery(hatcheryNames[0]);
-  }, [loading, hatcheryNames]);
+    if (!isLoading && hatcheryNames) setSelectedHatchery(hatcheryNames[0]);
+  }, [isLoading, hatcheryNames]);
 
   const handleHatcheryClick = (name: string) => {
     setSelectedHatchery(name);
@@ -39,7 +39,7 @@ const HatcheriesPage: React.FC = () => {
         locations, stocking totals, and trends over time.
       </p>
       <div className="flex flex-wrap gap-2 mb-8">
-        {loading ? (
+        {isLoading ? (
           <>
             {Array.from({ length: 65 }).map((_, index) => {
               const width = Math.floor(Math.random() * 60) + 150;
@@ -67,7 +67,7 @@ const HatcheriesPage: React.FC = () => {
           ))
         )}
       </div>
-      {loading ? (
+      {isLoading ? (
         <div className="bg-white shadow-md rounded-lg p-4 animate-pulse">
           <div className="h-6 bg-gray-300 rounded w-1/3 mb-4"></div>
           <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>

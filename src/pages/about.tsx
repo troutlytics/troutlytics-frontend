@@ -6,14 +6,14 @@ const AboutPage: React.FC = () => {
   return (
     <div className="container mx-auto px-4 pb-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        About Trout Tracker
+        About Troutlytics
       </h1>
       <section className="text-gray-600 text-lg mb-4">
         <p>
-          Welcome to Trout Tracker, your ultimate resource for stocked trout
-          data in Washington State. Whether you're a seasoned angler or a
-          beginner, our platform provides valuable information to enhance your
-          fishing experience.
+          Troutlytics is your ultimate resource for stocked trout data in
+          Washington State. Whether you're a seasoned angler or a beginner, our
+          platform provides valuable information to enhance your fishing
+          experience.
         </p>
         <p>
           Our mission is to offer comprehensive guides, tips, and real-time
