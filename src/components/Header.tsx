@@ -24,10 +24,10 @@ const Header: React.FC = () => {
               width={40}
               height={32}
               src={"/trout_image.png"}
-              alt="Trout Tracker Logo"
+              alt="Troutlytics"
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap">
-              Trout Tracker WA
+              Troutlytics
             </span>
           </Link>
 
