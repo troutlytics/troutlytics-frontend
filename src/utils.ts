@@ -16,3 +16,6 @@ export const calculateDate = (days: number) => {
   date.setDate(date.getDate() - days);
   return date;
 };
+
+// helper to get “2025-05-22” style dates
+export const isoFormat = (d: Date | null | undefined) => d?.toISOString().split("T")[0];

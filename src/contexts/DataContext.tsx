@@ -11,7 +11,7 @@ import useApiData, {
   TotalStockedByDate,
   DateRange,
 } from "@/hooks/useApiData";
-import { calculateDate } from "@/utils";
+import { calculateDate, isoFormat } from "@/utils";
 
 interface ApiDataContextType {
   stockedLakesData: StockedLake[];
@@ -36,8 +36,8 @@ const defaultState: ApiDataContextType = {
   totalStockedByDate: [],
   today: new Date(),
   selectedDateRange: {
-    recentDate: new Date().toDateString(),
-    pastDate: calculateDate(7).toDateString(),
+    recentDate: isoFormat(new Date()),
+    pastDate: isoFormat(calculateDate(7)),
   },
   setSelectedDateRange: () => {},
   dateDataUpdated: "",
@@ -108,12 +108,13 @@ export const ApiDataProvider: React.FC<ApiDataProviderProps> = ({
         hatcheryNamesError,
       });
     }
-  }, [hasError]);
+    console.log(selectedDateRange);
+  }, [hasError, selectedDateRange]);
 
   return (
     <ApiDataContext.Provider
       value={{
-        stockedLakesData,
+        stockedLakesData: stockedLakesData ?? [],
         hatcheryTotals,
         totalStockedByDate,
         selectedDateRange,

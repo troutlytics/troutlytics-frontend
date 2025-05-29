@@ -2,8 +2,8 @@ import React from "react";
 import { formatDate } from "@/utils";
 export interface SelectedDateRangeProps {
   selectedDateRange: {
-    pastDate: string | null;
-    recentDate: string | null;
+    pastDate: string | null | undefined;
+    recentDate: string | null | undefined;
   };
   today: Date;
 }

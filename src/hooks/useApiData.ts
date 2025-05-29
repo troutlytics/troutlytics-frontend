@@ -1,5 +1,6 @@
 "use client";
-import useSWRImmutable from "swr/immutable";
+import { useEffect } from "react";
+import useSWR from "swr";
 
 export interface StockedLake {
   id: number;
@@ -16,8 +17,8 @@ export interface StockedLake {
 }
 
 export interface DateRange {
-  recentDate: string | null;
-  pastDate: string | null;
+  recentDate: string | null | undefined;
+  pastDate: string | null | undefined;
 }
 
 export interface HatcheryTotal {
@@ -46,6 +47,8 @@ const swrOptionsDynamic = {
   revalidateOnReconnect: false,
   dedupingInterval: 10 * 60 * 1000, // 10 minutes
   cacheTTL: 60 * 60 * 1000, // 1 hour (with SWR v2+)
+  keepPreviousData: true,
+
 };
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -57,53 +60,58 @@ const useApiData = (dateRange: DateRange) => {
       : "";
 
   const {
-    data: stockedLakesData = [],
+    data: stockedLakesData,
     error: stockedLakesError,
     isLoading: stockedLakesLoading,
-  } = useSWRImmutable(
+  } = useSWR(
     `${route}/stocked_lakes_data${dateQuery}`,
     fetcher,
     swrOptionsDynamic
   );
 
   const {
-    data: hatcheryTotals = [],
+    data: hatcheryTotals,
     error: hatcheryTotalsError,
     isLoading: hatcheryTotalsLoading,
-  } = useSWRImmutable(
+  } = useSWR(
     `${route}/hatchery_totals${dateQuery}`,
     fetcher,
     swrOptionsDynamic
   );
 
   const {
-    data: totalStockedByDate = [],
+    data: totalStockedByDate,
     error: totalStockedByDateError,
     isLoading: totalStockedByDateLoading,
-  } = useSWRImmutable(
+  } = useSWR(
     `${route}/total_stocked_by_date_data${dateQuery}`,
     fetcher,
     swrOptionsDynamic
   );
 
   const {
-    data: derbyLakesData = [],
+    data: derbyLakesData,
     error: derbyLakesError,
     isLoading: derbyLakesLoading,
-  } = useSWRImmutable(`${route}/derby_lakes_data`, fetcher);
+  } = useSWR(`${route}/derby_lakes_data`, fetcher);
 
   const {
     data: dateDataUpdated = "",
     error: dateDataUpdatedError,
     isLoading: dateDataUpdatedLoading,
-  } = useSWRImmutable(`${route}/date_data_updated`, fetcher);
+  } = useSWR(`${route}/date_data_updated`, fetcher);
 
   const {
-    data: hatcheryNames = [],
+    data: hatcheryNames,
     error: hatcheryNamesError,
     isLoading: hatcheryNamesLoading,
-  } = useSWRImmutable(`${route}/hatchery_names`, fetcher);
+  } = useSWR(`${route}/hatchery_names`, fetcher);
+  useEffect(() => {
+    console.log(stockedLakesData)
+  
 
+  }, [stockedLakesData])
+  
   return {
     // Data
     stockedLakesData,

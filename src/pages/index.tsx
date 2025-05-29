@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { useApiDataContext } from "@/contexts/DataContext";
 
 import { DateRange } from "@/hooks/useApiData";
@@ -53,7 +52,6 @@ export default function Home() {
         </section>
         <section id="map-widget" className="col-span-1 lg:col-span-2">
           <FishingMap
-            selectedDateRange={selectedDateRange}
             stockedLakesData={stockedLakesData}
             loading={isLoading}
           />

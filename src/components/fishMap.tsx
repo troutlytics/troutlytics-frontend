@@ -12,7 +12,6 @@ const customIcon = L.icon({
 });
 
 interface MapProps {
-  selectedDateRange: DateRange;
   stockedLakesData: StockedLake[] | null;
   loading: boolean;
 }
@@ -21,6 +20,8 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
   const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
+    if (!stockedLakesData) return; // Bail early if undefined
+    console.log("Rendering FishMap", stockedLakesData.length, Date.now());
     if (!mapRef.current) {
       mapRef.current = L.map("map", {
         center: [47.6062, -122.3321], // Default center (Seattle)

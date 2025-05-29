@@ -2,7 +2,7 @@ import { DateRange } from "@/hooks/useApiData";
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import { isoFormat } from "@/utils";
 interface DateRangePickerProps {
   selectedDateRange: DateRange;
   handleDateChange: (dateRange: DateRange) => void;
@@ -30,10 +30,15 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   ) => {
     setrecentDate(recentDate);
     setpastDate(pastDate);
-    handleDateChange({
-      recentDate: recentDate ? recentDate.toDateString() : null,
-      pastDate: pastDate ? pastDate.toDateString() : null,
-    });
+    if (
+      isoFormat(recentDate) !== selectedDateRange.recentDate ||
+      isoFormat(pastDate) !== selectedDateRange.pastDate
+    ) {
+      handleDateChange({
+        recentDate: recentDate ? isoFormat(recentDate) : null,
+        pastDate: pastDate ? isoFormat(pastDate) : null,
+      });
+    }
   };
 
   const handlePresetClick = (days: number) => {
