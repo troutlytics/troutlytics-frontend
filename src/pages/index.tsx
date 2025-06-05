@@ -66,7 +66,7 @@ export default function Home() {
         </section>
 
         <section className="mt-10 col-span-1 lg:col-span-2">
-          <div className="flex justify-center space-x-6 border-b [&>button]:cursor-pointer">
+          <div className="flex justify-center space-x-6 border-b [&>button]:cursor-pointer overflow-auto">
             <button
               className={tabStyle("stock")}
               onClick={() => setActiveTab("stock")}

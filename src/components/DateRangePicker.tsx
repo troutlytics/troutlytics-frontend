@@ -53,8 +53,8 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
       <h2 className="text-2xl mx-auto font-bold text-gray-800 mb-4">
         Select a Date Range to view data within range
       </h2>
-      <div className="flex gap-6 justify-between">
-        <div className="flex space-x-4 mb-4 [&>button]:cursor-pointer">
+      <div className="flex gap-6 justify-between flex-wrap">
+        <div className="flex space-x-4 mb-4 [&>button]:cursor-pointer ">
           <button
             onClick={() => handlePresetClick(7)}
             className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200 text-xs md:text-sm"
@@ -86,24 +86,33 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
             Last 2 Years
           </button>
         </div>
-        <div className="flex space-x-0 md:space-x-4 [&>div]:p-6 ">
-          <DatePicker
-            selected={pastDate}
-            onChange={(date) => handleCustomDateChange(date, recentDate)}
-            selectsStart
-            maxDate={recentDate ?? undefined}
-            className="form-input rounded-md"
-            isClearable
-          />
-          <span className="text-sm text-gray-700">to</span>
-          <DatePicker
-            selected={recentDate}
-            onChange={(date) => handleCustomDateChange(pastDate, date)}
-            selectsEnd
-            maxDate={new Date()}
-            className="form-input rounded-md"
-            isClearable
-          />
+        <div className="flex flex-col flex-wrap gap-3 sm:flex-row text-center align-baseline sm:mx-0 mx-auto">
+          <div className="flex-col flex text-left">
+            <label htmlFor="past-date-picker">From</label>
+            <DatePicker
+              id="past-date-picker"
+              selected={pastDate}
+              onChange={(date) => handleCustomDateChange(date, recentDate)}
+              selectsStart
+              maxDate={recentDate ?? undefined}
+              className="form-input rounded-md p-4 border-2 border-b-teal-600"
+              isClearable
+            />
+          </div>
+          <div className="flex-col flex text-left">
+            <label htmlFor="recent-date-picker">To</label>
+            <DatePicker
+              id="recent-date-picker"
+              selected={recentDate}
+              onChange={(date) => handleCustomDateChange(pastDate, date)}
+              selectsEnd
+              minDate={pastDate ?? undefined}
+              maxDate={new Date()}
+              className="form-input rounded-md p-4 border-2 border-b-teal-600"
+              isClearable
+              
+            />
+          </div>
         </div>
       </div>
     </div>
