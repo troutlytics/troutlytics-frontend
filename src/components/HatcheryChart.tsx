@@ -37,12 +37,12 @@ const TotalStockedByHatcheryChart: React.FC<
     labels: hatcheries,
     datasets: [
       {
-        label: `Total Released ${formatDate(
+        label: `Total Stocked Between ${formatDate(
           selectedDateRange.pastDate
         )} - ${formatDate(selectedDateRange.recentDate)}`,
         data: totalStockedFish,
-        borderColor: "#9fd3c7",
-        backgroundColor: "#9fd3c7",
+        backgroundColor: "rgba(44, 123, 229, 0.7)", // troutlytics.primary with opacity
+        borderColor: "#2C7BE5",
         borderWidth: 1,
         pointRadius: 3,
       },
@@ -54,7 +54,7 @@ const TotalStockedByHatcheryChart: React.FC<
       y: {
         title: {
           display: true,
-          text: "Total Released",
+          text: "Total Stocked",
         },
       },
       x: {
@@ -68,11 +68,8 @@ const TotalStockedByHatcheryChart: React.FC<
 
   return (
     <div className="w-full">
+      <h2 className="text-center text-2xl">Total Stocked by Hatchery Statewide</h2>
       <Bar data={chartData} options={chartOptions} />
-      <p className="text-center text-gray-600 ">
-        This chart shows the total number of trout released by each hatchery in
-        the time period selected.
-      </p>
     </div>
   );
 };

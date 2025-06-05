@@ -23,7 +23,7 @@ const Header: React.FC = () => {
               className="w-10 h-8 mr-3"
               width={40}
               height={32}
-              src={"/trout_image.png"}
+              src={"/troutlytics_logo.png"}
               alt="Troutlytics"
             />
             <span className="self-center text-2xl font-semibold whitespace-nowrap">

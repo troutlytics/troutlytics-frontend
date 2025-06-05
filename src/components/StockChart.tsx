@@ -18,11 +18,11 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
   const chartData = {
     datasets: [
       {
-        label: `Total Released ${formatDate(
+        label: `Total Stocked Between ${formatDate(
           selectedDateRange.pastDate
         )} - ${formatDate(selectedDateRange.recentDate)}`,
-        backgroundColor: "#9fd3c7",
-        borderColor: "#9fd3c7",
+        backgroundColor: "rgba(44, 123, 229, 0.7)", // troutlytics.primary with opacity
+        borderColor: "#2C7BE5",
         borderWidth: 1,
         pointRadius: 2,
         data: data?.map((obj) => ({
@@ -51,7 +51,7 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
       y: {
         title: {
           display: true,
-          text: "Total Released",
+          text: "Total Stocked",
         },
       },
     },
@@ -59,12 +59,9 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
 
   return (
     <div className="w-full">
+      <h2 className="text-center text-2xl">Total Stocked in Over Time Statewide</h2>
       {/* @ts-ignore */}
       <Line data={chartData} options={chartOptions} />
-      <p className="text-center text-gray-600">
-        This chart shows the accumulative number of trout released in Washington
-        in the time period selected .
-      </p>
     </div>
   );
 };

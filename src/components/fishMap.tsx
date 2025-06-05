@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useApiDataContext } from "@/contexts/DataContext";
 import { formatDate } from "@/utils";
-import { DateRange, StockedLake } from "@/hooks/useApiData";
+import { StockedLake } from "@/hooks/useApiData";
 const customIcon = L.icon({
   iconUrl: "point-icon.png",
   iconSize: [32, 32],
@@ -63,7 +62,7 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
                       <p>Species: ${data.species}</p>
                       <p>Amount Produced: ${data.stocked_fish}</p>
                       <p>Fish Per Pound: ${data.weight}</p>
-                     ${index != groupData.length - 1 && "<hr />"} 
+                     ${index != groupData.length - 1 ? "<hr />" : ""} 
                     </div>
                   `
                 )
@@ -88,7 +87,7 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
     };
   }, [stockedLakesData]);
 
-  return <div id="map" className="w-full h-full" style={{ height: "500px" }} />;
+  return <div id="map" className="w-full h-full rounded-md z-0" style={{ height: "500px" }} />;
 };
 
 export default Map;

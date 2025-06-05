@@ -12,14 +12,7 @@ const HatcheriesPage: React.FC = () => {
     isLoading,
   } = useApiDataContext();
   const [selectedHatchery, setSelectedHatchery] = useState<string | null>(null);
-
-  useEffect(() => {
-    const allTimeDataDate = {
-      recentDate: new Date().toDateString(),
-      pastDate: new Date("1995-01-01").toDateString(),
-    };
-    setSelectedDateRange(allTimeDataDate);
-  }, []);
+  
 
   useEffect(() => {
     if (!isLoading && hatcheryNames) setSelectedHatchery(hatcheryNames[0]);

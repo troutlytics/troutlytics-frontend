@@ -100,7 +100,7 @@ const SortableTable: React.FC<SortableTableProps> = ({ data, loading }) => {
   };
 
   return (
-    <div className="max-h-96 overflow-auto w-full">
+    <div className="max-h-96 overflow-auto w-full rounded-sm">
       <table className="min-w-full divide-y divide-gray-300 sticky">
         <thead className="sticky top-0 bg-gray-700">
           <HeaderRow />
