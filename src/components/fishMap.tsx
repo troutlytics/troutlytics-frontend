@@ -42,13 +42,9 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
           fullscreenControl: true,
         });
 
-        L.tileLayer(
-          "https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
-          {
-            attribution:
-              "&copy; <a href='https://stadiamaps.com/'>Stadia Maps</a>",
-          }
-        ).addTo(mapRef.current);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "&copy; <a href='https://carto.com/'>CARTO</a>",
+        }).addTo(mapRef.current);
       }
 
       if (mapRef.current) {
