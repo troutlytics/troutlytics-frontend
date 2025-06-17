@@ -14,6 +14,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
 }) => {
   const [recentDate, setrecentDate] = useState<Date | null | undefined>(null);
   const [pastDate, setpastDate] = useState<Date | null | undefined>(null);
+  const [highlight, setHighlight] = useState(false);
 
   useEffect(() => {
     if (selectedDateRange.recentDate) {
@@ -45,6 +46,10 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     const today = new Date();
     const pastDate = new Date(today);
     pastDate.setDate(today.getDate() - days);
+    // trigger a single-run ping animation
+    setHighlight(true);
+    setTimeout(() => setHighlight(false), 100);
+
     handleCustomDateChange(pastDate, today);
   };
 
@@ -90,7 +95,13 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
             </div>
           </div>
         </div>
-        <div className="flex gap-3 mx-auto text-center align-baseline md:flex-row sm:mx-0">
+        <div
+          className={
+            `flex gap-3 mx-auto text-center align-baseline md:flex-row sm:mx-0 transition-transform ` +
+            (highlight ? "animate-ping" : "")
+          }
+          style={highlight ? { animationIterationCount: 1 } : undefined}
+        >
           <div className="flex flex-col w-1/2 text-left">
             <label htmlFor="past-date-picker">From</label>
             <DatePicker

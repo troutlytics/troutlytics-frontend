@@ -101,7 +101,7 @@ const SortableTable: React.FC<SortableTableProps> = ({ data, loading }) => {
 
   return (
     <div className="w-full overflow-auto chart-container">
-      <table className="sticky min-w-full divide-y divide-gray-300 chart-size">
+      <table className="sticky w-full divide-y divide-gray-300 ">
         <thead className="sticky top-0 bg-gray-700">
           <HeaderRow />
         </thead>

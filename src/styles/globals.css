@@ -37,7 +37,7 @@
 }
 
 .chart-container {
-  @apply w-full max-h-[60vh] text-center
+  @apply w-full h-[60vh] text-center
 }
 
 .chart-size {
