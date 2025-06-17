@@ -75,18 +75,18 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
                 <a href="${
                   groupData[0].directions
                 }" target="_blank" rel="noopener noreferrer" class="text-blue-500 underline">Get Directions</a>
-                <hr class="my-2" />
+                <hr class="mb-2" />
                 ${groupData
                   .map(
                     (data, index) => `
-                    <div class="mb-2">
-                      <p><strong>Date:</strong> ${formatDate(data.date)}</p>
+                    <div class="[&>p]:m-0">
+                      <p className="m-0"><strong>Date:</strong> ${formatDate(data.date)}</p>
                       <p><strong>Species:</strong> ${data.species}</p>
                       <p><strong>Stocked:</strong> ${data.stocked_fish}</p>
                       <p><strong>Fish/lb:</strong> ${data.weight}</p>
                       ${
                         index !== groupData.length - 1
-                          ? "<hr class='my-2' />"
+                          ? "<hr class='mb-2' />"
                           : ""
                       }
                     </div>
@@ -100,8 +100,8 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
               icon: customIcon,
             });
             marker.bindPopup(popupContent);
-            marker.on("mouseover", () => marker.openPopup());
-            marker.on("mouseout", () => marker.closePopup());
+            marker.on("click", () => marker.openPopup());
+            // marker.on("mouseout", () => marker.closePopup());
             markerCluster.addLayer(marker);
           }
         );

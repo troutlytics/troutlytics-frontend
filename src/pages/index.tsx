@@ -117,7 +117,7 @@ export default function Home() {
           <div
             key={card.id}
             onClick={() => setActiveTab(card.id)}
-            className={`cursor-pointer p-4 rounded-xl border shadow-sm text-center transition-all ${
+            className={`cursor-pointer p-4 rounded-xl border shadow-sm text-center transition-all duration-700 ${
               activeTab === card.id
                 ? "bg-troutlytics-primary text-white"
                 : "bg-white text-gray-700 hover:bg-troutlytics-primary/10"
@@ -129,25 +129,29 @@ export default function Home() {
         ))}
       </div>
 
-      <motion.div
-        key={activeTab}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        {activeTab === "stock" && <StockChart data={totalStockedByDate} />}
-        {activeTab === "hatchery" && (
-          <TotalStockedByHatcheryChart
-            data={hatcheryTotals}
-            loading={isLoading}
-          />
-        )}
-        {activeTab === "waters" && <TopWatersChart data={stockedLakesData} />}
-        {activeTab === "species" && <SpeciesPieChart data={stockedLakesData} />}
-        {activeTab === "table" && (
-          <SortableTable data={stockedLakesData} loading={isLoading} />
-        )}
-      </motion.div>
+      <div className="">
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          {activeTab === "stock" && <StockChart data={totalStockedByDate} />}
+          {activeTab === "hatchery" && (
+            <TotalStockedByHatcheryChart
+              data={hatcheryTotals}
+              loading={isLoading}
+            />
+          )}
+          {activeTab === "waters" && <TopWatersChart data={stockedLakesData} />}
+          {activeTab === "species" && (
+            <SpeciesPieChart data={stockedLakesData} />
+          )}
+          {activeTab === "table" && (
+            <SortableTable data={stockedLakesData} loading={isLoading} />
+          )}
+        </motion.div>
+      </div>
     </div>
   );
 }

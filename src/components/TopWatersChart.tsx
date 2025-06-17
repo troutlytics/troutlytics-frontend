@@ -72,14 +72,14 @@ const TopWatersChart: React.FC<TopWatersChartProps> = ({ data, topN = 10 }) => {
   };
 
   return (
-    <div className="w-full">
-      <h2 className="text-center text-2xl mb-4">
+    <div className="chart-container">
+      <h2 className="mb-4 text-2xl text-center">
         Top {topN} Waters stocked between{"  "}
         {formatDate(selectedDateRange.pastDate)} -
         {formatDate(selectedDateRange.recentDate)}
       </h2>
       {/* @ts-ignore */}
-      <Bar data={chartData} options={chartOptions} />
+      <Bar data={chartData} options={chartOptions} className="chart-size"/>
     </div>
   );
 };

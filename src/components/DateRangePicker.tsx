@@ -53,7 +53,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
       <div className="flex flex-col justify-between w-full p-2 opacity-75 md:flex-row bg-amber-300 rounded-2xl">
         <div>
           <h2 className="z-10 hidden mx-auto mb-4 text-2xl font-bold text-gray-900 md:flex">
-            Select a Date Range to view data within range
+            Select a fixed date range or pick a custom range to view data
           </h2>
           <div className="flex flex-wrap justify-between gap-6">
             <div className="flex space-x-4 mb-4 [&>button]:cursor-pointer ">

@@ -1,4 +1,4 @@
-import React, { ReactNode, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { StockedLake } from "../hooks/useApiData";
 import { formatDate } from "@/utils";
 interface SortableTableProps {
@@ -59,7 +59,7 @@ const SortableTable: React.FC<SortableTableProps> = ({ data, loading }) => {
         {Object.keys(thNames).map((key) => (
           <th
             key={key}
-            className="px-6 py-3 text-left text-xs font-medium text-gray-200 uppercase tracking-wider cursor-pointer hover:text-gray-400"
+            className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-200 uppercase cursor-pointer hover:text-gray-400"
             onClick={() => sortData(key as keyof StockedLake)}
           >
             {/* @ts-ignore */}
@@ -78,7 +78,7 @@ const SortableTable: React.FC<SortableTableProps> = ({ data, loading }) => {
       {Object.values(thNames).map((_, index) => (
         <td
           key={index}
-          className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 animate-pulse"
+          className="px-6 py-4 text-sm text-gray-300 whitespace-nowrap animate-pulse"
         >
           <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-400 w-48 mb-4"></div>
         </td>
@@ -100,8 +100,8 @@ const SortableTable: React.FC<SortableTableProps> = ({ data, loading }) => {
   };
 
   return (
-    <div className="max-h-96 overflow-auto w-full rounded-sm">
-      <table className="min-w-full divide-y divide-gray-300 sticky">
+    <div className="w-full overflow-auto chart-container">
+      <table className="sticky min-w-full divide-y divide-gray-300 chart-size">
         <thead className="sticky top-0 bg-gray-700">
           <HeaderRow />
         </thead>
@@ -110,25 +110,25 @@ const SortableTable: React.FC<SortableTableProps> = ({ data, loading }) => {
           {sortedData &&
             sortedData.map((lake, index) => (
               <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                   {formatDate(lake.date)}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                   {lake.water_name_cleaned}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                   {lake.hatchery}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                   {lake.species}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                   {lake.stocked_fish}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                   {lake.weight}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td className="px-6 py-4 text-sm text-gray-700 whitespace-nowrap">
                   <a
                     href={lake.directions}
                     target="_blank"

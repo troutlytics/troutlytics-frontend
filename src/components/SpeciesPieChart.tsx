@@ -68,14 +68,14 @@ const SpeciesPieChart: React.FC<SpeciesPieChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="w-full">
-      <h2 className="text-center text-2xl mb-4">
+    <div className="chart-container">
+      <h2 className="mb-4 text-2xl text-center">
         Species Stocked Between {"  "}
         {formatDate(selectedDateRange.pastDate)} -
         {formatDate(selectedDateRange.recentDate)}
       </h2>
       {/* @ts-ignore */}
-      <Pie data={chartData} options={chartOptions} />
+      <Pie data={chartData} options={chartOptions} className="chart-size"/>
     </div>
   );
 };

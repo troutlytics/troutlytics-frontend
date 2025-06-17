@@ -67,9 +67,11 @@ const TotalStockedByHatcheryChart: React.FC<
   };
 
   return (
-    <div className="w-full">
-      <h2 className="text-center text-2xl">Total Stocked by Hatchery Statewide</h2>
-      <Bar data={chartData} options={chartOptions} />
+    <div className="chart-container">
+      <h2 className="text-2xl text-center">
+        Total Stocked by Hatchery Statewide
+      </h2>
+      <Bar data={chartData} options={chartOptions} className="chart-size" />
     </div>
   );
 };

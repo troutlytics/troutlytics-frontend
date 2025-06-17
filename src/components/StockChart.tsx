@@ -58,10 +58,10 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="w-full">
-      <h2 className="text-center text-2xl">Total Stocked in Over Time Statewide</h2>
+    <div className="chart-container">
+      <h2 className="mx-auto text-2xl text-center">Total Stocked Over Time Statewide</h2>
       {/* @ts-ignore */}
-      <Line data={chartData} options={chartOptions} />
+      <Line data={chartData} options={chartOptions} className="chart-size"/>
     </div>
   );
 };

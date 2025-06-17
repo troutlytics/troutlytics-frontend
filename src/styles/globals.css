@@ -36,6 +36,14 @@
   @apply w-full border-2 rounded-md md:p-4 border-b-teal-600;
 }
 
+.chart-container {
+  @apply w-full max-h-[60vh] text-center
+}
+
+.chart-size {
+  @apply w-[70vw] mx-auto
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(to bottom,
@@ -74,4 +82,8 @@ body {
   overflow-y: auto;
   font-size: 0.875rem;
   line-height: 1.25;
+}
+
+.leaflet-popup-content p {
+  margin: 0 !important
 }
