@@ -4,13 +4,20 @@
   --foreground-rgb: rgb(0, 0, 0);
   --background-start-rgb: rgb(255, 254, 254);
   --background-end-rgb: rgb(255, 255, 255);
-  --color-primary: #2C7BE5;     /* Sky Blue */
-  --color-secondary: #2A4365;   /* Deep Blue */
-  --color-background: #F7FAFC;  /* Light Off-White */
-  --color-card: #FFFFFF;        /* White */
-  --color-text: #1A202C;        /* Slate Gray */
-  --color-subtext: #4A5568;     /* Medium Gray */
-  --color-accent: #38B2AC;      /* Teal */
+  --color-primary: #2C7BE5;
+  /* Sky Blue */
+  --color-secondary: #2A4365;
+  /* Deep Blue */
+  --color-background: #F7FAFC;
+  /* Light Off-White */
+  --color-card: #FFFFFF;
+  /* White */
+  --color-text: #1A202C;
+  /* Slate Gray */
+  --color-subtext: #4A5568;
+  /* Medium Gray */
+  --color-accent: #38B2AC;
+  /* Teal */
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -20,6 +27,14 @@
     --background-end-rgb: 0, 0, 0;
   }
 } */
+
+.troutlytics-btn {
+  @apply px-0 py-1 text-xs text-white transition duration-200 rounded-md md:px-4 md:py-2 bg-cyan-600 hover:bg-cyan-700 md:text-sm;
+}
+
+.date-picker {
+  @apply w-full border-2 rounded-md md:p-4 border-b-teal-600;
+}
 
 body {
   color: rgb(var(--foreground-rgb));
@@ -52,4 +67,11 @@ body {
 .scrollable-popup {
   max-height: 200px;
   overflow-y: auto;
+}
+
+.scrollable-popup {
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 0.875rem;
+  line-height: 1.25;
 }

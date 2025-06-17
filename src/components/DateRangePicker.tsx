@@ -50,44 +50,48 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   return (
     <div className="container px-0">
-      <h2 className="text-2xl mx-auto font-bold text-gray-800 mb-4">
-        Select a Date Range to view data within range
-      </h2>
-      <div className="flex gap-6 justify-between flex-wrap">
-        <div className="flex space-x-4 mb-4 [&>button]:cursor-pointer ">
-          <button
-            onClick={() => handlePresetClick(7)}
-            className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200 text-xs md:text-sm"
-          >
-            Last 7 Days
-          </button>
-          <button
-            onClick={() => handlePresetClick(30)}
-            className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200  text-xs md:text-sm"
-          >
-            Last 30 Days
-          </button>
-          <button
-            onClick={() => handlePresetClick(90)}
-            className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200  text-xs md:text-sm"
-          >
-            Last 90 Days
-          </button>
-          <button
-            onClick={() => handlePresetClick(365)}
-            className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200  text-xs md:text-sm"
-          >
-            Last Year
-          </button>
-          <button
-            onClick={() => handlePresetClick(730)}
-            className="px-4 py-2 bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition duration-200  text-xs md:text-sm"
-          >
-            Last 2 Years
-          </button>
+      <div className="flex flex-col justify-between w-full p-2 opacity-75 md:flex-row bg-amber-300 rounded-2xl">
+        <div>
+          <h2 className="z-10 hidden mx-auto mb-4 text-2xl font-bold text-gray-900 md:flex">
+            Select a Date Range to view data within range
+          </h2>
+          <div className="flex flex-wrap justify-between gap-6">
+            <div className="flex space-x-4 mb-4 [&>button]:cursor-pointer ">
+              <button
+                onClick={() => handlePresetClick(7)}
+                className="troutlytics-btn"
+              >
+                Last 7 Days
+              </button>
+              <button
+                onClick={() => handlePresetClick(30)}
+                className="troutlytics-btn"
+              >
+                Last 30 Days
+              </button>
+              <button
+                onClick={() => handlePresetClick(90)}
+                className="troutlytics-btn"
+              >
+                Last 90 Days
+              </button>
+              <button
+                onClick={() => handlePresetClick(365)}
+                className="troutlytics-btn"
+              >
+                Last Year
+              </button>
+              <button
+                onClick={() => handlePresetClick(730)}
+                className="troutlytics-btn"
+              >
+                Last 2 Years
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col flex-wrap gap-3 sm:flex-row text-center align-baseline sm:mx-0 mx-auto">
-          <div className="flex-col flex text-left">
+        <div className="flex gap-3 mx-auto text-center align-baseline md:flex-row sm:mx-0">
+          <div className="flex flex-col w-1/2 text-left">
             <label htmlFor="past-date-picker">From</label>
             <DatePicker
               id="past-date-picker"
@@ -95,11 +99,11 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
               onChange={(date) => handleCustomDateChange(date, recentDate)}
               selectsStart
               maxDate={recentDate ?? undefined}
-              className="form-input rounded-md p-4 border-2 border-b-teal-600"
+              className="date-picker"
               isClearable
             />
           </div>
-          <div className="flex-col flex text-left">
+          <div className="flex flex-col w-1/2 text-left">
             <label htmlFor="recent-date-picker">To</label>
             <DatePicker
               id="recent-date-picker"
@@ -108,9 +112,8 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
               selectsEnd
               minDate={pastDate ?? undefined}
               maxDate={new Date()}
-              className="form-input rounded-md p-4 border-2 border-b-teal-600"
+              className="date-picker"
               isClearable
-              
             />
           </div>
         </div>

@@ -1,18 +1,30 @@
 import { useApiDataContext } from "@/contexts/DataContext";
-
 import { DateRange } from "@/hooks/useApiData";
 import DateRangePicker from "@/components/DateRangePicker";
 import SelectedDateRange from "@/components/SelectedDateRange";
 import StockChart from "@/components/StockChart";
 import TotalStockedByHatcheryChart from "@/components/HatcheryChart";
 import SortableTable from "@/components/SortableTable";
-import dynamic from "next/dynamic";
-import { useState } from "react";
 import TopWatersChart from "@/components/TopWatersChart";
 import SpeciesPieChart from "@/components/SpeciesPieChart";
+import dynamic from "next/dynamic";
+import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
+
 const FishingMap = dynamic(() => import("../components/fishMap"), {
   ssr: false,
 });
+
+function StatCard({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="p-4 text-center shadow rounded-xl bg-troutlytics-card">
+      <div className="text-xs font-medium text-troutlytics-subtext">
+        {label}
+      </div>
+      <div className="text-2xl font-bold text-troutlytics-text">{value}</div>
+    </div>
+  );
+}
 
 export default function Home() {
   const {
@@ -24,113 +36,118 @@ export default function Home() {
     setSelectedDateRange,
     today,
   } = useApiDataContext();
-  const [activeTab, setActiveTab] = useState("stock");
 
-  const tabStyle = (tab: string) =>
-    `px-4 py-2 font-medium border-b-2 transition-all duration-200 ${
-      activeTab === tab
-        ? "border-troutlytics-primary text-troutlytics-primary"
-        : "border-transparent text-gray-500 hover:text-troutlytics-primary"
-    }`;
+  const [activeTab, setActiveTab] = useState("stock");
 
   const handleDateChange = (dateRange: DateRange) => {
     setSelectedDateRange(dateRange);
   };
 
+  const cards = [
+    { id: "stock", label: "Stocked Over Time", icon: "📈" },
+    { id: "hatchery", label: "By Hatchery", icon: "🏭" },
+    { id: "waters", label: "Top Waters", icon: "🌊" },
+    { id: "species", label: "By Species", icon: "🐟" },
+    { id: "table", label: "Data Table", icon: "📋" },
+  ];
+
+  const quickStats = useMemo(() => {
+    const totalCount = stockedLakesData.reduce(
+      (sum, item) => sum + (item.stocked_fish || 0),
+      0
+    );
+    const topHatchery = hatcheryTotals?.[0]?.hatchery || "-";
+    const topWater = stockedLakesData[0]?.water_name_cleaned || "-";
+    const topSpecies = stockedLakesData.reduce<Record<string, number>>(
+      (acc, item) => {
+        acc[item.species] = (acc[item.species] || 0) + item.stocked_fish;
+        return acc;
+      },
+      {}
+    );
+    const speciesSorted = Object.entries(topSpecies).sort(
+      (a, b) => (b[1] as number) - (a[1] as number)
+    );
+    return {
+      totalCount,
+      topHatchery,
+      topWater,
+      topSpecies: speciesSorted[0]?.[0] || "-",
+    };
+  }, [stockedLakesData, hatcheryTotals]);
+
   return (
-    <div className="container mx-auto px-4 pb-8">
-      <header className=" mb-4">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">
+    <div className="container px-4 pb-8 mx-auto">
+      <header className="mb-4">
+        <h1 className="mb-2 text-4xl font-bold text-troutlytics-text">
           Washington State DFW Trout Stocking Data
         </h1>
-        <p className="text-lg text-gray-600 lg:w-3xl">
-          Explore the data on trout stocking in Washington State, including
-          locations, hatcheries, and trends over time.
+        <p className="text-lg text-troutlytics-subtext lg:w-3xl">
+          Explore trout stocking activity across the state—see locations,
+          hatcheries, and trends.
         </p>
       </header>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <section id="date-widget" className="col-span-1 lg:col-span-2">
-          <DateRangePicker
+
+      <section className="sticky top-0 z-10 py-2 bg-troutlytics-background">
+        <DateRangePicker
+          selectedDateRange={selectedDateRange}
+          handleDateChange={handleDateChange}
+        />
+        {/* <div className="mt-2 text-center">
+          <SelectedDateRange
             selectedDateRange={selectedDateRange}
-            handleDateChange={handleDateChange}
+            today={today}
           />
-          <div id="selected-date-range" className="text-center w-full mt-5">
-            <SelectedDateRange
-              selectedDateRange={selectedDateRange}
-              today={today}
-            />
-          </div>
-        </section>
-        <section id="map-widget" className="col-span-1 lg:col-span-2">
-          <FishingMap stockedLakesData={stockedLakesData} loading={isLoading} />
-        </section>
+        </div> */}
+      </section>
 
-        <section className="mt-10 col-span-1 lg:col-span-2">
-          <div className="flex justify-center space-x-6 border-b [&>button]:cursor-pointer overflow-auto">
-            <button
-              className={tabStyle("stock")}
-              onClick={() => setActiveTab("stock")}
-            >
-              Total Stocked Over Time
-            </button>
-            <button
-              className={tabStyle("hatchery")}
-              onClick={() => setActiveTab("hatchery")}
-            >
-              Total Stocked by Hatchery
-            </button>
-            <button
-              className={tabStyle("waters")}
-              onClick={() => setActiveTab("waters")}
-            >
-              Top Waters
-            </button>
-            <button
-              className={tabStyle("species")}
-              onClick={() => setActiveTab("species")}
-            >
-              By Species
-            </button>
-            <button
-              className={tabStyle("table")}
-              onClick={() => setActiveTab("table")}
-            >
-              Breakdown
-            </button>
-          </div>
+      <div className="grid grid-cols-2 gap-4 my-6 sm:grid-cols-4">
+        <StatCard label="Total Stocked" value={quickStats.totalCount} />
+        <StatCard label="Top Hatchery" value={quickStats.topHatchery} />
+        <StatCard label="Top Water" value={quickStats.topWater} />
+        <StatCard label="Top Species" value={quickStats.topSpecies} />
+      </div>
 
-          <div className="mt-6">
-            {activeTab === "stock" && <StockChart data={totalStockedByDate} />}
-            {activeTab === "hatchery" && (
-              <TotalStockedByHatcheryChart
-                data={hatcheryTotals}
-                loading={isLoading}
-              />
-            )}
-            {activeTab === "waters" && (
-              <TopWatersChart data={stockedLakesData} />
-            )}
-            {activeTab === "species" && (
-              <SpeciesPieChart data={stockedLakesData} />
-            )}
-            {activeTab === "table" && (
-              <SortableTable data={stockedLakesData} loading={isLoading} />
-            )}
+      <section className="mb-6">
+        <FishingMap stockedLakesData={stockedLakesData} loading={isLoading} />
+      </section>
+
+      <div className="grid grid-cols-2 gap-3 mb-6 md:grid-cols-5">
+        {cards.map((card) => (
+          <div
+            key={card.id}
+            onClick={() => setActiveTab(card.id)}
+            className={`cursor-pointer p-4 rounded-xl border shadow-sm text-center transition-all ${
+              activeTab === card.id
+                ? "bg-troutlytics-primary text-white"
+                : "bg-white text-gray-700 hover:bg-troutlytics-primary/10"
+            }`}
+          >
+            <div className="text-2xl">{card.icon}</div>
+            <div className="text-sm font-medium">{card.label}</div>
           </div>
-        </section>
-        {/* <section id="table-widget" className="col-span-1 lg:col-span-1">
+        ))}
+      </div>
+
+      <motion.div
+        key={activeTab}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        {activeTab === "stock" && <StockChart data={totalStockedByDate} />}
+        {activeTab === "hatchery" && (
           <TotalStockedByHatcheryChart
             data={hatcheryTotals}
             loading={isLoading}
           />
-        </section>
-        <section id="stock-chart-widget" className="col-span-1 lg:col-span-1">
-          <StockChart data={totalStockedByDate} />
-        </section> */}
-        {/* <section className="col-span-1 lg:col-span-2">
+        )}
+        {activeTab === "waters" && <TopWatersChart data={stockedLakesData} />}
+        {activeTab === "species" && <SpeciesPieChart data={stockedLakesData} />}
+        {activeTab === "table" && (
           <SortableTable data={stockedLakesData} loading={isLoading} />
-        </section> */}
-      </div>
+        )}
+      </motion.div>
     </div>
   );
 }

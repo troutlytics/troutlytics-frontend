@@ -1,8 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "leaflet.markercluster";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+import "leaflet-fullscreen";
+import "leaflet-fullscreen/dist/leaflet.fullscreen.css";
 import { formatDate } from "@/utils";
 import { StockedLake } from "@/hooks/useApiData";
+
 const customIcon = L.icon({
   iconUrl: "point-icon.png",
   iconSize: [32, 32],
@@ -17,66 +22,103 @@ interface MapProps {
 
 const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
   const mapRef = useRef<L.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!stockedLakesData) return; // Bail early if undefined
+    if (
+      !mapContainerRef.current ||
+      !stockedLakesData ||
+      stockedLakesData.length === 0
+    )
+      return;
     console.log("Rendering FishMap", stockedLakesData.length, Date.now());
-    if (!mapRef.current) {
-      mapRef.current = L.map("map", {
-        center: [47.6062, -122.3321], // Default center (Seattle)
-        zoom: 8,
-      });
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(mapRef.current);
-    }
+    requestAnimationFrame(() => {
+      if (!mapRef.current) {
+        mapRef.current = L.map(mapContainerRef.current!, {
+          center: [47.6062, -122.3321],
+          zoom: 8,
+          //@ts-ignore
+          fullscreenControl: true,
+        });
 
-    if (stockedLakesData && mapRef.current) {
-      const markersGroupedByCoordinates: { [key: string]: StockedLake[] } = {};
+        L.tileLayer(
+          "https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png",
+          {
+            attribution:
+              "&copy; <a href='https://stadiamaps.com/'>Stadia Maps</a>",
+          }
+        ).addTo(mapRef.current);
+      }
 
-      stockedLakesData.forEach((data) => {
-        const coordinateKey: string = `${data.latitude},${data.longitude}`;
-        if (!markersGroupedByCoordinates[coordinateKey]) {
-          markersGroupedByCoordinates[coordinateKey] = [];
-        }
-        markersGroupedByCoordinates[coordinateKey].push(data);
-      });
+      if (mapRef.current) {
+        const markersGroupedByCoordinates: { [key: string]: StockedLake[] } =
+          {};
+        stockedLakesData.forEach((data) => {
+          const coordinateKey = `${data.latitude},${data.longitude}`;
+          if (!markersGroupedByCoordinates[coordinateKey]) {
+            markersGroupedByCoordinates[coordinateKey] = [];
+          }
+          markersGroupedByCoordinates[coordinateKey].push(data);
+        });
 
-      Object.entries(markersGroupedByCoordinates).forEach(
-        ([key, groupData]) => {
-          const [latitude, longitude] = key.split(",").map(Number);
-          const popupContent = `
-            <div class="scrollable-popup overflow-visible">
-              <strong><h2>${groupData[0].water_name_cleaned}</h2></strong>
-              <a href="${
-                groupData[0].directions
-              }" target="_blank" rel="noopener noreferrer">Get Directions</a>
-              <hr>
-              ${groupData
-                .map(
-                  (data, index) => `
-                    <div>
-                      <p>Release Date: ${formatDate(data.date)}</p>
-                      <p>Species: ${data.species}</p>
-                      <p>Amount Produced: ${data.stocked_fish}</p>
-                      <p>Fish Per Pound: ${data.weight}</p>
-                     ${index != groupData.length - 1 ? "<hr />" : ""} 
+        //@ts-ignore
+        const markerCluster = L.markerClusterGroup();
+        const allLatLngs: L.LatLngExpression[] = [];
+
+        Object.entries(markersGroupedByCoordinates).forEach(
+          ([key, groupData]) => {
+            const [latitude, longitude] = key.split(",").map(Number);
+            allLatLngs.push([latitude, longitude]);
+
+            const popupContent = `
+              <div class="scrollable-popup overflow-y-auto max-h-[200px] text-sm">
+                <strong><h2 class="font-bold text-base mb-1">${
+                  groupData[0].water_name_cleaned
+                }</h2></strong>
+                <a href="${
+                  groupData[0].directions
+                }" target="_blank" rel="noopener noreferrer" class="text-blue-500 underline">Get Directions</a>
+                <hr class="my-2" />
+                ${groupData
+                  .map(
+                    (data, index) => `
+                    <div class="mb-2">
+                      <p><strong>Date:</strong> ${formatDate(data.date)}</p>
+                      <p><strong>Species:</strong> ${data.species}</p>
+                      <p><strong>Stocked:</strong> ${data.stocked_fish}</p>
+                      <p><strong>Fish/lb:</strong> ${data.weight}</p>
+                      ${
+                        index !== groupData.length - 1
+                          ? "<hr class='my-2' />"
+                          : ""
+                      }
                     </div>
                   `
-                )
-                .join("")}
-            </div>
-          `;
+                  )
+                  .join("")}
+              </div>
+            `;
 
-          const marker = L.marker([latitude, longitude], {
-            icon: customIcon,
-          }).addTo(mapRef.current!);
-          marker.bindPopup(popupContent);
+            const marker = L.marker([latitude, longitude], {
+              icon: customIcon,
+            });
+            marker.bindPopup(popupContent);
+            marker.on("mouseover", () => marker.openPopup());
+            marker.on("mouseout", () => marker.closePopup());
+            markerCluster.addLayer(marker);
+          }
+        );
+
+        mapRef.current.addLayer(markerCluster);
+
+        if (allLatLngs.length > 0) {
+          mapRef.current.fitBounds(L.latLngBounds(allLatLngs), {
+            padding: [50, 50],
+          });
         }
-      );
-    }
+      }
+    });
 
     return () => {
       if (mapRef.current) {
@@ -87,7 +129,13 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
     };
   }, [stockedLakesData]);
 
-  return <div id="map" className="w-full h-full rounded-md z-0" style={{ height: "500px" }} />;
+  return (
+    <div
+      ref={mapContainerRef}
+      id="map"
+      className="z-0 w-full h-[300px] sm:h-[500px] rounded-md border border-gray-300"
+    />
+  );
 };
 
 export default Map;
