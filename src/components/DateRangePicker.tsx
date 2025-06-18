@@ -46,6 +46,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     const today = new Date();
     const pastDate = new Date(today);
     pastDate.setDate(today.getDate() - days);
+
     // trigger a single-run ping animation
     setHighlight(true);
     setTimeout(() => setHighlight(false), 100);

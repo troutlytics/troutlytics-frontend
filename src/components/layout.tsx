@@ -1,7 +1,7 @@
 // import type { Metadata } from "next";
 import Header from "./Header";
 import { useApiDataContext } from "@/contexts/DataContext";
-import { formatDate } from "@/utils";
+import { formatDate, isoFormat } from "@/utils";
 export default function RootLayout({
   children,
 }: {
@@ -11,11 +11,11 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      <main className="main mx-auto  flex min-h-screen flex-col items-center justify-between lg:px-24 py-8">
+      <main className="flex flex-col items-center justify-between min-h-screen py-8 mx-auto main lg:px-24">
         {children}
       </main>
       <footer>
-        <p className="text-center mb-10">
+        <p className="mb-10 text-center">
           Data was last collected on {formatDate(dateDataUpdated)} from the{" "}
           <a
             className=" text-cyan-700 hover:text-cyan-900"
