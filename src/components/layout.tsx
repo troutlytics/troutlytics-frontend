@@ -1,7 +1,7 @@
 // import type { Metadata } from "next";
 import Header from "./Header";
 import { useApiDataContext } from "@/contexts/DataContext";
-import { formatDate, isoFormat } from "@/utils";
+import { formatDate } from "@/utils";
 export default function RootLayout({
   children,
 }: {
