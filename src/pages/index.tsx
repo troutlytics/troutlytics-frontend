@@ -83,8 +83,8 @@ export default function Home() {
           Washington State DFW Trout Stocking Data
         </h1>
         <p className="text-lg text-troutlytics-subtext lg:w-3xl">
-          Explore trout stocking activity across the state—see locations,
-          hatcheries, and trends.
+          WDFW Trout Stocking data in a newly imagined way. WDFW Trout Stocking
+          data in a new imagined way.
         </p>
       </header>
 
