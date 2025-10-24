@@ -88,7 +88,7 @@ export default function Home() {
         </p>
       </header>
 
-      <section className="sticky top-0 z-10 py-2 bg-troutlytics-background">
+      <section className="sticky top-0 z-10 py-2">
         <DateRangePicker
           selectedDateRange={selectedDateRange}
           handleDateChange={handleDateChange}

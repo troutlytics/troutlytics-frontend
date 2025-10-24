@@ -18,7 +18,7 @@ export default function RootLayout({
         <p className="mb-10 text-center">
           Data was last collected on {formatDate(dateDataUpdated)} from the{" "}
           <a
-            className=" text-cyan-700 hover:text-cyan-900"
+            className="text-blue-600 hover:text-blue-800"
             href="https://wdfw.wa.gov/fishing/reports/stocking/trout-plants/all"
             target="_blank"
             rel="noreferrer nofollow"

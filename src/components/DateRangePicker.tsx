@@ -56,7 +56,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   return (
     <div className="container px-0">
-      <div className="flex flex-col justify-between w-full p-2 opacity-75 md:flex-row bg-amber-300 rounded-2xl">
+      <div className="flex flex-col justify-between w-full p-2 bg-blue-300 opacity-75 md:flex-row rounded-xl">
         <div>
           <h2 className="z-10 hidden mx-auto mb-4 text-2xl font-bold text-gray-900 md:flex">
             Select a fixed date range or pick a custom range to view data

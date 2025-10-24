@@ -4,12 +4,11 @@
 
 [Back End Code](https://github.com/troutlytics/troutlytics-backend)
 
-Troutlytics is a web application designed for anglers and wildlife enthusiasts in Washington State. It provides comprehensive, up-to-date information about fish stocking across various water bodies, enhancing the angling experience and promoting environmental awareness.
+Troutlytics is a web application designed for anglers and wildlife enthusiasts in Washington State. It provides daily updates on information about fish stocking across various water bodies, helping anglers stay informed, keeping pressure off endangered steelhead and salmon runs, and promoting environmental awareness.
 
 ## Features
 
 - **Data Visualization**: Interactive charts and maps showcasing fish stocking data for various species across Washington.
-- **Species Information**: Detailed insights into the habitat and behavior of various fish species stocked in Washington waters.
 - **Responsive Design**: Optimized for both mobile and desktop devices, ensuring a seamless user experience.
 - **User-Friendly Interface**: Easy navigation and intuitive layout, designed for users of all tech levels.
 - **Hosted With AWS Amplify**: Simplified front-end hosting
@@ -70,4 +69,5 @@ Acknowledgments
 
 Thanks to the Washington Department of Fish and Wildlife for providing the data.
 Inspired by the diverse angling community in Washington State.
+
 [WDFW trout plant data](https://wdfw.wa.gov/fishing/reports/stocking/trout-plants)

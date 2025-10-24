@@ -16,8 +16,8 @@ const Header: React.FC = () => {
 
   return (
     <header>
-      <nav className="bg-white ">
-        <div className="flex lg:mx-20 flex-wrap items-center justify-between p-4">
+      <nav>
+        <div className="flex flex-wrap items-center justify-between p-4 lg:mx-20">
           <Link href="/" className="flex items-center">
             <Image
               className="w-10 h-8 mr-3"
@@ -26,7 +26,7 @@ const Header: React.FC = () => {
               src={"/troutlytics_logo.png"}
               alt="Troutlytics"
             />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap">
+            <span className="self-center text-3xl font-bold font-groupo whitespace-nowrap">
               Troutlytics
             </span>
           </Link>
@@ -59,7 +59,7 @@ const Header: React.FC = () => {
             } w-full md:block md:w-auto`}
             id="navbar-default"
           >
-            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0">
+            <ul className="flex flex-col p-4 mt-4 border rounded-lg md:p-0 md:flex-row md:space-x-8 md:mt-0 md:border-0">
               <li>
                 <NavLink href="/">Home</NavLink>
               </li>

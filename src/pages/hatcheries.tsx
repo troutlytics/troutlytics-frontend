@@ -23,11 +23,11 @@ const HatcheriesPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 pb-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">
+    <div className="container px-4 pb-8 mx-auto">
+      <h1 className="mb-6 text-3xl font-bold text-gray-800">
         Washington State DFW Trout Hatcheries
       </h1>
-      <p className="text-gray-600 text-lg mb-4">
+      <p className="mb-4 text-lg text-gray-600">
         Explore the data on trout hatcheries in Washington State, including
         locations, stocking totals, and trends over time.
       </p>
@@ -39,7 +39,7 @@ const HatcheriesPage: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="inline-block bg-gray-300 text-white text-sm font-semibold px-3 py-1 rounded-full animate-pulse h-8"
+                  className="inline-block h-8 px-3 py-1 text-sm font-semibold text-white bg-gray-300 rounded-full animate-pulse"
                   style={{ width: `${width}px` }}
                 ></div>
               );
@@ -51,8 +51,8 @@ const HatcheriesPage: React.FC = () => {
             <span
               key={index}
               onClick={() => handleHatcheryClick(name)}
-              className={`inline-block cursor-pointer bg-cyan-600 text-white text-sm font-semibold px-3 py-1 rounded-full ${
-                selectedHatchery === name ? "bg-cyan-800" : ""
+              className={`inline-block cursor-pointer bg-blue-600 text-white text-sm font-semibold px-3 py-1 rounded-full ${
+                selectedHatchery === name ? "bg-blue-800" : ""
               }`}
             >
               {name}
@@ -61,19 +61,19 @@ const HatcheriesPage: React.FC = () => {
         )}
       </div>
       {isLoading ? (
-        <div className="bg-white shadow-md rounded-lg p-4 animate-pulse">
-          <div className="h-6 bg-gray-300 rounded w-1/3 mb-4"></div>
-          <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
-          <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
-          <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
+        <div className="p-4 bg-white rounded-lg shadow-md animate-pulse">
+          <div className="w-1/3 h-6 mb-4 bg-gray-300 rounded"></div>
+          <div className="w-1/2 h-4 mb-2 bg-gray-300 rounded"></div>
+          <div className="w-1/2 h-4 mb-2 bg-gray-300 rounded"></div>
+          <div className="w-1/2 h-4 mb-2 bg-gray-300 rounded"></div>
         </div>
       ) : (
         selectedHatchery && (
-          <div className="bg-white shadow-md rounded-lg p-4">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          <div className="p-4 bg-white rounded-lg shadow-md">
+            <h2 className="mb-4 text-2xl font-bold text-gray-800">
               {selectedHatchery} Stats
             </h2>
-            <p className="text-gray-600 text-lg">
+            <p className="text-lg text-gray-600">
               Total Fish Stocked All Time:{" "}
               {stockedLakesData
                 .filter((lake) => lake.hatchery === selectedHatchery)

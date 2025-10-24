@@ -1,6 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Gruppo&family=Roboto:wght@200;400;500;900&display=swap');
 @import 'tailwindcss';
 
-:root {
+@theme {
   --foreground-rgb: rgb(0, 0, 0);
   --background-start-rgb: rgb(255, 254, 254);
   --background-end-rgb: rgb(255, 255, 255);
@@ -18,6 +19,11 @@
   /* Medium Gray */
   --color-accent: #38B2AC;
   /* Teal */
+
+  --font-groupo: "Gruppo", sans-serif;
+
+  --font-roboto: "Gruppo", sans-serif;
+
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -28,20 +34,31 @@
   }
 } */
 
+p,
+h2,
+h3,
+li,
+h1,
+a {
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
 .troutlytics-btn {
-  @apply px-0 py-1 text-xs text-white transition duration-200 rounded-md md:px-4 md:py-2 bg-cyan-600 hover:bg-cyan-700 md:text-sm;
+  @apply px-0 py-1 text-xs text-white transition duration-200 bg-blue-600 rounded-md md:px-4 md:py-2 hover:bg-blue-700 md:text-sm;
 }
 
 .date-picker {
-  @apply w-full border-2 rounded-md md:p-4 border-b-teal-600;
+  @apply w-full border-2 border-blue-600 rounded-md md:p-4;
 }
 
 .chart-container {
-  @apply w-full h-[60vh] text-center
+  @apply w-full text-center
 }
 
 .chart-size {
-  @apply w-[70vw] mx-auto
+  @apply w-full mx-auto
 }
 
 body {
