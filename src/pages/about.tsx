@@ -11,14 +11,13 @@ const AboutPage: React.FC = () => {
       <section className="mb-4 text-lg text-gray-600">
         <p>
           Troutlytics was created to help inspire anglers and soon-to-be anglers
-          to get out and enjoy our communities resources, and to keep pressure
-          off endangered salmon and steelhead runs
+          to get out and enjoy our communities resources and to keep pressure
+          off endangered salmon and steelhead runs.
         </p>
         <p>
-          Our mission is to offer comprehensive guides, tips, and real-time
-          updates on stocked trout fishing locations, species, and regulations.
-          We aim to foster a community of passionate anglers who share their
-          experiences and knowledge.
+          Our mission is to offer more insight into the WDFW trout stocking
+          programs, saving anglers time by finding the most recent stocked trout
+          in lakes nearby.
         </p>
       </section>
 
@@ -29,14 +28,15 @@ const AboutPage: React.FC = () => {
         <p className="mb-4 text-lg text-gray-600">
           The fish stocking program in Washington is an effort in conservation
           and habitat management, aiming to balance ecosystems, support species
-          recovery, and enhance recreational fishing.
+          recovery, and enhance recreational fishing. This is a sustainable
+          resource we all own and should take advantage of.
         </p>
         <p className="mb-4 text-lg text-gray-600">
           By stocking various species, the WDFW is committed to maintaining the
           ecological balance in our lakes and rivers, often compensating for
           habitat changes or past overfishing. This initiative supports the
           health of Washington's aquatic ecosystems and provides a variety of
-          species for anglers.
+          species for anglers to catch.
         </p>
       </section>
       <section className="mt-8">
@@ -54,7 +54,7 @@ const AboutPage: React.FC = () => {
           If you're an organization looking for a developer who blends
           technology with environmental awareness, or an angler eager to share
           stories and insights, I'd love to connect. Let's work together to
-          foster a sustainable and thriving future for Washington's aquatic
+          create a sustainable and thriving future for Washington's aquatic
           habitats.
         </p>
       </section>
