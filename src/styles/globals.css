@@ -54,7 +54,7 @@ a {
 }
 
 .chart-container {
-  @apply w-full text-center
+  @apply h-[60vh] w-full text-center
 }
 
 .chart-size {
