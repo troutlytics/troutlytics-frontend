@@ -16,10 +16,10 @@ const ContactPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen page-gradient py-12">
-      <div className="container mx-auto px-4 max-w-5xl">
+    <div className="min-h-screen py-12 page-gradient">
+      <div className="container max-w-5xl px-4 mx-auto">
         <div className="grid gap-10 lg:grid-cols-[1.3fr,1fr] items-start">
-          <section className="p-8 bg-white rounded-3xl shadow-xl border border-slate-100">
+          <section className="p-8 bg-white border shadow-xl rounded-3xl border-slate-100">
             <p className="text-sm font-semibold tracking-[0.4em] uppercase text-troutlytics-accent">
               Let&apos;s build something
             </p>
@@ -39,7 +39,7 @@ const ContactPage: React.FC = () => {
                   </span>
                   <Link
                     href={channel.href}
-                    className="mt-1 text-xl font-semibold text-troutlytics-primary break-all hover:underline"
+                    className="mt-1 text-xl font-semibold break-all text-troutlytics-primary hover:underline"
                     target={channel.href.startsWith("http") ? "_blank" : undefined}
                     rel={channel.href.startsWith("http") ? "noreferrer" : undefined}
                   >
@@ -54,7 +54,7 @@ const ContactPage: React.FC = () => {
             <p className="text-sm font-semibold tracking-[0.4em] uppercase text-white/70">
               Areas of focus
             </p>
-            <h2 className="mt-3 text-3xl font-bold">What we can tackle</h2>
+            <h2 className="mt-3 text-3xl font-bold">What I can tackle</h2>
             <p className="mt-4 text-white/80">
               From dashboards to integrations, I help teams ship polished experiences quickly.
             </p>
