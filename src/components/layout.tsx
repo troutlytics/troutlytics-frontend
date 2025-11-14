@@ -15,7 +15,7 @@ export default function RootLayout({
         {children}
       </main>
       <footer>
-        <p className="mb-10 text-center">
+        <p className="mb-5 text-xs text-center">
           Data was last collected on {formatDate(dateDataUpdated)} from the{" "}
           <a
             className="text-blue-600 hover:text-blue-800"

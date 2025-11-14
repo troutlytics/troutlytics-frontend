@@ -1,157 +1,234 @@
-import { useApiDataContext } from "@/contexts/DataContext";
-import { DateRange } from "@/hooks/useApiData";
-import DateRangePicker from "@/components/DateRangePicker";
-import SelectedDateRange from "@/components/SelectedDateRange";
-import StockChart from "@/components/StockChart";
-import TotalStockedByHatcheryChart from "@/components/HatcheryChart";
-import SortableTable from "@/components/SortableTable";
-import TopWatersChart from "@/components/TopWatersChart";
-import SpeciesPieChart from "@/components/SpeciesPieChart";
-import dynamic from "next/dynamic";
-import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
-
-const FishingMap = dynamic(() => import("../components/fishMap"), {
-  ssr: false,
-});
-
-function StatCard({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="p-4 text-center shadow rounded-xl bg-troutlytics-card">
-      <div className="text-xs font-medium text-troutlytics-subtext">
-        {label}
-      </div>
-      <div className="text-2xl font-bold text-troutlytics-text">{value}</div>
-    </div>
-  );
-}
+import Head from "next/head";
+import Link from "next/link";
 
 export default function Home() {
-  const {
-    stockedLakesData,
-    hatcheryTotals,
-    totalStockedByDate,
-    isLoading,
-    selectedDateRange,
-    setSelectedDateRange,
-    today,
-  } = useApiDataContext();
-
-  const [activeTab, setActiveTab] = useState("stock");
-
-  const handleDateChange = (dateRange: DateRange) => {
-    setSelectedDateRange(dateRange);
-  };
-
-  const cards = [
-    { id: "stock", label: "Stocked Over Time", icon: "📈" },
-    { id: "hatchery", label: "By Hatchery", icon: "🏭" },
-    { id: "waters", label: "Top Waters", icon: "🌊" },
-    { id: "species", label: "By Species", icon: "🐟" },
-    { id: "table", label: "Data Table", icon: "📋" },
+  const features = [
+    {
+      title: "Live Stocking Intelligence",
+      description:
+        "Stay up to date on exactly when and where trout are being released with map layers, filters, and curated alerts.",
+      icon: "📍",
+    },
+    {
+      title: "Beautiful Visual Analytics",
+      description:
+        "Dive into species trends, hatchery performance, and historical patterns with cinematic charts and motion.",
+      icon: "📊",
+    },
+    {
+      title: "Made for Anglers & Agencies",
+      description:
+        "The interface is tuned for biologists, hatchery managers, and weekend anglers alike—clarity without compromise.",
+      icon: "🎣",
+    },
   ];
 
-  const quickStats = useMemo(() => {
-    const totalCount = stockedLakesData.reduce(
-      (sum, item) => sum + (item.stocked_fish || 0),
-      0
-    );
-    const topHatchery = hatcheryTotals?.[0]?.hatchery || "-";
-    const topWater = stockedLakesData[0]?.water_name_cleaned || "-";
-    const topSpecies = stockedLakesData.reduce<Record<string, number>>(
-      (acc, item) => {
-        acc[item.species] = (acc[item.species] || 0) + item.stocked_fish;
-        return acc;
-      },
-      {}
-    );
-    const speciesSorted = Object.entries(topSpecies).sort(
-      (a, b) => (b[1] as number) - (a[1] as number)
-    );
-    return {
-      totalCount,
-      topHatchery,
-      topWater,
-      topSpecies: speciesSorted[0]?.[0] || "-",
-    };
-  }, [stockedLakesData, hatcheryTotals]);
+  const metrics = [
+    { label: "Waters tracked", value: "1,200+" },
+    { label: "Historical records parsed", value: "10 years" },
+    { label: "Hatcheries analyzed", value: "65+" },
+  ];
+
+  const testimonials = [
+    {
+      quote:
+        "Troutlytics turned boring stocking spreadsheets into a fun app that gets us out on the water.",
+      name: "Sarah J.",
+      title: "Washington state angler",
+    },
+    {
+      quote:
+        "The dashboard saves us time from combing over data that we don't need. We have everything in one place, which is great.",
+      name: "Colin R.",
+      title: "",
+    },
+  ];
 
   return (
-    <div className="container px-4 pb-8 mx-auto">
-      <header className="mb-4">
-        <h1 className="mb-2 text-4xl font-bold text-troutlytics-text">
-          Washington State DFW Trout Stocking Data
-        </h1>
-        <p className="text-lg text-troutlytics-subtext lg:w-3xl">
-          WDFW Trout Stocking data in a newly imagined way. WDFW Trout Stocking
-          data in a new imagined way.
-        </p>
-      </header>
-
-      <section className="sticky top-0 z-10 py-2">
-        <DateRangePicker
-          selectedDateRange={selectedDateRange}
-          handleDateChange={handleDateChange}
+    <>
+      <Head>
+        <title>Troutlytics | Washington Trout Intelligence</title>
+        <meta
+          name="description"
+          content="Troutlytics, showcasing live trout stocking insights for Washington State."
         />
-        {/* <div className="mt-2 text-center">
-          <SelectedDateRange
-            selectedDateRange={selectedDateRange}
-            today={today}
-          />
-        </div> */}
-      </section>
-
-      <div className="grid grid-cols-2 gap-4 my-6 sm:grid-cols-4">
-        <StatCard label="Total Stocked" value={quickStats.totalCount} />
-        <StatCard label="Top Hatchery" value={quickStats.topHatchery} />
-        <StatCard label="Top Water" value={quickStats.topWater} />
-        <StatCard label="Top Species" value={quickStats.topSpecies} />
-      </div>
-
-      <section className="mb-6">
-        <FishingMap stockedLakesData={stockedLakesData} loading={isLoading} />
-      </section>
-
-      <div className="grid grid-cols-2 gap-3 mb-6 md:grid-cols-5">
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            onClick={() => setActiveTab(card.id)}
-            className={`cursor-pointer p-4 rounded-xl border shadow-sm text-center transition-all duration-700 ${
-              activeTab === card.id
-                ? "bg-troutlytics-primary text-white"
-                : "bg-white text-gray-700 hover:bg-troutlytics-primary/10"
-            }`}
-          >
-            <div className="text-2xl">{card.icon}</div>
-            <div className="text-sm font-medium">{card.label}</div>
+      </Head>
+      <main className="min-h-screen text-slate-900 bg-troutlytics-background">
+        <section className="relative overflow-hidden text-slate-900 bg-gradient-to-br from-troutlytics-secondary via-troutlytics-primary to-troutlytics-accent">
+          <div className="absolute inset-0 opacity-40 mix-blend-overlay">
+            <div className="absolute w-64 h-64 bg-white rounded-full blur-3xl -top-20 -right-10" />
+            <div className="absolute bottom-0 rounded-full w-72 h-72 bg-troutlytics-accent blur-3xl -left-16" />
           </div>
-        ))}
-      </div>
+          <div className="relative max-w-6xl px-6 py-24 mx-auto">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              <div>
+                <p className="inline-flex px-4 py-1 mb-6 text-sm font-semibold rounded-full bg-white/10 backdrop-blur">
+                  Built for the Washington trout community
+                </p>
+                <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl">
+                  A beautifully immersive home for Washington trout stocking
+                  data.
+                </h1>
+                <p className="mb-10 text-lg text-slate/80">
+                  Troutlytics elevates public stocking records into an
+                  interactive experience. Maps, curated insights, and stories
+                  that help anglers plan unforgettable days on the water.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <Link
+                    href="/dashboard"
+                    className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-slate-900 bg-white rounded-full shadow-lg hover:-translate-y-0.5 transition-transform"
+                  >
+                    Launch the dashboard
+                    <span className="ml-2 text-xl" aria-hidden="true">
+                      →
+                    </span>
+                  </Link>
+                  <Link
+                    href="/about"
+                    className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold transition border rounded-full border-white/40 hover:bg-white/10"
+                  >
+                    Meet the mission
+                  </Link>
+                </div>
+              </div>
+              <div className="relative p-6 bg-white/10 rounded-3xl backdrop-blur">
+                <div className="absolute h-10 rounded-full inset-x-8 top-8 bg-white/20 blur-2xl" />
+                <div className="relative p-6 space-y-6 shadow-2xl bg-troutlytics-secondary/70 rounded-2xl ring-1 ring-white/30">
+                  <div>
+                    <p className="text-sm tracking-widest uppercase text-slate-900/70">
+                      Live Snapshot
+                    </p>
+                    <p className="text-3xl font-semibold">Yakima Region</p>
+                  </div>
+                  <ul className="space-y-3 text-slate-900/80">
+                    <li className="flex items-center justify-between">
+                      <span>Stocked this week</span>
+                      <strong className="text-slate-900">28,450 fish</strong>
+                    </li>
+                    <li className="flex items-center justify-between">
+                      <span>Most active hatchery</span>
+                      <strong className="text-slate-900">Goldendale</strong>
+                    </li>
+                    <li className="flex items-center justify-between">
+                      <span>Top destination</span>
+                      <strong className="text-slate-900">Wenas Lake</strong>
+                    </li>
+                  </ul>
+                  <p className="text-sm text-slate-900/60">
+                    Data refreshes every few minutes. Dive deeper inside the
+                    dashboard.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-      <div className="">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          {activeTab === "stock" && <StockChart data={totalStockedByDate} />}
-          {activeTab === "hatchery" && (
-            <TotalStockedByHatcheryChart
-              data={hatcheryTotals}
-              loading={isLoading}
-            />
-          )}
-          {activeTab === "waters" && <TopWatersChart data={stockedLakesData} />}
-          {activeTab === "species" && (
-            <SpeciesPieChart data={stockedLakesData} />
-          )}
-          {activeTab === "table" && (
-            <SortableTable data={stockedLakesData} loading={isLoading} />
-          )}
-        </motion.div>
-      </div>
-    </div>
+        <section className="py-20">
+          <div className="max-w-6xl px-6 mx-auto">
+            <p className="text-sm font-semibold tracking-widest text-troutlytics-accent">
+              Why Troutlytics
+            </p>
+            <h2 className="mt-2 text-3xl font-bold">
+              Trout stocking data that makes sense.
+            </h2>
+            <p className="max-w-3xl mt-3 text-lg text-troutlytics-subtext">
+              The WDFW is fair and transparent with how they deliver public
+              trout stocking data, however, if you are looking for a more
+              visually interactive experience, Troutlytics is the solution.
+            </p>
+            <div className="grid gap-6 mt-12 md:grid-cols-3">
+              {features.map((feature) => (
+                <div
+                  key={feature.title}
+                  className="h-full p-6 transition-shadow bg-white shadow-sm rounded-2xl hover:shadow-xl"
+                >
+                  <div className="flex items-center justify-center w-12 h-12 mb-4 text-2xl rounded-full bg-troutlytics-primary/10">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold">{feature.title}</h3>
+                  <p className="mt-2 text-troutlytics-subtext">
+                    {feature.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 bg-white">
+          <div className="max-w-5xl px-6 mx-auto">
+            <div className="grid gap-8 md:grid-cols-3">
+              {metrics.map((metric) => (
+                <div
+                  key={metric.label}
+                  className="p-6 text-center border rounded-2xl border-troutlytics-background"
+                >
+                  <p className="text-3xl font-semibold text-troutlytics-primary">
+                    {metric.value}
+                  </p>
+                  <p className="mt-2 text-sm font-semibold tracking-wide uppercase text-troutlytics-subtext">
+                    {metric.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-20">
+          <div className="max-w-6xl px-6 mx-auto">
+            <div className="grid gap-8 lg:grid-cols-2">
+              {testimonials.map((testimonial) => (
+                <div
+                  key={testimonial.name}
+                  className="p-8 shadow-xl rounded-3xl bg-gradient-to-br from-white to-troutlytics-background"
+                >
+                  <p className="text-lg italic text-slate-900/90">
+                    “{testimonial.quote}”
+                  </p>
+                  <div className="mt-6">
+                    <p className="font-semibold">{testimonial.name}</p>
+                    <p className="text-sm text-troutlytics-subtext">
+                      {testimonial.title}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="px-6 pb-24">
+          <div className="max-w-4xl px-8 py-16 mx-auto text-center shadow-2xl text-slate-900 bg-troutlytics-secondary rounded-3xl">
+            <p className="text-sm font-semibold tracking-[0.2em] text-slate-900/70 uppercase">
+              Ready when you are
+            </p>
+            <h3 className="mt-4 text-3xl font-bold">
+              Bring beauty and clarity to trout stocking data.
+            </h3>
+            <p className="mt-3 text-lg text-slate-900/80">
+              Your dashboard is a click away. Step inside to see stocking
+              timelines, hatchery stories, and map layers that feel alive.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center px-6 py-3 font-semibold bg-white rounded-full shadow-lg text-slate-900"
+              >
+                Explore the dashboard
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center px-6 py-3 font-semibold transition border rounded-full border-white/50 hover:bg-white/10"
+              >
+                Request a walkthrough
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
   );
 }

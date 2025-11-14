@@ -61,6 +61,10 @@ a {
   @apply w-full mx-auto
 }
 
+.text-troutlytics-text {
+  @apply text-slate-900
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(to bottom,
