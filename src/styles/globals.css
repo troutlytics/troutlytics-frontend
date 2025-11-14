@@ -1,29 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Gruppo&family=Roboto:wght@200;400;500;900&display=swap');
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Gruppo&family=Roboto:wght@200;400;500;900&display=swap");
+@import "tailwindcss";
 
 @theme {
   --foreground-rgb: rgb(0, 0, 0);
   --background-start-rgb: rgb(255, 254, 254);
   --background-end-rgb: rgb(255, 255, 255);
-  --color-primary: #2C7BE5;
-  /* Sky Blue */
-  --color-secondary: #2A4365;
-  /* Deep Blue */
-  --color-background: #F7FAFC;
-  /* Light Off-White */
-  --color-card: #FFFFFF;
-  /* White */
-  --color-text: #1A202C;
-  /* Slate Gray */
-  --color-subtext: #4A5568;
-  /* Medium Gray */
-  --color-accent: #38B2AC;
-  /* Teal */
+  --color-primary: #2c7be5;
+  --color-secondary: #2a4365;
+  --color-background: #f7fafc;
+  --color-card: #ffffff;
+  --color-text: #1a202c;
+  --color-subtext: #4a5568;
+  --color-accent: #38b2ac;
 
   --font-groupo: "Gruppo", sans-serif;
-
-  --font-roboto: "Gruppo", sans-serif;
-
+  --font-roboto: "Roboto", sans-serif;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -45,8 +36,74 @@ a {
   font-style: normal;
 }
 
+.font-groupo {
+  font-family: var(--font-groupo);
+  letter-spacing: 0.02em;
+}
+
+.font-roboto {
+  font-family: var(--font-roboto);
+}
+
+.main {
+  @apply w-full max-w-7xl;
+}
+
+.section-heading {
+  @apply text-3xl font-bold text-slate-900;
+}
+
+.text-troutlytics-subtext {
+  @apply text-slate-500;
+}
+
+.section-subtext {
+  @apply text-lg text-slate-500;
+}
+
+.badge-pill {
+  @apply inline-flex items-center gap-2 rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-[0.3em];
+}
+
 .troutlytics-btn {
   @apply px-0 py-1 text-xs text-white transition duration-200 bg-blue-600 rounded-md md:px-4 md:py-2 hover:bg-blue-700 md:text-sm;
+}
+
+.glass-panel {
+  @apply p-6 border shadow-lg rounded-3xl border-white/40 bg-white/80 backdrop-blur-xl;
+}
+
+.gradient-panel {
+  @apply text-white shadow-2xl rounded-3xl;
+  background-image: linear-gradient(135deg,
+      var(--color-secondary),
+      var(--color-primary),
+      var(--color-accent));
+}
+
+.stat-highlight {
+  @apply relative p-5 overflow-hidden text-white shadow-lg rounded-2xl;
+  background-image: linear-gradient(135deg,
+      var(--color-primary),
+      var(--color-secondary));
+}
+
+.hero-gradient {
+  background-image: linear-gradient(130deg,
+      rgba(42, 67, 101, 1),
+      rgba(44, 123, 229, 1),
+      rgba(56, 178, 172, 1));
+}
+
+.page-gradient {
+  background-image: linear-gradient(180deg,
+      var(--color-background),
+      #ffffff,
+      var(--color-background));
+}
+
+.tab-pill {
+  @apply flex flex-col gap-1 px-4 py-3 text-left transition border rounded-2xl;
 }
 
 .date-picker {
@@ -54,15 +111,72 @@ a {
 }
 
 .chart-container {
-  @apply h-[60vh] w-full text-center
+  @apply h-[60vh] w-full text-center;
 }
 
 .chart-size {
-  @apply w-full mx-auto
+  @apply w-full mx-auto;
 }
 
 .text-troutlytics-text {
-  @apply text-slate-900
+  @apply text-slate-900;
+}
+
+.text-troutlytics-secondary {
+  color: var(--color-secondary);
+}
+
+.text-troutlytics-accent {
+  color: var(--color-accent);
+}
+
+.text-troutlytics-primary {
+  @apply text-blue-600;
+}
+
+.bg-troutlytics-background {
+  background-color: var(--color-background);
+}
+
+.bg-troutlytics-secondary {
+  background-color: var(--color-secondary);
+}
+
+.bg-troutlytics-accent {
+  background-color: var(--color-accent);
+}
+
+.bg-troutlytics-card {
+  background-color: var(--color-card);
+}
+
+.border-troutlytics-background {
+  border-color: var(--color-background);
+}
+
+.bg-troutlytics-primary {
+  @apply bg-blue-400;
+}
+
+.snapshot-card {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1.25rem;
+  background-image: linear-gradient(140deg,
+      rgba(42, 67, 101, 0.7),
+      rgba(44, 123, 229, 0.85));
+}
+
+.metric-card {
+  border: 1px solid rgba(42, 67, 101, 0.08);
+  background-color: var(--color-card);
+  box-shadow: 0 20px 35px rgba(10, 14, 23, 0.05);
+}
+
+.testimonial-card {
+  background-image: linear-gradient(145deg,
+      rgba(255, 255, 255, 0.95),
+      rgba(247, 250, 252, 1));
+  border: 1px solid rgba(42, 67, 101, 0.05);
 }
 
 body {
@@ -106,5 +220,5 @@ body {
 }
 
 .leaflet-popup-content p {
-  margin: 0 !important
+  margin: 0 !important;
 }

@@ -40,7 +40,7 @@ export default function Home() {
       quote:
         "The dashboard saves us time from combing over data that we don't need. We have everything in one place, which is great.",
       name: "Colin R.",
-      title: "",
+      title: "Colleague, angler",
     },
   ];
 
@@ -54,7 +54,7 @@ export default function Home() {
         />
       </Head>
       <main className="min-h-screen text-slate-900 bg-troutlytics-background">
-        <section className="relative overflow-hidden text-slate-900 bg-gradient-to-br from-troutlytics-secondary via-troutlytics-primary to-troutlytics-accent">
+        <section className="relative overflow-hidden text-white hero-gradient">
           <div className="absolute inset-0 opacity-40 mix-blend-overlay">
             <div className="absolute w-64 h-64 bg-white rounded-full blur-3xl -top-20 -right-10" />
             <div className="absolute bottom-0 rounded-full w-72 h-72 bg-troutlytics-accent blur-3xl -left-16" />
@@ -69,7 +69,7 @@ export default function Home() {
                   A beautifully immersive home for Washington trout stocking
                   data.
                 </h1>
-                <p className="mb-10 text-lg text-slate/80">
+                <p className="mb-10 text-lg text-white/80">
                   Troutlytics elevates public stocking records into an
                   interactive experience. Maps, curated insights, and stories
                   that help anglers plan unforgettable days on the water.
@@ -92,30 +92,32 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-              <div className="relative p-6 bg-white/10 rounded-3xl backdrop-blur">
+              <div className="relative p-6 glass-panel">
                 <div className="absolute h-10 rounded-full inset-x-8 top-8 bg-white/20 blur-2xl" />
-                <div className="relative p-6 space-y-6 shadow-2xl bg-troutlytics-secondary/70 rounded-2xl ring-1 ring-white/30">
+                <div className="relative p-6 space-y-6 shadow-2xl rounded-2xl snapshot-card">
                   <div>
-                    <p className="text-sm tracking-widest uppercase text-slate-900/70">
+                    <p className="text-sm tracking-widest uppercase text-white/70">
                       Live Snapshot
                     </p>
-                    <p className="text-3xl font-semibold">Yakima Region</p>
+                    <p className="text-3xl font-semibold text-white">
+                      Yakima Region
+                    </p>
                   </div>
-                  <ul className="space-y-3 text-slate-900/80">
+                  <ul className="space-y-3 text-white/90">
                     <li className="flex items-center justify-between">
                       <span>Stocked this week</span>
-                      <strong className="text-slate-900">28,450 fish</strong>
+                      <strong>28,450 fish</strong>
                     </li>
                     <li className="flex items-center justify-between">
                       <span>Most active hatchery</span>
-                      <strong className="text-slate-900">Goldendale</strong>
+                      <strong>Goldendale</strong>
                     </li>
                     <li className="flex items-center justify-between">
                       <span>Top destination</span>
-                      <strong className="text-slate-900">Wenas Lake</strong>
+                      <strong>Wenas Lake</strong>
                     </li>
                   </ul>
-                  <p className="text-sm text-slate-900/60">
+                  <p className="text-sm text-white/70">
                     Data refreshes every few minutes. Dive deeper inside the
                     dashboard.
                   </p>
@@ -130,7 +132,7 @@ export default function Home() {
             <p className="text-sm font-semibold tracking-widest text-troutlytics-accent">
               Why Troutlytics
             </p>
-            <h2 className="mt-2 text-3xl font-bold">
+            <h2 className="mt-2 text-3xl font-bold text-troutlytics-secondary">
               Trout stocking data that makes sense.
             </h2>
             <p className="max-w-3xl mt-3 text-lg text-troutlytics-subtext">
@@ -142,7 +144,7 @@ export default function Home() {
               {features.map((feature) => (
                 <div
                   key={feature.title}
-                  className="h-full p-6 transition-shadow bg-white shadow-sm rounded-2xl hover:shadow-xl"
+                  className="h-full p-6 transition-shadow bg-white border shadow-sm rounded-2xl hover:shadow-xl border-slate-100"
                 >
                   <div className="flex items-center justify-center w-12 h-12 mb-4 text-2xl rounded-full bg-troutlytics-primary/10">
                     {feature.icon}
@@ -157,13 +159,13 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="py-16 bg-white">
-          <div className="max-w-5xl px-6 mx-auto">
+        <section className="py-16">
+          <div className="max-w-5xl px-6 mx-auto glass-panel">
             <div className="grid gap-8 md:grid-cols-3">
               {metrics.map((metric) => (
                 <div
                   key={metric.label}
-                  className="p-6 text-center border rounded-2xl border-troutlytics-background"
+                  className="p-6 text-center rounded-2xl metric-card"
                 >
                   <p className="text-3xl font-semibold text-troutlytics-primary">
                     {metric.value}
@@ -183,9 +185,9 @@ export default function Home() {
               {testimonials.map((testimonial) => (
                 <div
                   key={testimonial.name}
-                  className="p-8 shadow-xl rounded-3xl bg-gradient-to-br from-white to-troutlytics-background"
+                  className="p-8 shadow-xl rounded-3xl testimonial-card"
                 >
-                  <p className="text-lg italic text-slate-900/90">
+                  <p className="text-lg italic text-troutlytics-secondary">
                     “{testimonial.quote}”
                   </p>
                   <div className="mt-6">
@@ -201,21 +203,21 @@ export default function Home() {
         </section>
 
         <section className="px-6 pb-24">
-          <div className="max-w-4xl px-8 py-16 mx-auto text-center shadow-2xl text-slate-900 bg-troutlytics-secondary rounded-3xl">
-            <p className="text-sm font-semibold tracking-[0.2em] text-slate-900/70 uppercase">
+          <div className="max-w-4xl px-8 py-16 mx-auto text-center text-white gradient-panel">
+            <p className="text-sm font-semibold tracking-[0.2em] text-white/70 uppercase">
               Ready when you are
             </p>
             <h3 className="mt-4 text-3xl font-bold">
               Bring beauty and clarity to trout stocking data.
             </h3>
-            <p className="mt-3 text-lg text-slate-900/80">
+            <p className="mt-3 text-lg text-white/80">
               Your dashboard is a click away. Step inside to see stocking
               timelines, hatchery stories, and map layers that feel alive.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mt-8">
               <Link
                 href="/dashboard"
-                className="inline-flex items-center px-6 py-3 font-semibold bg-white rounded-full shadow-lg text-slate-900"
+                className="inline-flex items-center px-6 py-3 font-semibold bg-white rounded-full shadow-lg text-troutlytics-secondary"
               >
                 Explore the dashboard
               </Link>
