@@ -82,6 +82,7 @@ const aggregateHatcheryInsights = (
       name: string;
       totalFish: number;
       totalWeight: number;
+      totalFishWithWeight: number;
       totalReleases: number;
       waters: Record<string, number>;
       species: Record<string, number>;
@@ -98,6 +99,7 @@ const aggregateHatcheryInsights = (
         name: hatcheryName,
         totalFish: 0,
         totalWeight: 0,
+        totalFishWithWeight: 0,
         totalReleases: 0,
         waters: {},
         species: {},
@@ -109,12 +111,15 @@ const aggregateHatcheryInsights = (
 
     const agg = aggregates[hatcheryName];
     const fish = record.stocked_fish || 0;
-    const weight = record.weight || 0;
+    const fishPerPound = Number(record.weight) || 0;
     const water = record.water_name_cleaned || "Unknown Water";
     const species = record.species || "Unknown Species";
 
     agg.totalFish += fish;
-    agg.totalWeight += weight;
+    if (fishPerPound > 0 && fish > 0) {
+      agg.totalWeight += fish / fishPerPound; // convert fish-per-pound to pounds per fish
+      agg.totalFishWithWeight += fish;
+    }
     agg.totalReleases += 1;
     agg.waters[water] = (agg.waters[water] || 0) + fish;
     agg.species[species] = (agg.species[species] || 0) + fish;
@@ -150,7 +155,9 @@ const aggregateHatcheryInsights = (
         totalReleases: agg.totalReleases,
         uniqueWaters: Object.keys(agg.waters).length,
         averageWeight:
-          agg.totalFish > 0 ? agg.totalWeight / agg.totalFish : null,
+          agg.totalFishWithWeight > 0
+            ? agg.totalWeight / agg.totalFishWithWeight
+            : null,
         topWaters: buildBreakdown(agg.waters),
         speciesBreakdown: buildBreakdown(agg.species),
         lastStockDate: agg.lastStockDate,

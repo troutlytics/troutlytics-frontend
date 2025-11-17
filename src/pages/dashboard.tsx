@@ -17,11 +17,11 @@ const FishingMap = dynamic(() => import("../components/fishMap"), {
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="p-4 text-center shadow rounded-xl bg-troutlytics-card">
+    <div className="p-1 text-center shadow rounded-xl bg-troutlytics-card">
       <div className="text-xs font-medium text-troutlytics-subtext">
         {label}
       </div>
-      <div className="text-2xl font-bold text-troutlytics-text">{value}</div>
+      <div className="font-bold text-md text-troutlytics-text">{value}</div>
     </div>
   );
 }
@@ -77,7 +77,7 @@ export default function Dashboard() {
   }, [stockedLakesData, hatcheryTotals]);
 
   return (
-    <div className="container px-4 pb-8 mx-auto">
+    <div className="container mx-auto">
       <section className="sticky top-0 z-10 py-2">
         <DateRangePicker
           selectedDateRange={selectedDateRange}
@@ -113,7 +113,7 @@ export default function Dashboard() {
                 : "bg-white text-gray-700 hover:bg-troutlytics-primary/10"
             }`}
           >
-            <div className="text-2xl">{card.icon}</div>
+            <div className="text-lg">{card.icon}</div>
             <div className="text-sm font-medium">{card.label}</div>
           </div>
         ))}

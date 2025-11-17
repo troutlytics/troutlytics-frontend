@@ -20,8 +20,8 @@ const StatCard = ({
   value: string;
   helper?: string;
 }) => (
-  <div className="p-4 transition-shadow bg-white border rounded-2xl shadow-sm hover:shadow-md">
-    <p className="text-xs font-semibold tracking-wide text-troutlytics-subtext uppercase">
+  <div className="p-4 transition-shadow bg-white border shadow-sm rounded-2xl hover:shadow-md">
+    <p className="text-xs font-semibold tracking-wide uppercase text-troutlytics-subtext">
       {label}
     </p>
     <p className="mt-2 text-2xl font-bold text-slate-900">{value}</p>
@@ -40,7 +40,7 @@ const BreakdownList = ({
   data: { name: string; total: number }[];
   emptyLabel: string;
 }) => (
-  <div className="p-6 bg-white rounded-2xl shadow-sm">
+  <div className="p-6 bg-white shadow-sm rounded-2xl">
     <h3 className="text-lg font-semibold">{title}</h3>
     {data.length === 0 ? (
       <p className="mt-3 text-sm text-troutlytics-subtext">{emptyLabel}</p>
@@ -115,7 +115,7 @@ const HatcheryExplorer = () => {
         </p>
       </header>
 
-      <section className="p-6 mb-8 bg-white rounded-3xl shadow-sm">
+      <section className="p-6 mb-8 bg-white shadow-sm rounded-3xl">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="w-full md:w-1/2">
             <label
@@ -141,7 +141,7 @@ const HatcheryExplorer = () => {
             Array.from({ length: 20 }).map((_, index) => (
               <div
                 key={index}
-                className="h-9 px-6 py-2 rounded-full bg-slate-100 animate-pulse"
+                className="px-6 py-2 rounded-full h-9 bg-slate-100 animate-pulse"
               />
             ))
           ) : filteredNames.length === 0 ? (
@@ -167,7 +167,7 @@ const HatcheryExplorer = () => {
       </section>
 
       {hasError && (
-        <p className="p-4 mb-6 text-sm text-red-700 bg-red-50 border border-red-100 rounded-xl">
+        <p className="p-4 mb-6 text-sm text-red-700 border border-red-100 bg-red-50 rounded-xl">
           We couldn’t load hatchery records right now. Please refresh and try
           again.
         </p>
@@ -209,7 +209,7 @@ const HatcheryExplorer = () => {
                 label="Average fish weight"
                 value={
                   selectedInsight.averageWeight
-                    ? `${selectedInsight.averageWeight.toFixed(2)} lbs`
+                    ? `${selectedInsight.averageWeight.toFixed(2)} lbs` // todo: this is not working
                     : "—"
                 }
                 helper="Average of all reported weights"
@@ -247,7 +247,7 @@ const HatcheryExplorer = () => {
           </section>
 
           <section className="mt-8">
-            <div className="p-6 bg-white rounded-2xl shadow-sm">
+            <div className="p-6 bg-white shadow-sm rounded-2xl">
               <h3 className="text-lg font-semibold">Recent stocking activity</h3>
               {selectedInsight.recentReleases.length === 0 ? (
                 <p className="mt-3 text-sm text-troutlytics-subtext">

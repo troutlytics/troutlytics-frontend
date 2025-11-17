@@ -56,13 +56,13 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   return (
     <div className="container px-0">
-      <div className="flex flex-col justify-between w-full p-2 bg-blue-300 opacity-75 md:flex-row rounded-xl">
+      <div className="flex flex-col justify-between w-full p-1 bg-blue-300 opacity-75 md:flex-row rounded-xl">
         <div>
-          <h2 className="z-10 hidden mx-auto mb-4 text-2xl font-bold text-gray-900 md:flex">
-            Select a fixed date range or pick a custom range to view data
+          <h2 className="z-10 hidden mx-auto mb-4 text-xs font-bold text-gray-900 md:flex">
+            Select a fixed date range or pick a custom range
           </h2>
           <div className="flex flex-wrap justify-between gap-6">
-            <div className="flex space-x-4 mb-4 [&>button]:cursor-pointer ">
+            <div className="flex space-x-2 mb-1 [&>button]:cursor-pointer text-xs ">
               <button
                 onClick={() => handlePresetClick(7)}
                 className="troutlytics-btn"
