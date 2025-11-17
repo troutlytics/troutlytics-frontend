@@ -209,7 +209,7 @@ const HatcheryExplorer = () => {
                 label="Average fish weight"
                 value={
                   selectedInsight.averageWeight
-                    ? `${selectedInsight.averageWeight.toFixed(2)} lbs` // todo: this is not working
+                    ? `${selectedInsight.averageWeight.toFixed(2)} lbs`
                     : "—"
                 }
                 helper="Average of all reported weights"

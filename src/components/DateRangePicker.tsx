@@ -58,7 +58,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
     <div className="container px-0">
       <div className="flex flex-col justify-between w-full p-1 bg-blue-300 opacity-75 md:flex-row rounded-xl">
         <div>
-          <h2 className="z-10 hidden mx-auto mb-4 text-xs font-bold text-gray-900 md:flex">
+          <h2 className="z-10 hidden mx-auto mb-1 text-xs font-bold text-gray-900 md:flex">
             Select a fixed date range or pick a custom range
           </h2>
           <div className="flex flex-wrap justify-between gap-6">
@@ -98,7 +98,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
         </div>
         <div
           className={
-            `flex gap-3 mx-auto text-center align-baseline md:flex-row sm:mx-0 transition-transform ` +
+            `text-xs flex gap-3 mx-auto text-center align-baseline md:flex-row sm:mx-0 transition-transform ` +
             (highlight ? "animate-ping" : "")
           }
           style={highlight ? { animationIterationCount: 1 } : undefined}
