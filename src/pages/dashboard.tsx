@@ -112,6 +112,7 @@ export default function Dashboard() {
       acc[item.species] = (acc[item.species] || 0) + (item.stocked_fish || 0);
       return acc;
     }, {});
+    
     const speciesSorted = Object.entries(topSpecies).sort(
       (a, b) => (b[1] ?? 0) - (a[1] ?? 0)
     );
