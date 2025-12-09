@@ -100,23 +100,18 @@ export default function Dashboard() {
   ];
 
   const quickStats = useMemo(() => {
-    const releases = Array.isArray(stockedLakesData)
-      ? stockedLakesData
-      : [];
+    const releases = Array.isArray(stockedLakesData) ? stockedLakesData : [];
     const totalCount = releases.reduce(
       (sum, item) => sum + (item?.stocked_fish || 0),
       0
     );
     const topHatchery = hatcheryTotals?.[0]?.hatchery || "-";
     const topWater = releases[0]?.water_name_cleaned || "-";
-    const topSpecies = releases.reduce<Record<string, number>>(
-      (acc, item) => {
-        if (!item?.species) return acc;
-        acc[item.species] = (acc[item.species] || 0) + (item.stocked_fish || 0);
-        return acc;
-      },
-      {}
-    );
+    const topSpecies = releases.reduce<Record<string, number>>((acc, item) => {
+      if (!item?.species) return acc;
+      acc[item.species] = (acc[item.species] || 0) + (item.stocked_fish || 0);
+      return acc;
+    }, {});
     const speciesSorted = Object.entries(topSpecies).sort(
       (a, b) => (b[1] ?? 0) - (a[1] ?? 0)
     );
@@ -130,19 +125,6 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto">
-      <section className="sticky top-0 z-10 py-2">
-        <DateRangePicker
-          selectedDateRange={selectedDateRange}
-          handleDateChange={handleDateChange}
-        />
-        {/* <div className="mt-2 text-center">
-          <SelectedDateRange
-            selectedDateRange={selectedDateRange}
-            today={today}
-          />
-        </div> */}
-      </section>
-
       <div className="grid grid-cols-2 gap-4 my-6 sm:grid-cols-4">
         <StatCard label="Total Stocked" value={quickStats.totalCount} />
         <StatCard label="Top Hatchery" value={quickStats.topHatchery} />
@@ -175,7 +157,12 @@ export default function Dashboard() {
           </Link>
         </div>
       </div>
-
+      <section className="sticky top-0 z-10 py-2">
+        <DateRangePicker
+          selectedDateRange={selectedDateRange}
+          handleDateChange={handleDateChange}
+        />
+      </section>
       <div className="grid grid-cols-1 gap-3 mb-6 md:grid-cols-3 xl:grid-cols-4">
         {cards.map((card) => (
           <div

@@ -178,7 +178,7 @@ export const HatcheryDataProvider = ({
     error: hatcheryRecordsError,
     isLoading: hatcheryRecordsLoading,
   } = useSWR<StockedLake[]>(
-    `${route}/stocked_lakes_data${hatcheryDateQuery}`,
+    `${route}/stocked_lakes_data_all_time`,
     fetcher,
     swrOptions
   );
