@@ -4,7 +4,7 @@ import Link from "next/link";
 const ContactPage: React.FC = () => {
   const contactChannels = [
     { label: "Email", value: "bashamtg@gmail.com", href: "mailto:bashamtg@gmail.com" },
-    { label: "LinkedIn", value: "linkedin.com/in/thomas-basham", href: "https://github.com/thomas-basham" },
+    { label: "LinkedIn", value: "linkedin.com/in/thomas-basham", href: "linkedin.com/in/thomas-basham" },
     { label: "GitHub", value: "github.com/thomas-basham", href: "https://github.com/thomas-basham" },
   ];
 
