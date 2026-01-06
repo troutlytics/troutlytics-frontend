@@ -4,8 +4,8 @@ import Link from "next/link";
 const ContactPage: React.FC = () => {
   const contactChannels = [
     { label: "Email", value: "bashamtg@gmail.com", href: "mailto:bashamtg@gmail.com" },
-    { label: "LinkedIn", value: "linkedin.com/in/bashamtg", href: "https://www.linkedin.com/in/bashamtg" },
-    { label: "GitHub", value: "github.com/bashamtg", href: "https://github.com/bashamtg" },
+    { label: "LinkedIn", value: "linkedin.com/in/thomas-basham", href: "https://github.com/thomas-basham" },
+    { label: "GitHub", value: "github.com/thomas-basham", href: "https://github.com/thomas-basham" },
   ];
 
   const specialties = [
