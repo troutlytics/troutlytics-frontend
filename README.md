@@ -1,73 +1,180 @@
 # Troutlytics Frontend
 
-[troutlytics.com](https://troutlytics.com)
+Public site: [troutlytics.com](https://troutlytics.com)  
+Backend repository: [troutlytics-backend](https://github.com/troutlytics/troutlytics-backend)
 
-[Back End Code](https://github.com/troutlytics/troutlytics-backend)
+Troutlytics Frontend is a Next.js app that turns Washington State trout stocking records into an interactive product for anglers, hatchery teams, and fisheries stakeholders.
 
-Troutlytics is a web application designed for anglers and wildlife enthusiasts in Washington State. It provides daily updates on information about fish stocking across various water bodies, helping anglers stay informed, keeping pressure off endangered steelhead and salmon runs, and promoting environmental awareness.
+## Project Purpose
 
-## Features
+This README is written for contributors and maintainers.
 
-- **Data Visualization**: Interactive charts and maps showcasing fish stocking data for various species across Washington.
-- **Responsive Design**: Optimized for both mobile and desktop devices, ensuring a seamless user experience.
-- **User-Friendly Interface**: Easy navigation and intuitive layout, designed for users of all tech levels.
-- **Hosted With AWS Amplify**: Simplified front-end hosting
+### Problem
 
-## Getting Started
+- WDFW trout plant records are public, but raw reports are hard to filter and compare quickly.
+- It is difficult to understand statewide stocking patterns (time, species, hatchery, location) from spreadsheets alone.
 
-These instructions will help you get a copy of the project up and running on your local machine for development and testing purposes.
+### Solution
+
+- Centralized, filterable UI for recent and historical stocking activity.
+- Interactive analytics (time series, composition, distribution, rankings).
+- Geospatial map experience with clustered markers and route links.
+- Hatchery-level profiles that aggregate long-range production patterns.
+
+## Routes + Features
+
+- `/` Home/marketing landing page
+- `/dashboard` Date-range analytics workspace
+- `/map` Interactive statewide stocking map
+- `/hatcheries` Hatchery explorer with all-time insights
+- `/about` Mission and context
+- `/contact` Maintainer contact
+
+### Dashboard modules
+
+- Total stocked over time
+- Cumulative stocking progress
+- Top species trendlines
+- Species composition pie
+- Top waters bar chart
+- Release-size histogram
+- Average fish weight trend
+- Sortable release table
+
+### Map experience
+
+- Leaflet + marker clustering + fullscreen support
+- Popups grouped by coordinate with release details
+- “Get Directions” outbound links per water body
+
+### Hatchery explorer
+
+- Search/filter hatchery names
+- All-time aggregate totals by hatchery
+- Species and top-water breakdowns
+- First/most recent stocking dates + recent events table
+
+## Architecture Overview
+
+- Framework: Next.js (Pages Router), React 19, TypeScript
+- Styling: Tailwind CSS 4 + custom global theme styles
+- Data layer: SWR + context providers
+- Charts: Chart.js via `react-chartjs-2`
+- Map: Leaflet + `leaflet.markercluster` + `leaflet-fullscreen`
+
+### Data flow
+
+1. `ApiDataProvider` owns the active date range state.
+2. `DateRangePicker` updates that range.
+3. `useApiData` fetches filtered API resources via SWR.
+4. Dashboard and map components consume shared context data.
+5. Hatchery page uses `HatcheryDataProvider` for all-time aggregation logic.
+
+## Backend API Usage
+
+The frontend reads from the Troutlytics backend API.
+
+Current endpoints used:
+
+- `/stocked_lakes_data` (date-range filtered)
+- `/hatchery_totals` (date-range filtered)
+- `/total_stocked_by_date_data` (date-range filtered)
+- `/stocked_lakes_data_all_time`
+- `/hatchery_names`
+- `/date_data_updated`
+- `/derby_lakes_data` (fetched but not currently surfaced in UI)
+
+Environment-controlled API base:
+
+- `NEXT_PUBLIC_ENVIRONMENT=dev` -> `http://localhost:8080`
+- any other value -> `https://xtczssso08.execute-api.us-west-2.amazonaws.com`
+
+## Local Development
 
 ### Prerequisites
 
-Before running the application, ensure you have the following installed:
+- Node.js (18+ recommended)
+- npm
+- Running Troutlytics backend service (local or remote)
 
-- Node.js
-- npm (usually comes with Node.js)
+### Setup
 
-### Installing
+1. Install dependencies.
 
-Follow these steps to get a development environment running:
+   ```bash
+   npm install
+   ```
 
-1.  Clone the repo:
+2. Configure environment in `.env.local`.
 
-2.  Navigate to the project directory:
+   ```bash
+   NEXT_PUBLIC_ENVIRONMENT="dev"
+   ```
 
-3.  Install dependencies:
+3. Start the frontend.
 
-        npm install
+   ```bash
+   npm run dev
+   ```
 
-4.  Start the development server:
+4. Open `http://localhost:3000`
 
-         npm run dev
+## Environment Variables
 
-The application should now be running on http://localhost:3000
+- `NEXT_PUBLIC_ENVIRONMENT`
+  - `dev` uses local backend (`http://localhost:8080`)
+  - anything else uses production API Gateway endpoint
+- `NEXT_PUBLIC_HATCHERY_DATA_START` (optional)
+  - Used by hatchery analytics context
+  - Defaults to `2010-01-01` if not provided
 
-Running the Tests
+## Available Scripts
 
-To run the automated tests, use the following command:
+- `npm run dev` Start local dev server (Turbopack)
+- `npm run build` Build production bundle
+- `npm run start` Start production server
+- `npm run lint` Run Next.js lint checks
+- `npm test` Run Jest tests
 
-    npm test
+## Testing
 
-Built With
+- Jest + Testing Library are configured for component tests.
+- Chart rendering is mocked in tests to avoid JSDOM canvas limitations.
+- Current suite can be run with:
 
-    TypeScript - For adding type safety to JavaScript
-    Next.js - React framework for server-side rendering
-    SWR - For fetching, error handling, loading, and caching data
-    Tailwind CSS - For styling
-    Chart.js - For creating interactive data visualizations
-    leaflet.js - For creating an interactive map
+  ```bash
+  npm test
+  ```
 
-#### Contributing
+## Deployment
 
-Please read CONTRIBUTING.md for details on our code of conduct, and the process for submitting pull requests.
-Versioning
+### Current production setup
 
-#### License
+- Frontend host: AWS Amplify (serving `troutlytics.com`)
+- Backend API: AWS API Gateway endpoint consumed by this frontend
+- Domain routing: `troutlytics.com` points at Amplify-hosted frontend
 
-This project is licensed under the MIT License - see the LICENSE.md file for details
-Acknowledgments
+### Contributor deployment notes
 
-Thanks to the Washington Department of Fish and Wildlife for providing the data.
-Inspired by the diverse angling community in Washington State.
+- This repo does not include infrastructure-as-code for Amplify configuration.
+- Amplify environment variables must include `NEXT_PUBLIC_ENVIRONMENT` set to a non-`dev` value (commonly `prod`).
+- If new required env vars are added in code, add them to Amplify before shipping.
+- Validate production build locally before release:
 
-[WDFW trout plant data](https://wdfw.wa.gov/fishing/reports/stocking/trout-plants)
+  ```bash
+  npm run build
+  npm run start
+  ```
+
+### Release checklist
+
+1. Run `npm run lint`
+2. Run `npm test`
+3. Run `npm run build`
+4. Confirm API reads production endpoint when `NEXT_PUBLIC_ENVIRONMENT` is not `dev`
+5. Merge/deploy through the Amplify-connected branch workflow
+
+## Data Source
+
+- Washington Department of Fish and Wildlife trout plant reports:  
+  [https://wdfw.wa.gov/fishing/reports/stocking/trout-plants](https://wdfw.wa.gov/fishing/reports/stocking/trout-plants)
