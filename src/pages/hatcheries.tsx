@@ -1,7 +1,6 @@
 "use client";
 
 import React, {
-  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -65,13 +64,15 @@ const BreakdownList = ({
 const HatcheryExplorer = () => {
   const {
     hatcheryNames,
-    hatcheryInsights,
-    isLoading,
+    activeHatchery,
+    setActiveHatchery,
+    selectedInsight,
+    isNamesLoading,
+    isInsightLoading,
     hasError,
   } = useHatcheryDataContext();
 
   const [search, setSearch] = useState("");
-  const [activeHatchery, setActiveHatchery] = useState<string | null>(null);
 
   const filteredNames = useMemo(() => {
     if (!search) return hatcheryNames;
@@ -79,25 +80,6 @@ const HatcheryExplorer = () => {
       name.toLowerCase().includes(search.toLowerCase())
     );
   }, [hatcheryNames, search]);
-
-  useEffect(() => {
-    if (filteredNames.length === 0) {
-      setActiveHatchery(null);
-      return;
-    }
-
-    if (!activeHatchery || !filteredNames.includes(activeHatchery)) {
-      setActiveHatchery(filteredNames[0]);
-    }
-  }, [filteredNames, activeHatchery]);
-
-  const selectedInsight = useMemo(
-    () =>
-      hatcheryInsights.find(
-        (insight) => insight.name === activeHatchery
-      ) ?? null,
-    [hatcheryInsights, activeHatchery]
-  );
 
   return (
     <div className="container px-4 pb-12 mx-auto">
@@ -137,7 +119,7 @@ const HatcheryExplorer = () => {
           </p>
         </div>
         <div className="flex flex-wrap gap-2 mt-6">
-          {isLoading ? (
+          {isNamesLoading ? (
             Array.from({ length: 20 }).map((_, index) => (
               <div
                 key={index}
@@ -173,7 +155,7 @@ const HatcheryExplorer = () => {
         </p>
       )}
 
-      {isLoading && !selectedInsight ? (
+      {isInsightLoading && activeHatchery ? (
         <div className="grid gap-4 md:grid-cols-2">
           {Array.from({ length: 4 }).map((_, index) => (
             <div key={index} className="h-32 bg-slate-100 rounded-2xl animate-pulse" />
@@ -188,8 +170,9 @@ const HatcheryExplorer = () => {
               </p>
               <h2 className="text-3xl font-bold">{selectedInsight.name}</h2>
               <p className="text-troutlytics-subtext">
-                Total coverage based on {selectedInsight.totalReleases.toLocaleString()}{" "}
-                stocking events across {selectedInsight.uniqueWaters} waters.
+                {selectedInsight.totalReleases > 0
+                  ? `Total coverage based on ${selectedInsight.totalReleases.toLocaleString()} stocking events across ${selectedInsight.uniqueWaters} waters.`
+                  : "No stocking records were returned for this hatchery yet."}
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -246,6 +229,31 @@ const HatcheryExplorer = () => {
             />
           </section>
 
+          {selectedInsight.extraMetrics.length > 0 && (
+            <section className="mt-8">
+              <div className="p-6 bg-white shadow-sm rounded-2xl">
+                <h3 className="text-lg font-semibold">
+                  Additional profile metrics
+                </h3>
+                <div className="grid gap-3 mt-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {selectedInsight.extraMetrics.map((metric) => (
+                    <div
+                      key={`${metric.label}-${metric.value}`}
+                      className="p-3 border rounded-xl border-slate-100 bg-slate-50"
+                    >
+                      <p className="text-xs font-semibold tracking-wide uppercase text-troutlytics-subtext">
+                        {metric.label}
+                      </p>
+                      <p className="mt-1 text-base font-semibold text-slate-900">
+                        {metric.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
           <section className="mt-8">
             <div className="p-6 bg-white shadow-sm rounded-2xl">
               <h3 className="text-lg font-semibold">Recent stocking activity</h3>
@@ -288,7 +296,7 @@ const HatcheryExplorer = () => {
         </>
       ) : (
         <p className="text-troutlytics-subtext">
-          Use the search to choose a hatchery and see its profile.
+          Use the search to choose a hatchery. We only load profile data after a hatchery is selected.
         </p>
       )}
     </div>
