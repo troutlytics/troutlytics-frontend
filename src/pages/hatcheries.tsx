@@ -73,6 +73,7 @@ const HatcheryExplorer = () => {
   } = useHatcheryDataContext();
 
   const [search, setSearch] = useState("");
+  const [isSelectorCollapsed, setIsSelectorCollapsed] = useState(false);
 
   const filteredNames = useMemo(() => {
     if (!search) return hatcheryNames;
@@ -98,54 +99,85 @@ const HatcheryExplorer = () => {
       </header>
 
       <section className="p-6 mb-8 bg-white shadow-sm rounded-3xl">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="w-full md:w-1/2">
-            <label
-              htmlFor="hatchery-search"
-              className="text-sm font-semibold uppercase text-troutlytics-subtext"
-            >
-              Search hatcheries
-            </label>
-            <input
-              id="hatchery-search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Start typing: 'Goldendale', 'Chelan', 'Naches'…"
-              className="w-full px-4 py-2 mt-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-troutlytics-primary"
-            />
-          </div>
-          <p className="text-sm text-troutlytics-subtext">
-            Showing {filteredNames.length} hatcheries
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2 mt-6">
-          {isNamesLoading ? (
-            Array.from({ length: 20 }).map((_, index) => (
-              <div
-                key={index}
-                className="px-6 py-2 rounded-full h-9 bg-slate-100 animate-pulse"
-              />
-            ))
-          ) : filteredNames.length === 0 ? (
-            <p className="text-sm text-troutlytics-subtext">
-              No hatcheries match that search.
+        <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-troutlytics-subtext">
+              Hatchery selector
             </p>
-          ) : (
-            filteredNames.map((name) => (
-              <button
-                key={name}
-                onClick={() => setActiveHatchery(name)}
-                className={`px-4 py-2 text-sm font-semibold rounded-full border transition ${
-                  activeHatchery === name
-                    ? "bg-troutlytics-primary text-white border-troutlytics-primary"
-                    : "bg-white text-slate-700 border-slate-200 hover:border-troutlytics-primary"
-                }`}
-              >
-                {name}
-              </button>
-            ))
-          )}
+            <p className="text-sm text-troutlytics-subtext">
+              Choose a hatchery to load its profile.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsSelectorCollapsed((prev) => !prev)}
+            aria-expanded={!isSelectorCollapsed}
+            className="inline-flex items-center self-start gap-2 px-4 py-2 text-sm font-semibold transition border rounded-full md:self-center border-slate-200 text-slate-700 hover:border-troutlytics-primary hover:text-troutlytics-primary"
+          >
+            {isSelectorCollapsed ? "Show hatchery list" : "Hide hatchery list"}
+            <span aria-hidden>{isSelectorCollapsed ? "▾" : "▴"}</span>
+          </button>
         </div>
+
+        {isSelectorCollapsed ? (
+          <p className="text-sm text-troutlytics-subtext">
+            List minimized.{" "}
+            {activeHatchery
+              ? `Current selection: ${activeHatchery}.`
+              : "No hatchery selected yet."}
+          </p>
+        ) : (
+          <>
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="w-full md:w-1/2">
+                <label
+                  htmlFor="hatchery-search"
+                  className="text-sm font-semibold uppercase text-troutlytics-subtext"
+                >
+                  Search hatcheries
+                </label>
+                <input
+                  id="hatchery-search"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Start typing: 'Goldendale', 'Chelan', 'Naches'…"
+                  className="w-full px-4 py-2 mt-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-troutlytics-primary"
+                />
+              </div>
+              <p className="text-sm text-troutlytics-subtext">
+                Showing {filteredNames.length} hatcheries
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-6">
+              {isNamesLoading ? (
+                Array.from({ length: 20 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="px-6 py-2 rounded-full h-9 bg-slate-100 animate-pulse"
+                  />
+                ))
+              ) : filteredNames.length === 0 ? (
+                <p className="text-sm text-troutlytics-subtext">
+                  No hatcheries match that search.
+                </p>
+              ) : (
+                filteredNames.map((name) => (
+                  <button
+                    key={name}
+                    onClick={() => setActiveHatchery(name)}
+                    className={`px-4 py-2 text-sm font-semibold rounded-full border transition ${
+                      activeHatchery === name
+                        ? "bg-troutlytics-primary text-white border-troutlytics-primary"
+                        : "bg-white text-slate-700 border-slate-200 hover:border-troutlytics-primary"
+                    }`}
+                  >
+                    {name}
+                  </button>
+                ))
+              )}
+            </div>
+          </>
+        )}
       </section>
 
       {hasError && (
