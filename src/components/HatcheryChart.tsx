@@ -10,8 +10,16 @@ import {
   Legend,
 } from "chart.js";
 import { HatcheryTotal } from "@/hooks/useApiData";
-import { formatDate } from "@/utils";
 import { useApiDataContext } from "@/contexts/DataContext";
+import ChartFrame from "./ChartFrame";
+import StatePanel from "./StatePanel";
+import {
+  buildCartesianOptions,
+  chartPalette,
+  formatInteger,
+  withAlpha,
+} from "./chartTheme";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,50 +37,58 @@ type TotalStockedByHatcheryChartProps = {
 const TotalStockedByHatcheryChart: React.FC<
   TotalStockedByHatcheryChartProps
 > = ({ data }) => {
-  const { selectedDateRange } = useApiDataContext();
-  const hatcheries = data?.map((lake) => lake.hatchery);
-  const totalStockedFish = data?.map((lake) => lake.sum_1);
+  const { hatcheryTotals } = useApiDataContext();
+  const chartSource = (data?.length ? data : hatcheryTotals).slice();
+
+  if (!chartSource.length) {
+    return (
+      <StatePanel
+        compact
+        eyebrow="Hatchery Output"
+        title="No hatchery output is available for this window."
+        description="Try widening the selected range to compare which hatcheries drove statewide production."
+      />
+    );
+  }
+
+  const sortedSource = chartSource.sort((a, b) => b.sum_1 - a.sum_1);
+  const hatcheries = sortedSource.map((lake) => lake.hatchery);
+  const totalStockedFish = sortedSource.map((lake) => lake.sum_1);
 
   const chartData = {
     labels: hatcheries,
     datasets: [
       {
-        label: `Total Stocked Between ${formatDate(
-          selectedDateRange.pastDate
-        )} - ${formatDate(selectedDateRange.recentDate)}`,
+        label: "Fish stocked by hatchery",
         data: totalStockedFish,
-        backgroundColor: "rgba(44, 123, 229, 0.7)", // troutlytics.primary with opacity
-        borderColor: "#2C7BE5",
-        borderWidth: 1,
-        pointRadius: 3,
+        backgroundColor: withAlpha(chartPalette.ice, 0.3),
+        borderColor: chartPalette.cyan,
+        borderWidth: 1.4,
+        borderRadius: 10,
       },
     ],
   };
 
-  const chartOptions = {
-    scales: {
-      y: {
-        title: {
-          display: true,
-          text: "Total Stocked",
-        },
-      },
-      x: {
-        title: {
-          display: true,
-          text: "Hatchery",
-        },
-      },
+  const chartOptions = buildCartesianOptions({
+    xTitle: "Hatchery",
+    yTitle: "Fish stocked",
+    yTicksCallback: (value) => formatInteger(Number(value)),
+    tooltipCallbacks: {
+      label: (ctx: any) =>
+        `${ctx.label}: ${formatInteger(ctx.parsed.y ?? 0)} fish`,
     },
-  };
+  });
 
   return (
-    <div className="chart-container">
-      <h2 className="text-2xl text-center">
-        Total Stocked by Hatchery Statewide
-      </h2>
-      <Bar data={chartData} options={chartOptions} className="chart-size" />
-    </div>
+    <ChartFrame
+      eyebrow="Hatchery Output"
+      title="Which hatcheries carried the selected stocking window"
+      description="Compare production volume across facilities to see which hatcheries were the primary drivers in the active telemetry span."
+    >
+      <div className="chart-container">
+        <Bar data={chartData} options={chartOptions} className="chart-size" />
+      </div>
+    </ChartFrame>
   );
 };
 

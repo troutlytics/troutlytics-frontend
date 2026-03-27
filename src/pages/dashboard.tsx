@@ -10,17 +10,28 @@ import SpeciesTrendChart from "@/components/SpeciesTrendChart";
 import ReleaseSizeHistogram from "@/components/ReleaseSizeHistogram";
 import AverageWeightTrendChart from "@/components/AverageWeightTrendChart";
 import CumulativeStockChart from "@/components/CumulativeStockChart";
+import StatePanel from "@/components/StatePanel";
+import FullScreenLoader from "@/components/FullScreenLoader";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
+import { formatDate } from "@/utils";
+import { formatCompactNumber, formatInteger } from "@/components/chartTheme";
 
-function StatCard({ label, value }: { label: string; value: string | number }) {
+function StatCard({
+  label,
+  value,
+  helper,
+}: {
+  label: string;
+  value: string;
+  helper: string;
+}) {
   return (
-    <div className="p-1 text-center shadow rounded-xl bg-troutlytics-card">
-      <div className="text-xs font-medium text-troutlytics-subtext">
-        {label}
-      </div>
-      <div className="font-bold text-md text-troutlytics-text">{value}</div>
+    <div className="metric-card rounded-[1.5rem] px-4 py-4">
+      <p className="card-eyebrow">{label}</p>
+      <p className="mt-3 stat-value">{value}</p>
+      <p className="mt-2 text-sm text-cyan-50/60">{helper}</p>
     </div>
   );
 }
@@ -31,9 +42,9 @@ export default function Dashboard() {
     hatcheryTotals,
     totalStockedByDate,
     isLoading,
+    hasError,
     selectedDateRange,
     setSelectedDateRange,
-    today,
   } = useApiDataContext();
 
   const [activeTab, setActiveTab] = useState("stock");
@@ -45,57 +56,57 @@ export default function Dashboard() {
   const cards = [
     {
       id: "stock",
-      label: "Stocked over time",
-      description: "Daily statewide totals",
-      accent: "from-blue-500/90 to-blue-600",
+      label: "Daily sweep",
+      description: "Statewide stocking by day",
+      accent: "#63d7ff",
     },
     {
       id: "cumulative",
-      label: "Cumulative progress",
-      description: "Season-to-date trajectory",
-      accent: "from-purple-500/90 to-purple-600",
+      label: "Season curve",
+      description: "Running stocking total",
+      accent: "#7ca7ff",
     },
     {
       id: "speciesTrend",
-      label: "Species trends",
-      description: "Momentum for the top 5 species",
-      accent: "from-emerald-500/90 to-teal-500",
+      label: "Species momentum",
+      description: "Top species over time",
+      accent: "#5de4c4",
     },
     {
       id: "species",
-      label: "Species share",
-      description: "Proportion of stocking mix",
-      accent: "from-sky-500/90 to-sky-600",
+      label: "Species mix",
+      description: "Share of the stocking blend",
+      accent: "#9ee9ff",
     },
     {
       id: "hatchery",
-      label: "By hatchery",
-      description: "Which facilities led production",
-      accent: "from-orange-500/90 to-amber-500",
+      label: "Hatchery output",
+      description: "Facility production leaders",
+      accent: "#58d2ff",
     },
     {
       id: "waters",
-      label: "Top waters",
+      label: "Lake priority",
       description: "Most-targeted destinations",
-      accent: "from-lime-500/90 to-lime-600",
+      accent: "#5de4c4",
     },
     {
       id: "releaseSizes",
-      label: "Release sizes",
+      label: "Release size",
       description: "Distribution of drop volume",
-      accent: "from-rose-500/90 to-rose-600",
+      accent: "#ffbf73",
     },
     {
       id: "avgWeight",
-      label: "Avg weight",
-      description: "Quality of fish over time",
-      accent: "from-fuchsia-500/90 to-pink-500",
+      label: "Weight trace",
+      description: "Average fish quality",
+      accent: "#ff8b95",
     },
     {
       id: "table",
-      label: "Data table",
-      description: "Full detailed log",
-      accent: "from-slate-600/90 to-slate-700",
+      label: "Detailed log",
+      description: "Full event ledger",
+      accent: "#c6e6f1",
     },
   ];
 
@@ -105,110 +116,244 @@ export default function Dashboard() {
       (sum, item) => sum + (item?.stocked_fish || 0),
       0
     );
-    const topHatchery = hatcheryTotals?.[0]?.hatchery || "-";
-    const topWater = releases[0]?.water_name_cleaned || "-";
-    const topSpecies = releases.reduce<Record<string, number>>((acc, item) => {
+    const hatcheryByTotal = hatcheryTotals?.[0]?.hatchery || "Awaiting sync";
+
+    const waterTotals = releases.reduce<Record<string, number>>((acc, item) => {
+      if (!item?.water_name_cleaned) return acc;
+      acc[item.water_name_cleaned] =
+        (acc[item.water_name_cleaned] || 0) + (item.stocked_fish || 0);
+      return acc;
+    }, {});
+
+    const speciesTotals = releases.reduce<Record<string, number>>((acc, item) => {
       if (!item?.species) return acc;
       acc[item.species] = (acc[item.species] || 0) + (item.stocked_fish || 0);
       return acc;
     }, {});
-    
-    const speciesSorted = Object.entries(topSpecies).sort(
-      (a, b) => (b[1] ?? 0) - (a[1] ?? 0)
-    );
+
+    const latestDate = releases.reduce((latest, item) => {
+      const timestamp = new Date(item?.date || "").getTime();
+      return Number.isFinite(timestamp) ? Math.max(latest, timestamp) : latest;
+    }, 0);
+
+    const topWater = Object.entries(waterTotals).sort((a, b) => b[1] - a[1])[0];
+    const topSpecies = Object.entries(speciesTotals).sort(
+      (a, b) => b[1] - a[1]
+    )[0];
+
     return {
       totalCount,
-      topHatchery,
-      topWater,
-      topSpecies: speciesSorted[0]?.[0] || "-",
+      totalReleases: releases.length,
+      totalWaters: Object.keys(waterTotals).length,
+      topHatchery: hatcheryByTotal,
+      topWater: topWater?.[0] || "Awaiting sync",
+      topSpecies: topSpecies?.[0] || "Awaiting sync",
+      latestDate: latestDate ? formatDate(new Date(latestDate).toISOString()) : "Syncing",
     };
   }, [stockedLakesData, hatcheryTotals]);
 
-  return (
-    <div className="container mx-auto">
-      <div className="grid grid-cols-2 gap-4 my-6 sm:grid-cols-4">
-        <StatCard label="Total Stocked" value={quickStats.totalCount} />
-        <StatCard label="Top Hatchery" value={quickStats.topHatchery} />
-        <StatCard label="Top Water" value={quickStats.topWater} />
-        <StatCard label="Top Species" value={quickStats.topSpecies} />
-      </div>
+  const activeView = cards.find((card) => card.id === activeTab) ?? cards[0];
 
-      <div className="mb-8 bg-white border shadow-sm rounded-3xl border-slate-100">
-        <div className="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xs font-semibold tracking-[0.3em] uppercase text-troutlytics-accent">
-              Interactive map
+  if (isLoading && !stockedLakesData.length && !totalStockedByDate.length) {
+    return (
+      <div className="page-shell">
+        <FullScreenLoader
+          title="Rebuilding the statewide trout dashboard"
+          description="Pulling fresh stocking totals, resolving hatchery output, and aligning every chart for a new telemetry pass."
+          statusItems={[
+            "Syncing daily stocking totals",
+            "Resolving lake activity",
+            "Calibrating chart layers",
+          ]}
+          footerLabel="Scanning hatcheries • Mapping waters • Rendering charts"
+        />
+      </div>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <div className="page-shell">
+        <StatePanel
+          variant="error"
+          eyebrow="Signal Interrupted"
+          title="Dashboard telemetry could not be refreshed."
+          description="The statewide stocking feed did not finish loading. Check the API connection and rerun the sweep."
+          action={
+            <Link href="/map" className="secondary-button">
+              Open map anyway
+            </Link>
+          }
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="page-shell space-y-6">
+      <section className="grid gap-5 xl:grid-cols-[1.35fr_0.65fr]">
+        <div className="glass-panel-strong rounded-[2rem] p-6 sm:p-8">
+          <div className="telemetry-kicker">
+            <span className="signal-dot" />
+            Live statewide telemetry
+          </div>
+
+          <div className="mt-6 max-w-4xl space-y-4">
+            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.65em] text-cyan-100/55">
+              Washington Stocking Command Deck
             </p>
-            <h2 className="mt-2 text-2xl font-semibold">
-              Explore stocking runs spatially
-            </h2>
-            <p className="mt-1 text-troutlytics-subtext">
-              Dive into the statewide map to see individual drop locations,
-              cluster density, and route planning links.
+            <h1 className="page-title text-balance">
+              Scan trout plants like a night-water operations board.
+            </h1>
+            <p className="page-copy max-w-3xl">
+              This dashboard turns Washington stocking records into a sonar-like
+              telemetry surface. Sweep the date window, pivot across charts, and
+              trace how hatcheries, waters, and species move together.
             </p>
           </div>
-          <Link
-            href="/map"
-            className="inline-flex items-center justify-center px-5 py-2 text-sm font-semibold text-white transition rounded-full bg-troutlytics-primary hover:bg-troutlytics-primary/90"
-          >
-            Open the map
-            <span className="ml-2 text-lg" aria-hidden>
-              →
-            </span>
-          </Link>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <StatCard
+              label="Fish stocked"
+              value={formatCompactNumber(quickStats.totalCount)}
+              helper={`${formatInteger(quickStats.totalCount)} fish in window`}
+            />
+            <StatCard
+              label="Active releases"
+              value={formatInteger(quickStats.totalReleases)}
+              helper={`${quickStats.totalWaters} waters reached`}
+            />
+            <StatCard
+              label="Top hatchery"
+              value={quickStats.topHatchery}
+              helper="Highest output facility"
+            />
+            <StatCard
+              label="Lead species"
+              value={quickStats.topSpecies}
+              helper={quickStats.topWater}
+            />
+          </div>
         </div>
-      </div>
-      <section className="sticky top-0 z-10 py-2">
+
+        <aside className="glass-panel rounded-[2rem] p-6 sm:p-7">
+          <div className="flex h-full flex-col justify-between gap-6">
+            <div className="space-y-4">
+              <p className="card-eyebrow">Mission Briefing</p>
+              <h2 className="text-2xl font-semibold text-white">
+                Keep the signal readable.
+              </h2>
+              <div className="space-y-3 text-sm leading-7 text-cyan-50/68">
+                <p>
+                  Use the preset date sweeps for quick trend checks, then lock a
+                  custom range when you need historical context.
+                </p>
+                <p>
+                  Jump between daily, cumulative, species, hatchery, and lake
+                  views without losing the same shared telemetry window.
+                </p>
+                <p>
+                  When you need precise raw records, drop into the detailed log
+                  and sort the feed directly.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3 rounded-[1.5rem] border border-cyan-100/10 bg-white/5 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+              <p className="card-eyebrow">Active Sweep</p>
+              <p className="text-lg font-medium tracking-[-0.02em] text-white">
+                {formatDate(selectedDateRange.pastDate)} -{" "}
+                {formatDate(selectedDateRange.recentDate)}
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-white/8 bg-[#03141f]/70 p-4">
+                  <p className="compact-label">Top water</p>
+                  <p className="mt-2 text-base font-semibold text-white">
+                    {quickStats.topWater}
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-white/8 bg-[#03141f]/70 p-4">
+                  <p className="compact-label">Latest drop</p>
+                  <p className="mt-2 text-base font-semibold text-white">
+                    {quickStats.latestDate}
+                  </p>
+                </div>
+              </div>
+              <Link href="/map" className="secondary-button w-full">
+                Open spatial sweep
+              </Link>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section>
         <DateRangePicker
           selectedDateRange={selectedDateRange}
           handleDateChange={handleDateChange}
         />
       </section>
-      <div className="grid grid-cols-1 gap-3 mb-6 md:grid-cols-3 xl:grid-cols-4">
-        {cards.map((card) => (
-          <div
-            key={card.id}
-            onClick={() => setActiveTab(card.id)}
-            className={`relative cursor-pointer rounded-2xl border shadow-sm transition-all duration-500 ${
-              activeTab === card.id
-                ? `bg-gradient-to-br ${card.accent} text-white shadow-lg`
-                : "bg-white text-gray-700 border-slate-200 hover:border-troutlytics-primary/40"
-            }`}
-          >
-            <div className="flex flex-col p-5">
-              <span
-                className={`text-xs font-semibold tracking-[0.2em] uppercase ${
-                  activeTab === card.id
-                    ? "text-white/80"
-                    : "text-troutlytics-subtext"
-                }`}
-              >
-                View
-              </span>
-              <h3 className="mt-2 text-lg font-semibold">{card.label}</h3>
-              <p
-                className={`mt-1 text-sm ${
-                  activeTab === card.id
-                    ? "text-white/80"
-                    : "text-troutlytics-subtext"
-                }`}
-              >
-                {card.description}
-              </p>
-            </div>
-            {activeTab === card.id && (
-              <span className="absolute inset-x-5 bottom-4 h-0.5 rounded-full bg-white/60" />
-            )}
-          </div>
-        ))}
-      </div>
 
-      <div className="">
+      <section className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        {cards.map((card) => {
+          const isActive = activeTab === card.id;
+
+          return (
+            <button
+              key={card.id}
+              type="button"
+              onClick={() => setActiveTab(card.id)}
+              className={`rounded-[1.6rem] p-5 text-left transition ${
+                isActive ? "glass-panel-strong" : "glass-panel-soft"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="card-eyebrow">View</p>
+                  <h3 className="mt-2 text-xl font-semibold text-white">
+                    {card.label}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-cyan-50/64">
+                    {card.description}
+                  </p>
+                </div>
+                <span
+                  className="mt-1 h-3 w-3 shrink-0 rounded-full shadow-[0_0_18px_rgba(99,215,255,0.3)]"
+                  style={{ backgroundColor: card.accent }}
+                />
+              </div>
+              <div className="mt-5 flex items-center justify-between">
+                <span className={`hud-pill px-3 py-1.5 text-[0.66rem] uppercase tracking-[0.26em] ${isActive ? "hud-pill-active" : ""}`}>
+                  {isActive ? "Active view" : "Open view"}
+                </span>
+                <span className="text-sm text-cyan-50/44">Telemetry</span>
+              </div>
+            </button>
+          );
+        })}
+      </section>
+
+      <section className="rounded-[2rem]">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-1">
+          <div>
+            <p className="card-eyebrow">Current focus</p>
+            <h2 className="mt-2 text-2xl font-semibold text-white">
+              {activeView.label}
+            </h2>
+            <p className="mt-2 text-sm leading-7 text-cyan-50/66">
+              {activeView.description}
+            </p>
+          </div>
+          <div className="hud-pill px-4 py-2 text-xs uppercase tracking-[0.26em]">
+            Live chart
+          </div>
+        </div>
+
         <motion.div
           key={activeTab}
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.42, ease: "easeOut" }}
         >
           {activeTab === "stock" && <StockChart data={totalStockedByDate} />}
           {activeTab === "cumulative" && (
@@ -237,7 +382,7 @@ export default function Dashboard() {
             <SortableTable data={stockedLakesData} loading={isLoading} />
           )}
         </motion.div>
-      </div>
+      </section>
     </div>
   );
 }

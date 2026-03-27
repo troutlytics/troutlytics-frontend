@@ -1,10 +1,17 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
-import Chart from "chart.js/auto";
-import "chartjs-adapter-date-fns";
+import "chart.js/auto";
 import { TotalStockedByDate } from "@/hooks/useApiData";
 import { useApiDataContext } from "@/contexts/DataContext";
 import { formatDate } from "@/utils";
+import ChartFrame from "./ChartFrame";
+import StatePanel from "./StatePanel";
+import {
+  buildCartesianOptions,
+  chartPalette,
+  formatInteger,
+  withAlpha,
+} from "./chartTheme";
 
 interface StockChartProps {
   data: TotalStockedByDate[] | [];
@@ -13,19 +20,33 @@ interface StockChartProps {
 const StockChart: React.FC<StockChartProps> = ({ data }) => {
   const { selectedDateRange } = useApiDataContext();
 
-  Chart.register();
+  if (!data?.length) {
+    return (
+      <StatePanel
+        compact
+        eyebrow="Daily Sweep"
+        title="No statewide stocking signals were returned."
+        description="Expand the selected time window or choose a different interval to chart daily stocking totals."
+      />
+    );
+  }
 
   const chartData = {
     datasets: [
       {
-        label: `Total Stocked Between ${formatDate(
+        label: `Total stocked between ${formatDate(
           selectedDateRange.pastDate
-        )} - ${formatDate(selectedDateRange.recentDate)}`,
-        backgroundColor: "rgba(44, 123, 229, 0.7)", // troutlytics.primary with opacity
-        borderColor: "#2C7BE5",
-        borderWidth: 1,
-        pointRadius: 2,
-        data: data?.map((obj) => ({
+        )} and ${formatDate(selectedDateRange.recentDate)}`,
+        backgroundColor: withAlpha(chartPalette.cyan, 0.14),
+        borderColor: chartPalette.cyan,
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        pointHoverBackgroundColor: chartPalette.ice,
+        pointHoverBorderWidth: 0,
+        tension: 0.24,
+        fill: true,
+        data: data.map((obj) => ({
           x: obj.date,
           y: obj.stocked_fish,
         })),
@@ -33,36 +54,28 @@ const StockChart: React.FC<StockChartProps> = ({ data }) => {
     ],
   };
 
-  const chartOptions = {
-    scales: {
-      x: {
-        type: "time",
-        time: {
-          unit: "day",
-          displayFormats: {
-            day: "MM/dd/yyyy",
-          },
-        },
-        title: {
-          display: true,
-          text: "Date",
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: "Total Stocked",
-        },
-      },
+  const chartOptions = buildCartesianOptions({
+    xTitle: "Date",
+    yTitle: "Fish stocked",
+    timeScale: true,
+    yTicksCallback: (value) => formatInteger(Number(value)),
+    tooltipCallbacks: {
+      label: (ctx: any) =>
+        `${ctx.dataset.label}: ${formatInteger(ctx.parsed.y ?? 0)} fish`,
     },
-  };
+  });
 
   return (
-    <div className="chart-container">
-      <h2 className="mx-auto text-2xl text-center">Total Stocked Over Time Statewide</h2>
-      {/* @ts-ignore */}
-      <Line data={chartData} options={chartOptions} className="chart-size"/>
-    </div>
+    <ChartFrame
+      eyebrow="Daily Sweep"
+      title="Statewide stocking telemetry by day"
+      description="Track how planting volume rises and falls across the selected window. The line highlights daily statewide throughput."
+    >
+      <div className="chart-container">
+        {/* @ts-ignore */}
+        <Line data={chartData} options={chartOptions} className="chart-size" />
+      </div>
+    </ChartFrame>
   );
 };
 

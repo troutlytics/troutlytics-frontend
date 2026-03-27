@@ -1,20 +1,25 @@
 import React, { useMemo } from "react";
 import { Line } from "react-chartjs-2";
-import Chart from "chart.js/auto";
+import "chart.js/auto";
 import { StockedLake } from "@/hooks/useApiData";
 import { useApiDataContext } from "@/contexts/DataContext";
 import { formatDate } from "@/utils";
-
-Chart.register();
+import ChartFrame from "./ChartFrame";
+import StatePanel from "./StatePanel";
+import {
+  buildCartesianOptions,
+  chartPalette,
+  formatInteger,
+  withAlpha,
+} from "./chartTheme";
 
 const LINE_COLORS = [
-  "#2C7BE5",
-  "#38B2AC",
-  "#F6AD55",
-  "#805AD5",
-  "#E53E3E",
-  "#4FD1C5",
-  "#DD6B20",
+  chartPalette.cyan,
+  chartPalette.teal,
+  chartPalette.gold,
+  chartPalette.indigo,
+  chartPalette.salmon,
+  chartPalette.mint,
 ];
 
 interface SpeciesTrendChartProps {
@@ -61,76 +66,73 @@ const SpeciesTrendChart: React.FC<SpeciesTrendChartProps> = ({
       (a, b) => new Date(a).getTime() - new Date(b).getTime()
     );
 
-    const chartDatasets = sortedSpecies.map((species, index) => ({
-      label: species,
-      data: sortedDates.map((date) => ({
-        x: date,
-        y: dateSpeciesMap.get(date)?.get(species) ?? 0,
-      })),
-      borderColor: LINE_COLORS[index % LINE_COLORS.length],
-      backgroundColor: `${LINE_COLORS[index % LINE_COLORS.length]}33`,
-      borderWidth: 2,
-      tension: 0.25,
-      pointRadius: 2,
-    }));
+    const chartDatasets = sortedSpecies.map((species, index) => {
+      const color = LINE_COLORS[index % LINE_COLORS.length];
+
+      return {
+        label: species,
+        data: sortedDates.map((date) => ({
+          x: date,
+          y: dateSpeciesMap.get(date)?.get(species) ?? 0,
+        })),
+        borderColor: color,
+        backgroundColor: withAlpha(color, 0.2),
+        borderWidth: 2,
+        tension: 0.25,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+      };
+    });
 
     return {
       datasets: chartDatasets,
-      label: `Top ${sortedSpecies.length} species stocked between ${formatDate(
+      label: `Top ${sortedSpecies.length} species from ${formatDate(
         selectedDateRange.pastDate
-      )} - ${formatDate(selectedDateRange.recentDate)}`,
+      )} to ${formatDate(selectedDateRange.recentDate)}`,
       hasData: Boolean(sortedSpecies.length),
     };
   }, [data, selectedDateRange, topSpeciesCount]);
 
   if (!hasData) {
     return (
-      <div className="p-6 text-center bg-white rounded-2xl shadow-sm">
-        No species data available for this range.
-      </div>
+      <StatePanel
+        compact
+        eyebrow="Species Momentum"
+        title="No species trend data is available for this range."
+        description="The multi-line trend needs stocking records inside the active interval before it can plot daily species movement."
+      />
     );
   }
 
-  const chartData = {
-    datasets,
-  };
-
-  const chartOptions = {
-    responsive: true,
-    scales: {
-      x: {
-        type: "time" as const,
-        title: {
-          display: true,
-          text: "Date",
-        },
-      },
-      y: {
-        title: {
-          display: true,
-          text: "Fish stocked",
-        },
-        beginAtZero: true,
-      },
+  const chartOptions = buildCartesianOptions({
+    xTitle: "Date",
+    yTitle: "Fish stocked",
+    timeScale: true,
+    showLegend: true,
+    legendPosition: "bottom",
+    yTicksCallback: (value) => formatInteger(Number(value)),
+    tooltipCallbacks: {
+      title: (ctx: any) => formatDate(ctx[0]?.parsed?.x),
+      label: (ctx: any) =>
+        `${ctx.dataset.label}: ${formatInteger(ctx.parsed.y ?? 0)} fish`,
     },
-    plugins: {
-      legend: {
-        position: "bottom" as const,
-      },
-      tooltip: {
-        callbacks: {
-          title: (ctx: any) => formatDate(ctx[0]?.parsed?.x),
-        },
-      },
-    },
-  };
+  });
 
   return (
-    <div className="chart-container">
-      <h2 className="mb-4 text-2xl text-center">{label}</h2>
-      {/* @ts-ignore */}
-      <Line data={chartData} options={chartOptions} className="chart-size" />
-    </div>
+    <ChartFrame
+      eyebrow="Species Momentum"
+      title={label}
+      description="Compare the strongest species trajectories over time and see which trout types dominated each daily stocking wave."
+    >
+      <div className="chart-container">
+        {/* @ts-ignore */}
+        <Line
+          data={{ datasets }}
+          options={chartOptions}
+          className="chart-size"
+        />
+      </div>
+    </ChartFrame>
   );
 };
 

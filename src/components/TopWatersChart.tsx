@@ -1,86 +1,84 @@
-// components/TopWatersChart.tsx
 import React from "react";
 import { Bar } from "react-chartjs-2";
-import Chart from "chart.js/auto";
+import "chart.js/auto";
 import { StockedLake } from "@/hooks/useApiData";
-import { useApiDataContext } from "@/contexts/DataContext";
-import { formatDate } from "@/utils";
+import ChartFrame from "./ChartFrame";
+import StatePanel from "./StatePanel";
+import {
+  buildCartesianOptions,
+  chartPalette,
+  formatInteger,
+  withAlpha,
+} from "./chartTheme";
 
 interface TopWatersChartProps {
   data: StockedLake[];
-  topN?: number; // how many waters to display (default: 10)
+  topN?: number;
 }
 
 const TopWatersChart: React.FC<TopWatersChartProps> = ({ data, topN = 10 }) => {
-  const { selectedDateRange } = useApiDataContext();
-
-  // 1) Aggregate total stocked fish by water_name_cleaned
   const totalsByWater: Record<string, number> = {};
+
   data.forEach((entry) => {
     const water = entry.water_name_cleaned;
     totalsByWater[water] = (totalsByWater[water] || 0) + entry.stocked_fish;
   });
 
-  // 2) Sort waters by descending total, then take top N
   const sortedWaters = Object.entries(totalsByWater)
     .sort(([, aCount], [, bCount]) => bCount - aCount)
     .slice(0, topN);
 
+  if (!sortedWaters.length) {
+    return (
+      <StatePanel
+        compact
+        eyebrow="Lake Priority"
+        title="No targeted waters were returned for this sweep."
+        description="There were no stocked-water records in the current selection. Expand the date range to surface the busiest lakes."
+      />
+    );
+  }
+
   const labels = sortedWaters.map(([water]) => water);
   const counts = sortedWaters.map(([, count]) => count);
 
-  // 3) Build chart.js data object
   const chartData = {
     labels,
     datasets: [
       {
-        // label: `Top ${topN} Waters (${formatLabelRange(selectedDateRange)})`,
-        label: `Total Stocked Between ${formatDate(
-          selectedDateRange.pastDate
-        )} - ${formatDate(selectedDateRange.recentDate)}`,
+        label: "Fish stocked",
         data: counts,
-        backgroundColor: "rgba(44, 123, 229, 0.7)", // troutlytics.primary with opacity
-        borderColor: "#2C7BE5",
-        borderWidth: 1,
+        backgroundColor: withAlpha(chartPalette.teal, 0.26),
+        borderColor: chartPalette.teal,
+        borderWidth: 1.2,
+        borderRadius: 10,
       },
     ],
   };
 
-  // 4) Chart options
-  const chartOptions = {
-    indexAxis: "y" as const, // horizontal bar
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Total Fish Stocked",
-        },
-        beginAtZero: true,
-      },
-      y: {
-        title: {
-          display: true,
-          text: "Water Name",
-        },
-      },
+  const chartOptions = buildCartesianOptions({
+    indexAxis: "y",
+    xTitle: "Fish stocked",
+    yTitle: "Water body",
+    yTicksCallback: undefined,
+    xTicksCallback: (value) => formatInteger(Number(value)),
+    tooltipCallbacks: {
+      label: (ctx: any) =>
+        `${ctx.label}: ${formatInteger(ctx.parsed.x ?? 0)} fish`,
     },
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-  };
+  });
 
   return (
-    <div className="chart-container">
-      <h2 className="mb-4 text-2xl text-center">
-        Top {topN} Waters stocked between{"  "}
-        {formatDate(selectedDateRange.pastDate)} -
-        {formatDate(selectedDateRange.recentDate)}
-      </h2>
-      {/* @ts-ignore */}
-      <Bar data={chartData} options={chartOptions} className="chart-size"/>
-    </div>
+    <ChartFrame
+      eyebrow="Lake Priority"
+      title={`Top ${topN} waters by stocking volume`}
+      description="This horizontal ranking shows which water bodies absorbed the highest share of fish during the current telemetry interval."
+    >
+      <div className="chart-container">
+        {/* @ts-ignore */}
+        <Bar data={chartData} options={chartOptions} className="chart-size" />
+      </div>
+    </ChartFrame>
   );
 };
 

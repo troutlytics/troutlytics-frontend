@@ -1,11 +1,15 @@
 import React, { useMemo } from "react";
 import { Bar } from "react-chartjs-2";
-import Chart from "chart.js/auto";
+import "chart.js/auto";
 import { StockedLake } from "@/hooks/useApiData";
-import { useApiDataContext } from "@/contexts/DataContext";
-import { formatDate } from "@/utils";
-
-Chart.register();
+import ChartFrame from "./ChartFrame";
+import StatePanel from "./StatePanel";
+import {
+  buildCartesianOptions,
+  chartPalette,
+  formatInteger,
+  withAlpha,
+} from "./chartTheme";
 
 interface ReleaseSizeHistogramProps {
   data: StockedLake[];
@@ -16,8 +20,6 @@ const ReleaseSizeHistogram: React.FC<ReleaseSizeHistogramProps> = ({
   data,
   binCount = 8,
 }) => {
-  const { selectedDateRange } = useApiDataContext();
-
   const histogram = useMemo(() => {
     const releaseSizes = data
       .map((record) => record.stocked_fish || 0)
@@ -47,7 +49,7 @@ const ReleaseSizeHistogram: React.FC<ReleaseSizeHistogramProps> = ({
     const labels = bins.map((_, index) => {
       const rangeStart = minValue + index * binSize;
       const rangeEnd = rangeStart + binSize - 1;
-      return `${rangeStart.toLocaleString()} - ${rangeEnd.toLocaleString()}`;
+      return `${formatInteger(rangeStart)} - ${formatInteger(rangeEnd)}`;
     });
 
     return { bins, labels };
@@ -55,9 +57,12 @@ const ReleaseSizeHistogram: React.FC<ReleaseSizeHistogramProps> = ({
 
   if (!histogram) {
     return (
-      <div className="p-6 text-center bg-white rounded-2xl shadow-sm">
-        No release size data available for this range.
-      </div>
+      <StatePanel
+        compact
+        eyebrow="Release Size"
+        title="No release-size data is available for this sweep."
+        description="There were no stocked-fish counts in the active interval, so the histogram has nothing to bucket yet."
+      />
     );
   }
 
@@ -65,52 +70,36 @@ const ReleaseSizeHistogram: React.FC<ReleaseSizeHistogramProps> = ({
     labels: histogram.labels,
     datasets: [
       {
-        label: `Release size distribution (${formatDate(
-          selectedDateRange.pastDate
-        )} - ${formatDate(selectedDateRange.recentDate)})`,
+        label: "Number of releases",
         data: histogram.bins,
-        backgroundColor: "rgba(56, 178, 172, 0.7)",
-        borderColor: "#38B2AC",
+        backgroundColor: withAlpha(chartPalette.teal, 0.28),
+        borderColor: chartPalette.teal,
+        borderRadius: 10,
       },
     ],
   };
 
-  const chartOptions = {
-    responsive: true,
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Fish per release",
-        },
-      },
-      y: {
-        beginAtZero: true,
-        title: {
-          display: true,
-          text: "Number of releases",
-        },
-      },
+  const chartOptions = buildCartesianOptions({
+    xTitle: "Fish per release",
+    yTitle: "Number of releases",
+    tooltipCallbacks: {
+      label: (ctx: any) =>
+        `${ctx.label}: ${formatInteger(ctx.parsed.y ?? 0)} releases`,
     },
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-  };
+  });
 
   return (
-    <div className="chart-container">
-      <h2 className="mb-4 text-2xl text-center">
-        Release size distribution
-      </h2>
-      {/* @ts-ignore */}
-      <Bar data={chartData} options={chartOptions} className="chart-size" />
-      <p className="mt-2 text-sm text-center text-troutlytics-subtext">
-        Each bar shows how many stocking events fall within the indicated
-        release-size bucket.
-      </p>
-    </div>
+    <ChartFrame
+      eyebrow="Release Size"
+      title="Distribution of stocking event sizes"
+      description="Each column shows how many stocking events landed inside the indicated fish-count bucket, helping you spot common release magnitudes."
+      footer="Each bar represents the count of stocking events that fall inside the displayed release-size bucket."
+    >
+      <div className="chart-container">
+        {/* @ts-ignore */}
+        <Bar data={chartData} options={chartOptions} className="chart-size" />
+      </div>
+    </ChartFrame>
   );
 };
 

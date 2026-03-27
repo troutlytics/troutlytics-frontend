@@ -4,17 +4,17 @@ const values = [
   {
     title: "Transparency",
     description:
-      "Turning spreadsheets into stories helps anglers and agencies see the same truth at a glance.",
+      "Stocking data should be readable by anglers, agencies, and conservation-minded readers without needing a spreadsheet decoder ring.",
   },
   {
     title: "Stewardship",
     description:
-      "Sustainable stocking protects salmon and steelhead runs while still giving communities access to healthy trout.",
+      "Healthy trout access can reduce pressure on wild salmon and steelhead systems when anglers have clearer visibility into stocked opportunities.",
   },
   {
     title: "Craftsmanship",
     description:
-      "The interface is designed like a magazine spread—layered typography, cinematic gradients, and meaningful context.",
+      "Dense public data deserves software with hierarchy, restraint, and atmosphere rather than generic dashboards and bright default cards.",
   },
 ];
 
@@ -22,134 +22,119 @@ const timeline = [
   {
     year: "2020",
     label: "Idea",
-    detail: "Began aggregating WDFW reports manually after every plant.",
+    detail: "Manual tracking of WDFW reports begins as a practical way to find stocked opportunities.",
   },
   {
     year: "2022",
     label: "Prototype",
-    detail: "First public dashboard released to friends and local guides.",
+    detail: "The first internal dashboard proves the data can feel spatial, curated, and much easier to interpret.",
   },
   {
-    year: "2025",
-    label: "Today",
-    detail:
-      "Troutlytics becomes a platform for agencies, anglers, and storytellers.",
+    year: "2026",
+    label: "Now",
+    detail: "Troutlytics evolves into a cinematic telemetry layer for maps, hatcheries, and statewide stocking trends.",
   },
 ];
 
 const AboutPage = () => {
   return (
-    <div className="py-16 page-gradient">
-      <div className="container max-w-6xl px-4 mx-auto space-y-12">
-        <header className="grid gap-10 lg:grid-cols-[1.2fr,0.8fr] items-center">
-          <div>
-            <p className="badge-pill bg-white/60 text-troutlytics-secondary">
-              Behind Troutlytics
+    <div className="page-shell space-y-6">
+      <section className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
+        <div className="glass-panel-strong rounded-[2rem] p-6 sm:p-8">
+          <div className="telemetry-kicker">Behind Troutlytics</div>
+          <div className="mt-6 max-w-4xl space-y-4">
+            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.65em] text-cyan-100/55">
+              Mission Log
             </p>
-            <h1 className="mt-4 text-4xl font-bold text-slate-900">
-              A love letter to Washington fisheries and the data that protects
-              them.
+            <h1 className="page-title text-balance">
+              A design-forward read on Washington fisheries data.
             </h1>
-            <p className="mt-4 text-lg leading-relaxed text-troutlytics-subtext">
-              Troutlytics started as a side project to help anglers visualize
-              WDFW trout plants. Today it blends beautiful software with
-              conservation-minded reporting so we celebrate stocked trout while
-              giving native salmon and steelhead a break.
+            <p className="page-copy max-w-3xl">
+              Troutlytics started as a personal tool for making WDFW trout plant
+              data easier to interpret. It grew into a broader thesis: public
+              natural-resource data becomes more useful when it is readable,
+              spatial, and emotionally legible.
             </p>
-            <div className="flex flex-wrap gap-3 mt-6">
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center px-5 py-3 rounded-full bg-troutlytics-secondary text-white font-semibold shadow-lg hover:-translate-y-0.5 transition"
-              >
-                Explore dashboard
-              </Link>
-              <Link
-                href="/contact"
-                className="inline-flex items-center px-5 py-3 font-semibold transition border rounded-full border-troutlytics-secondary text-troutlytics-secondary hover:bg-troutlytics-secondary/10"
-              >
-                Collaborate with us
-              </Link>
-            </div>
           </div>
-          <div className="glass-panel">
-            <h2 className="text-xl font-semibold text-slate-900">
-              What Troutlytics stands for
-            </h2>
-            <p className="mt-3 text-sm text-troutlytics-subtext">
-              Built by Thomas Basham, a software developer in the greater
-              Seattle area who cares deeply about access, design, and thriving
-              ecosystems.
-            </p>
-            <ul className="mt-6 space-y-4">
-              {values.map((value) => (
-                <li key={value.title}>
-                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-troutlytics-accent">
-                    {value.title}
-                  </p>
-                  <p className="mt-1 text-troutlytics-subtext">
-                    {value.description}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </header>
 
-        <section className="glass-panel">
-          <div className="grid gap-8 md:grid-cols-2">
-            <article>
-              <h2 className="text-2xl font-bold text-slate-900">
-                Stocking for sustainability
-              </h2>
-              <p className="mt-4 text-lg leading-relaxed text-troutlytics-subtext">
-                Washington’s trout program is more than sport—it’s a buffer that
-                keeps pressure off wild salmon and steelhead runs. By
-                highlighting active hatcheries and recent plants, Troutlytics
-                guides anglers toward stocked fisheries so native fish get room
-                to recover.
-              </p>
-            </article>
-            <article>
-              <h2 className="text-2xl font-bold text-slate-900">
-                Design meets biology
-              </h2>
-              <p className="mt-4 text-lg leading-relaxed text-troutlytics-subtext">
-                The interface was crafted for interpretive clarity. Soft
-                gradients, motion, and typography reveal data at a glance, while
-                the underlying API stays rigorous enough for biologists and
-                hatchery leads to trust.
-              </p>
-            </article>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/dashboard" className="primary-button">
+              Explore the dashboard
+            </Link>
+            <Link href="/contact" className="secondary-button">
+              Open a conversation
+            </Link>
           </div>
-        </section>
+        </div>
 
-        <section className="glass-panel">
-          <p className="badge-pill bg-troutlytics-primary/10 text-troutlytics-primary">
-            Our journey
-          </p>
-          <h2 className="mt-4 text-3xl font-bold text-slate-900">
-            How we got here
-          </h2>
-          <div className="grid gap-6 mt-8 md:grid-cols-3">
-            {timeline.map((item) => (
+        <aside className="glass-panel rounded-[2rem] p-6 sm:p-7">
+          <p className="card-eyebrow">Core Values</p>
+          <div className="mt-5 space-y-4">
+            {values.map((value) => (
               <div
-                key={item.year}
-                className="p-6 bg-white border shadow-sm rounded-2xl border-slate-100"
+                key={value.title}
+                className="rounded-[1.45rem] border border-white/8 bg-white/[0.04] p-5"
               >
-                <p className="text-sm font-semibold text-troutlytics-subtext">
-                  {item.year}
-                </p>
-                <h3 className="text-xl font-bold text-slate-900">
-                  {item.label}
-                </h3>
-                <p className="mt-2 text-sm text-troutlytics-subtext">
-                  {item.detail}
+                <h2 className="text-xl font-semibold text-white">
+                  {value.title}
+                </h2>
+                <p className="mt-3 text-sm leading-7 text-cyan-50/66">
+                  {value.description}
                 </p>
               </div>
             ))}
           </div>
-        </section>
-      </div>
+        </aside>
+      </section>
+
+      <section className="grid gap-5 lg:grid-cols-2">
+        <article className="glass-panel rounded-[1.9rem] p-6 sm:p-7">
+          <p className="card-eyebrow">Conservation Lens</p>
+          <h2 className="mt-3 text-3xl font-semibold text-white">
+            Stocking as pressure relief.
+          </h2>
+          <p className="mt-4 text-sm leading-7 text-cyan-50/68">
+            Washington’s trout program is more than sport. Highlighting stocked
+            waters helps anglers focus effort on managed opportunities, which
+            can reduce incidental pressure on more sensitive native systems.
+          </p>
+        </article>
+
+        <article className="glass-panel rounded-[1.9rem] p-6 sm:p-7">
+          <p className="card-eyebrow">Product Lens</p>
+          <h2 className="mt-3 text-3xl font-semibold text-white">
+            Interface as interpretation.
+          </h2>
+          <p className="mt-4 text-sm leading-7 text-cyan-50/68">
+            The gradients, typography, map styling, and HUD cues are not there
+            to dramatize the data. They are there to organize attention and make
+            public records feel easier to read at speed.
+          </p>
+        </article>
+      </section>
+
+      <section className="glass-panel-strong rounded-[2rem] p-6 sm:p-7">
+        <p className="card-eyebrow">Timeline</p>
+        <h2 className="mt-3 text-3xl font-semibold text-white">
+          How the project evolved
+        </h2>
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
+          {timeline.map((item) => (
+            <div
+              key={item.year}
+              className="rounded-[1.5rem] border border-white/8 bg-white/[0.04] p-5"
+            >
+              <p className="card-eyebrow">{item.year}</p>
+              <h3 className="mt-2 text-2xl font-semibold text-white">
+                {item.label}
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-cyan-50/66">
+                {item.detail}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 };

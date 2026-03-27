@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
 import { Line } from "react-chartjs-2";
-import Chart from "chart.js/auto";
+import "chart.js/auto";
 import { StockedLake } from "@/hooks/useApiData";
 import { useApiDataContext } from "@/contexts/DataContext";
 import { formatDate } from "@/utils";
-
-Chart.register();
+import ChartFrame from "./ChartFrame";
+import StatePanel from "./StatePanel";
+import { buildCartesianOptions, chartPalette, withAlpha } from "./chartTheme";
 
 interface AverageWeightTrendChartProps {
   data: StockedLake[];
@@ -43,70 +44,66 @@ const AverageWeightTrendChart: React.FC<AverageWeightTrendChartProps> = ({
       (a, b) => new Date(a).getTime() - new Date(b).getTime()
     );
 
-    const points = sortedDates.map((date) => {
-      const entry = weightsByDate.get(date)!;
-      return {
-        x: date,
-        y: entry.totalFish > 0 ? entry.totalPounds / entry.totalFish : 0,
-      };
-    });
-
-    return points.filter((point) => point.y > 0);
+    return sortedDates
+      .map((date) => {
+        const entry = weightsByDate.get(date)!;
+        return {
+          x: date,
+          y: entry.totalFish > 0 ? entry.totalPounds / entry.totalFish : 0,
+        };
+      })
+      .filter((point) => point.y > 0);
   }, [data]);
 
   if (!trendData.length) {
     return (
-      <div className="p-6 text-center bg-white rounded-2xl shadow-sm">
-        No weight data is available for this view.
-      </div>
+      <StatePanel
+        compact
+        eyebrow="Weight Trace"
+        title="No reported fish-weight telemetry is available."
+        description="Average weight is only plotted when the incoming stocking records include fish-per-pound data."
+      />
     );
   }
 
   const chartData = {
     datasets: [
       {
-        label: `Average fish weight (${formatDate(
+        label: `Average fish weight from ${formatDate(
           selectedDateRange.pastDate
-        )} - ${formatDate(selectedDateRange.recentDate)})`,
+        )} to ${formatDate(selectedDateRange.recentDate)}`,
         data: trendData,
-        borderColor: "#DD6B20",
-        backgroundColor: "rgba(221, 107, 32, 0.2)",
+        borderColor: chartPalette.gold,
+        backgroundColor: withAlpha(chartPalette.gold, 0.18),
         tension: 0.25,
-        pointRadius: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true,
       },
     ],
   };
 
-  const chartOptions = {
-    responsive: true,
-    scales: {
-      x: {
-        type: "time" as const,
-        title: { display: true, text: "Date" },
-      },
-      y: {
-        title: { display: true, text: "Average weight (lbs)" },
-        beginAtZero: true,
-      },
+  const chartOptions = buildCartesianOptions({
+    xTitle: "Date",
+    yTitle: "Average weight (lbs)",
+    timeScale: true,
+    tooltipCallbacks: {
+      label: (ctx: any) =>
+        `${ctx.dataset.label}: ${(ctx.parsed.y ?? 0).toFixed(2)} lbs`,
     },
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: (ctx: any) =>
-            `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} lbs`,
-        },
-      },
-    },
-  };
+  });
 
   return (
-    <div className="chart-container">
-      <h2 className="mb-4 text-2xl text-center">
-        Average weights of stocked fish
-      </h2>
-      {/* @ts-ignore */}
-      <Line data={chartData} options={chartOptions} className="chart-size" />
-    </div>
+    <ChartFrame
+      eyebrow="Weight Trace"
+      title="Average fish weight over time"
+      description="Use the weight trace to monitor how planted fish quality shifts throughout the selected stocking interval."
+    >
+      <div className="chart-container">
+        {/* @ts-ignore */}
+        <Line data={chartData} options={chartOptions} className="chart-size" />
+      </div>
+    </ChartFrame>
   );
 };
 

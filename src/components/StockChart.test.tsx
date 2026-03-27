@@ -17,12 +17,12 @@ describe("StockChart", () => {
     lineSpy.mockClear();
   });
 
-  it("renders without crashing", () => {
+  it("renders the empty state when no data is available", () => {
     render(<StockChart data={[]} />);
     expect(
-      screen.getByText("Total Stocked Over Time Statewide")
+      screen.getByText("No statewide stocking signals were returned.")
     ).toBeInTheDocument();
-    expect(screen.getByTestId("line-chart")).toBeInTheDocument();
+    expect(screen.queryByTestId("line-chart")).not.toBeInTheDocument();
   });
 
   it("renders correctly with data", () => {
@@ -31,6 +31,10 @@ describe("StockChart", () => {
       { date: "2024-01-02", stocked_fish: 150 },
     ];
     render(<StockChart data={testData} />);
+    expect(
+      screen.getByText("Statewide stocking telemetry by day")
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("line-chart")).toBeInTheDocument();
     expect(lineSpy).toHaveBeenCalled();
   });
 
@@ -54,7 +58,9 @@ describe("StockChart", () => {
       { date: "2024-01-01", stocked_fish: 100 },
     ];
     render(<StockChart data={testData} />);
-    expect(screen.getByText("Total Stocked Over Time Statewide")).toBeInTheDocument();
+    expect(
+      screen.getByText("Statewide stocking telemetry by day")
+    ).toBeInTheDocument();
     expect(screen.getByTestId("line-chart")).toBeInTheDocument();
   });
 });

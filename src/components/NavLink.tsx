@@ -11,8 +11,8 @@ const NavLink: React.FC<NavLinkProps> = ({ href, children }) => {
   const isActive = router.pathname === href;
 
   const className = isActive
-    ? "block py-2 pl-3 pr-4 text-blue-600 rounded md:bg-transparent md:p-0"
-    : "block py-2 pl-3 pr-4 hover:text-blue-800 rounded md:bg-transparent md:p-0";
+    ? "hud-pill hud-pill-active w-full md:w-auto"
+    : "hud-pill w-full md:w-auto";
 
   return (
     <Link href={href} className={className}>

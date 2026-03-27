@@ -108,20 +108,26 @@ export const ApiDataProvider: React.FC<ApiDataProviderProps> = ({
         hatcheryNamesError,
       });
     }
-    console.log(selectedDateRange);
-  }, [hasError, selectedDateRange]);
+  }, [
+    hasError,
+    stockedLakesError,
+    hatcheryTotalsError,
+    totalStockedByDateError,
+    dateDataUpdatedError,
+    hatcheryNamesError,
+  ]);
 
   return (
     <ApiDataContext.Provider
       value={{
         stockedLakesData: stockedLakesData ?? [],
-        hatcheryTotals,
-        totalStockedByDate,
+        hatcheryTotals: hatcheryTotals ?? [],
+        totalStockedByDate: totalStockedByDate ?? [],
         selectedDateRange,
         setSelectedDateRange,
         today,
         dateDataUpdated,
-        hatcheryNames,
+        hatcheryNames: hatcheryNames ?? [],
         isLoading,
         hasError,
       }}

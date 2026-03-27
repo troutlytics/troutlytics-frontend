@@ -1,47 +1,34 @@
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   const features = [
     {
-      title: "Live Stocking Intelligence",
+      title: "Spatial stocking radar",
       description:
-        "Stay up to date on exactly when and where trout are being released with map layers, filters, and curated alerts.",
-      icon: "📍",
+        "Sweep the statewide map for active waters, clustered target zones, and direct route access from a single command deck.",
+      image: "/rainbow_trout.jpg",
     },
     {
-      title: "Beautiful Visual Analytics",
+      title: "Telemetry-rich analytics",
       description:
-        "Dive into species trends, hatchery performance, and historical patterns with cinematic charts and motion.",
-      icon: "📊",
+        "Read hatchery output, species movement, release-size distribution, and daily momentum through high-contrast chart surfaces.",
+      image: "/steelhead_trout.jpg",
     },
     {
-      title: "Made for Anglers & Agencies",
+      title: "Profiles with field context",
       description:
-        "The interface is tuned for biologists, hatchery managers, and weekend anglers alike—clarity without compromise.",
-      icon: "🎣",
+        "Open hatchery dossiers and raw event ledgers to move from summary signals into precise stocking records without breaking flow.",
+      image: "/cutthroat_trout.jpg",
     },
   ];
 
   const metrics = [
     { label: "Waters tracked", value: "1,200+" },
-    { label: "Historical records parsed", value: "10 years" },
-    { label: "Hatcheries analyzed", value: "65+" },
-  ];
-
-  const testimonials = [
-    {
-      quote:
-        "Troutlytics turned boring stocking spreadsheets into a fun app that gets us out on the water.",
-      name: "Sarah J.",
-      title: "Washington state angler",
-    },
-    {
-      quote:
-        "The dashboard saves us time from combing over data that we don't need. We have everything in one place, which is great.",
-      name: "Colin R.",
-      title: "Colleague, angler",
-    },
+    { label: "Historical depth", value: "10 years" },
+    { label: "Hatcheries indexed", value: "65+" },
+    { label: "Statewide views", value: "Dashboard + map" },
   ];
 
   return (
@@ -50,187 +37,192 @@ export default function Home() {
         <title>Troutlytics | Washington Trout Intelligence</title>
         <meta
           name="description"
-          content="Troutlytics, showcasing live trout stocking insights for Washington State."
+          content="Troutlytics transforms Washington trout stocking data into a premium night-water telemetry dashboard."
         />
       </Head>
-      <main className="min-h-screen text-slate-900 bg-troutlytics-background">
-        <section className="relative overflow-hidden text-white hero-gradient">
-          <div className="absolute inset-0 opacity-40 mix-blend-overlay">
-            <div className="absolute w-64 h-64 bg-white rounded-full blur-3xl -top-20 -right-10" />
-            <div className="absolute bottom-0 rounded-full w-72 h-72 bg-troutlytics-accent blur-3xl -left-16" />
-          </div>
-          <div className="relative max-w-6xl px-6 py-24 mx-auto">
-            <div className="grid items-center gap-12 lg:grid-cols-2">
-              <div>
-                <p className="inline-flex px-4 py-1 mb-6 text-sm font-semibold rounded-full bg-white/10 backdrop-blur">
-                  Built for the Washington trout community
-                </p>
-                <h1 className="mb-6 text-4xl font-bold leading-tight md:text-5xl">
-                  A beautifully immersive home for Washington trout stocking
-                  data.
-                </h1>
-                <p className="mb-10 text-lg text-white/80">
-                  Troutlytics elevates public stocking records into an
-                  interactive experience. Maps, curated insights, and stories
-                  that help anglers plan unforgettable days on the water.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <Link
-                    href="/dashboard"
-                    className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold text-slate-900 bg-white rounded-full shadow-lg hover:-translate-y-0.5 transition-transform"
-                  >
-                    Launch the dashboard
-                    <span className="ml-2 text-xl" aria-hidden="true">
-                      →
-                    </span>
-                  </Link>
-                  <Link
-                    href="/about"
-                    className="inline-flex items-center justify-center px-6 py-3 text-base font-semibold transition border rounded-full border-white/40 hover:bg-white/10"
-                  >
-                    Meet the mission
-                  </Link>
-                </div>
-              </div>
-              <div className="relative p-6 glass-panel">
-                <div className="absolute h-10 rounded-full inset-x-8 top-8 bg-white/20 blur-2xl" />
-                <div className="relative p-6 space-y-6 shadow-2xl rounded-2xl snapshot-card">
-                  <div>
-                    <p className="text-sm tracking-widest uppercase text-white/70">
-                      Live Snapshot
-                    </p>
-                    <p className="text-3xl font-semibold text-white">
-                      Yakima Region
-                    </p>
-                  </div>
-                  <ul className="space-y-3 text-white/90">
-                    <li className="flex items-center justify-between">
-                      <span>Stocked this week</span>
-                      <strong>28,450 fish</strong>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span>Most active hatchery</span>
-                      <strong>Goldendale</strong>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span>Top destination</span>
-                      <strong>Wenas Lake</strong>
-                    </li>
-                  </ul>
-                  <p className="text-sm text-white/70">
-                    Data refreshes every few minutes. Dive deeper inside the
-                    dashboard.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        <section className="py-20">
-          <div className="max-w-6xl px-6 mx-auto">
-            <p className="text-sm font-semibold tracking-widest text-troutlytics-accent">
-              Why Troutlytics
-            </p>
-            <h2 className="mt-2 text-3xl font-bold text-troutlytics-secondary">
-              Trout stocking data that makes sense.
-            </h2>
-            <p className="max-w-3xl mt-3 text-lg text-troutlytics-subtext">
-              The WDFW is fair and transparent with how they deliver public
-              trout stocking data, however, if you are looking for a more
-              visually interactive experience, Troutlytics is the solution.
-            </p>
-            <div className="grid gap-6 mt-12 md:grid-cols-3">
-              {features.map((feature) => (
-                <div
-                  key={feature.title}
-                  className="h-full p-6 transition-shadow bg-white border shadow-sm rounded-2xl hover:shadow-xl border-slate-100"
-                >
-                  <div className="flex items-center justify-center w-12 h-12 mb-4 text-2xl rounded-full bg-troutlytics-primary/10">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-semibold">{feature.title}</h3>
-                  <p className="mt-2 text-troutlytics-subtext">
-                    {feature.description}
-                  </p>
-                </div>
-              ))}
+      <div className="page-shell space-y-6 pb-8">
+        <section className="grid gap-5 xl:grid-cols-[1.3fr_0.7fr]">
+          <div className="glass-panel-strong rounded-[2rem] p-6 sm:p-8">
+            <div className="telemetry-kicker">
+              <span className="signal-dot" />
+              Washington trout telemetry
             </div>
-          </div>
-        </section>
 
-        <section className="py-16">
-          <div className="max-w-5xl px-6 mx-auto glass-panel">
-            <div className="grid gap-8 md:grid-cols-3">
+            <div className="mt-6 max-w-4xl space-y-4">
+              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.65em] text-cyan-100/55">
+                Night-Water Command Deck
+              </p>
+              <h1 className="page-title text-balance">
+                Trout stocking data, reimagined as an immersive sonar dashboard.
+              </h1>
+              <p className="page-copy max-w-3xl">
+                Troutlytics translates Washington stocking reports into a
+                premium dark-glass interface for anglers, hatchery teams, and
+                data-minded planners. Sweep the state, trace the latest plants,
+                and read the water with the same visual language across every
+                surface.
+              </p>
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/dashboard" className="primary-button">
+                Launch dashboard
+              </Link>
+              <Link href="/map" className="secondary-button">
+                Open map sweep
+              </Link>
+            </div>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {metrics.map((metric) => (
                 <div
                   key={metric.label}
-                  className="p-6 text-center rounded-2xl metric-card"
+                  className="metric-card rounded-[1.45rem] px-4 py-4"
                 >
-                  <p className="text-3xl font-semibold text-troutlytics-primary">
-                    {metric.value}
-                  </p>
-                  <p className="mt-2 text-sm font-semibold tracking-wide uppercase text-troutlytics-subtext">
-                    {metric.label}
-                  </p>
+                  <p className="card-eyebrow">{metric.label}</p>
+                  <p className="mt-3 stat-value">{metric.value}</p>
                 </div>
               ))}
             </div>
           </div>
+
+          <aside className="glass-panel rounded-[2rem] p-6 sm:p-7">
+            <div className="space-y-4">
+              <p className="card-eyebrow">Live Snapshot</p>
+              <h2 className="text-2xl font-semibold text-white">
+                A calmer way to read the state.
+              </h2>
+              <p className="text-sm leading-7 text-cyan-50/68">
+                The interface blends atmospheric gradients, HUD pills, dark-glass
+                panels, and restrained cyan glow so dense fisheries data still
+                feels elegant.
+              </p>
+            </div>
+
+            <div className="relative mt-8 flex h-[18rem] items-center justify-center overflow-hidden rounded-[1.8rem] border border-cyan-100/10 bg-[radial-gradient(circle,_rgba(99,215,255,0.14),_transparent_52%),linear-gradient(180deg,rgba(5,22,35,0.96),rgba(2,12,20,1))]">
+              <div className="absolute inset-0 trout-loader-grid opacity-35" />
+              <div className="absolute inset-8 rounded-full border border-cyan-100/12" />
+              <div className="absolute inset-[22%] rounded-full border border-cyan-100/12" />
+              <div className="absolute inset-[35%] rounded-full border border-cyan-100/12" />
+              <div className="absolute h-px w-[72%] bg-gradient-to-r from-transparent via-cyan-100/25 to-transparent" />
+              <div className="absolute h-[72%] w-px bg-gradient-to-b from-transparent via-cyan-100/25 to-transparent" />
+              <div className="trout-loader-sweep absolute inset-0 rounded-full" />
+              <div className="relative flex h-24 w-24 items-center justify-center rounded-full border border-cyan-100/20 bg-[#02111b]/80 shadow-[0_0_35px_rgba(70,190,255,0.16)] backdrop-blur-md">
+                <div className="absolute inset-3 rounded-full border border-cyan-100/15" />
+                <div className="trout-loader-core h-3.5 w-3.5 rounded-full bg-cyan-100 shadow-[0_0_24px_rgba(133,232,255,0.95)]" />
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-3">
+              <div className="hud-pill w-full justify-between px-4 py-3">
+                <span>Statewide stocking sweep</span>
+                <span className="text-cyan-100/48">Live</span>
+              </div>
+              <div className="hud-pill w-full justify-between px-4 py-3">
+                <span>Map + analytics in sync</span>
+                <span className="text-cyan-100/48">Ready</span>
+              </div>
+            </div>
+          </aside>
         </section>
 
-        <section className="py-20">
-          <div className="max-w-6xl px-6 mx-auto">
-            <div className="grid gap-8 lg:grid-cols-2">
-              {testimonials.map((testimonial) => (
-                <div
-                  key={testimonial.name}
-                  className="p-8 shadow-xl rounded-3xl testimonial-card"
-                >
-                  <p className="text-lg italic text-troutlytics-secondary">
-                    “{testimonial.quote}”
-                  </p>
-                  <div className="mt-6">
-                    <p className="font-semibold">{testimonial.name}</p>
-                    <p className="text-sm text-troutlytics-subtext">
-                      {testimonial.title}
-                    </p>
-                  </div>
-                </div>
-              ))}
+        <section className="grid gap-5 lg:grid-cols-3">
+          {features.map((feature) => (
+            <article
+              key={feature.title}
+              className="glass-panel overflow-hidden rounded-[1.9rem]"
+            >
+              <div className="relative h-56">
+                <Image
+                  src={feature.image}
+                  alt={feature.title}
+                  fill
+                  className="object-cover opacity-70"
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(2,12,20,0.14),rgba(2,12,20,0.88))]" />
+              </div>
+              <div className="p-6">
+                <p className="card-eyebrow">Capability</p>
+                <h2 className="mt-3 text-2xl font-semibold text-white">
+                  {feature.title}
+                </h2>
+                <p className="mt-3 text-sm leading-7 text-cyan-50/68">
+                  {feature.description}
+                </p>
+              </div>
+            </article>
+          ))}
+        </section>
+
+        <section className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
+          <div className="glass-panel rounded-[2rem] p-6 sm:p-7">
+            <p className="card-eyebrow">Why It Exists</p>
+            <h2 className="mt-3 text-3xl font-semibold text-white">
+              Built to make public stocking data feel usable, not buried.
+            </h2>
+            <div className="mt-4 space-y-3 text-sm leading-7 text-cyan-50/68">
+              <p>
+                Washington publishes the truth in plain view, but spreadsheets
+                are not how most people naturally read a statewide fishery.
+              </p>
+              <p>
+                Troutlytics adds hierarchy, atmosphere, and telemetry cues so
+                maps, charts, and raw records all reinforce each other instead
+                of competing for attention.
+              </p>
+              <p>
+                The goal is not decoration. It is signal clarity, spatial
+                intuition, and faster pattern recognition.
+              </p>
             </div>
           </div>
-        </section>
 
-        <section className="px-6 pb-24">
-          <div className="max-w-4xl px-8 py-16 mx-auto text-center text-white gradient-panel">
-            <p className="text-sm font-semibold tracking-[0.2em] text-white/70 uppercase">
-              Ready when you are
-            </p>
-            <h3 className="mt-4 text-3xl font-bold">
-              Bring beauty and clarity to trout stocking data.
-            </h3>
-            <p className="mt-3 text-lg text-white/80">
-              Your dashboard is a click away. Step inside to see stocking
-              timelines, hatchery stories, and map layers that feel alive.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 mt-8">
+          <div className="glass-panel-strong rounded-[2rem] p-6 sm:p-7">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="card-eyebrow">Explore The Deck</p>
+                <h2 className="mt-3 text-3xl font-semibold text-white">
+                  Three ways into the water.
+                </h2>
+              </div>
+              <Link href="/hatcheries" className="ghost-button">
+                Open hatchery profiles
+              </Link>
+            </div>
+
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <Link
                 href="/dashboard"
-                className="inline-flex items-center px-6 py-3 font-semibold bg-white rounded-full shadow-lg text-troutlytics-secondary"
+                className="rounded-[1.5rem] border border-white/8 bg-white/[0.04] p-5 transition hover:bg-white/[0.06]"
               >
-                Explore the dashboard
+                <p className="card-eyebrow">Dashboard</p>
+                <p className="mt-2 text-xl font-semibold text-white">
+                  Chart statewide volume
+                </p>
               </Link>
               <Link
-                href="/contact"
-                className="inline-flex items-center px-6 py-3 font-semibold transition border rounded-full border-white/50 hover:bg-white/10"
+                href="/map"
+                className="rounded-[1.5rem] border border-white/8 bg-white/[0.04] p-5 transition hover:bg-white/[0.06]"
               >
-                Request a walkthrough
+                <p className="card-eyebrow">Map</p>
+                <p className="mt-2 text-xl font-semibold text-white">
+                  Sweep the state spatially
+                </p>
+              </Link>
+              <Link
+                href="/about"
+                className="rounded-[1.5rem] border border-white/8 bg-white/[0.04] p-5 transition hover:bg-white/[0.06]"
+              >
+                <p className="card-eyebrow">Mission</p>
+                <p className="mt-2 text-xl font-semibold text-white">
+                  See the conservation lens
+                </p>
               </Link>
             </div>
           </div>
         </section>
-      </main>
+      </div>
     </>
   );
 }

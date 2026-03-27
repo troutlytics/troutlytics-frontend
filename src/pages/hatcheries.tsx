@@ -1,14 +1,14 @@
 "use client";
 
-import React, {
-  useMemo,
-  useState,
-} from "react";
+import React, { useMemo, useState } from "react";
 import {
   HatcheryDataProvider,
   useHatcheryDataContext,
 } from "@/contexts/HatcheryDataContext";
 import { formatDate } from "@/utils";
+import FullScreenLoader from "@/components/FullScreenLoader";
+import StatePanel from "@/components/StatePanel";
+import { formatCompactNumber, formatInteger } from "@/components/chartTheme";
 
 const StatCard = ({
   label,
@@ -19,14 +19,12 @@ const StatCard = ({
   value: string;
   helper?: string;
 }) => (
-  <div className="p-4 transition-shadow bg-white border shadow-sm rounded-2xl hover:shadow-md">
-    <p className="text-xs font-semibold tracking-wide uppercase text-troutlytics-subtext">
-      {label}
-    </p>
-    <p className="mt-2 text-2xl font-bold text-slate-900">{value}</p>
-    {helper && (
-      <p className="mt-1 text-sm text-troutlytics-subtext">{helper}</p>
-    )}
+  <div className="metric-card rounded-[1.5rem] px-4 py-4">
+    <p className="card-eyebrow">{label}</p>
+    <p className="mt-3 stat-value">{value}</p>
+    {helper ? (
+      <p className="mt-2 text-sm leading-6 text-cyan-50/60">{helper}</p>
+    ) : null}
   </div>
 );
 
@@ -39,20 +37,21 @@ const BreakdownList = ({
   data: { name: string; total: number }[];
   emptyLabel: string;
 }) => (
-  <div className="p-6 bg-white shadow-sm rounded-2xl">
-    <h3 className="text-lg font-semibold">{title}</h3>
+  <div className="glass-panel rounded-[1.8rem] p-6">
+    <p className="card-eyebrow">{title}</p>
+    <h3 className="mt-3 text-2xl font-semibold text-white">{title}</h3>
     {data.length === 0 ? (
-      <p className="mt-3 text-sm text-troutlytics-subtext">{emptyLabel}</p>
+      <p className="mt-4 text-sm leading-7 text-cyan-50/62">{emptyLabel}</p>
     ) : (
-      <ul className="mt-4 space-y-3">
+      <ul className="mt-6 space-y-3">
         {data.map((item) => (
           <li
             key={`${title}-${item.name}`}
-            className="flex items-center justify-between text-sm"
+            className="flex items-center justify-between gap-4 rounded-2xl border border-white/6 bg-white/[0.03] px-4 py-3 text-sm"
           >
-            <span className="font-medium">{item.name}</span>
-            <span className="text-troutlytics-subtext">
-              {item.total.toLocaleString()}
+            <span className="font-medium text-white">{item.name}</span>
+            <span className="text-cyan-50/66">
+              {formatInteger(item.total)}
             </span>
           </li>
         ))}
@@ -82,57 +81,128 @@ const HatcheryExplorer = () => {
     );
   }, [hatcheryNames, search]);
 
-  return (
-    <div className="container px-4 pb-12 mx-auto">
-      <header className="max-w-3xl mb-8">
-        <p className="text-sm font-semibold tracking-[0.3em] uppercase text-troutlytics-accent">
-          Hatchery intelligence
-        </p>
-        <h1 className="mt-2 text-4xl font-bold text-slate-900">
-          Washington State trout hatchery explorer
-        </h1>
-        <p className="mt-4 text-lg text-troutlytics-subtext">
-          Every stocking run ever recorded is rolled into these profiles so
-          biologists, hatchery leads, and anglers can understand each facility’s
-          unique story.
-        </p>
-      </header>
+  if (isNamesLoading && !hatcheryNames.length) {
+    return (
+      <div className="page-shell">
+        <FullScreenLoader
+          title="Resolving hatchery intelligence"
+          description="Loading facility rosters, indexing hatchery names, and preparing profile telemetry for the explorer."
+          statusItems={[
+            "Indexing hatchery names",
+            "Linking profile metrics",
+            "Preparing activity ledger",
+          ]}
+          footerLabel="Scanning hatcheries • Linking waters • Priming profiles"
+        />
+      </div>
+    );
+  }
 
-      <section className="p-6 mb-8 bg-white shadow-sm rounded-3xl">
-        <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-troutlytics-subtext">
-              Hatchery selector
+  return (
+    <div className="page-shell space-y-6">
+      <section className="grid gap-5 xl:grid-cols-[1.3fr_0.7fr]">
+        <div className="glass-panel-strong rounded-[2rem] p-6 sm:p-8">
+          <div className="telemetry-kicker">
+            <span className="signal-dot" />
+            Hatchery intelligence
+          </div>
+
+          <div className="mt-6 max-w-4xl space-y-4">
+            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.65em] text-cyan-100/55">
+              Facility Profiles
             </p>
-            <p className="text-sm text-troutlytics-subtext">
-              Choose a hatchery to load its profile.
+            <h1 className="page-title text-balance">
+              Compare Washington hatcheries through long-range stocking
+              telemetry.
+            </h1>
+            <p className="page-copy max-w-3xl">
+              Every stocking run rolls up into a living hatchery profile so you
+              can inspect water coverage, species distribution, timing, and
+              production scale from a single command surface.
             </p>
           </div>
+
+          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+            <div className="metric-card rounded-[1.45rem] px-4 py-4">
+              <p className="card-eyebrow">Facilities indexed</p>
+              <p className="mt-3 stat-value">
+                {formatInteger(hatcheryNames.length)}
+              </p>
+            </div>
+            <div className="metric-card rounded-[1.45rem] px-4 py-4">
+              <p className="card-eyebrow">Active profile</p>
+              <p className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-white">
+                {activeHatchery || "Awaiting selection"}
+              </p>
+            </div>
+            <div className="metric-card rounded-[1.45rem] px-4 py-4">
+              <p className="card-eyebrow">Filtered names</p>
+              <p className="mt-3 stat-value">
+                {formatInteger(filteredNames.length)}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <aside className="glass-panel rounded-[2rem] p-6 sm:p-7">
+          <p className="card-eyebrow">How To Read It</p>
+          <h2 className="mt-3 text-2xl font-semibold text-white">
+            Profile the statewide network quickly.
+          </h2>
+          <div className="mt-4 space-y-3 text-sm leading-7 text-cyan-50/68">
+            <p>
+              Search or browse the hatchery roster, then open a profile to load
+              its lifetime footprint across waters and species.
+            </p>
+            <p>
+              The spotlight metrics summarize scale, coverage, timing, and fish
+              quality before the lists drill into top waters and mix.
+            </p>
+            <p>
+              Recent activity stays visible below so you can jump from summary
+              telemetry to individual events without losing context.
+            </p>
+          </div>
+        </aside>
+      </section>
+
+      <section className="glass-panel-strong rounded-[2rem] p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="card-eyebrow">Hatchery Selector</p>
+            <h2 className="mt-3 text-2xl font-semibold text-white">
+              Load a facility profile
+            </h2>
+            <p className="mt-2 text-sm leading-7 text-cyan-50/66">
+              Choose a hatchery to open its telemetry profile. Search filters
+              the roster locally without changing data loading.
+            </p>
+          </div>
+
           <button
             type="button"
             onClick={() => setIsSelectorCollapsed((prev) => !prev)}
             aria-expanded={!isSelectorCollapsed}
-            className="inline-flex items-center self-start gap-2 px-4 py-2 text-sm font-semibold transition border rounded-full md:self-center border-slate-200 text-slate-700 hover:border-troutlytics-primary hover:text-troutlytics-primary"
+            className="ghost-button self-start lg:self-auto"
           >
             {isSelectorCollapsed ? "Show hatchery list" : "Hide hatchery list"}
-            <span aria-hidden>{isSelectorCollapsed ? "▾" : "▴"}</span>
           </button>
         </div>
 
         {isSelectorCollapsed ? (
-          <p className="text-sm text-troutlytics-subtext">
-            List minimized.{" "}
+          <p className="mt-5 text-sm leading-7 text-cyan-50/64">
+            Selector minimized.{" "}
             {activeHatchery
-              ? `Current selection: ${activeHatchery}.`
-              : "No hatchery selected yet."}
+              ? `Current profile: ${activeHatchery}.`
+              : "No hatchery profile selected yet."}
           </p>
         ) : (
           <>
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div className="w-full md:w-1/2">
+            <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
+              <div>
                 <label
                   htmlFor="hatchery-search"
-                  className="text-sm font-semibold uppercase text-troutlytics-subtext"
+                  className="compact-label mb-2 block"
                 >
                   Search hatcheries
                 </label>
@@ -140,35 +210,35 @@ const HatcheryExplorer = () => {
                   id="hatchery-search"
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Start typing: 'Goldendale', 'Chelan', 'Naches'…"
-                  className="w-full px-4 py-2 mt-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-troutlytics-primary"
+                  placeholder="Goldendale, Chelan, Naches..."
+                  className="custom-input"
                 />
               </div>
-              <p className="text-sm text-troutlytics-subtext">
-                Showing {filteredNames.length} hatcheries
-              </p>
+              <div className="hud-pill px-4 py-3 text-xs uppercase tracking-[0.28em]">
+                {formatInteger(filteredNames.length)} visible
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2 mt-6">
+
+            <div className="mt-6 flex flex-wrap gap-2">
               {isNamesLoading ? (
-                Array.from({ length: 20 }).map((_, index) => (
+                Array.from({ length: 16 }).map((_, index) => (
                   <div
                     key={index}
-                    className="px-6 py-2 rounded-full h-9 bg-slate-100 animate-pulse"
+                    className="h-10 w-32 animate-pulse rounded-full border border-white/6 bg-white/6"
                   />
                 ))
               ) : filteredNames.length === 0 ? (
-                <p className="text-sm text-troutlytics-subtext">
+                <p className="text-sm leading-7 text-cyan-50/62">
                   No hatcheries match that search.
                 </p>
               ) : (
                 filteredNames.map((name) => (
                   <button
                     key={name}
+                    type="button"
                     onClick={() => setActiveHatchery(name)}
-                    className={`px-4 py-2 text-sm font-semibold rounded-full border transition ${
-                      activeHatchery === name
-                        ? "bg-troutlytics-primary text-white border-troutlytics-primary"
-                        : "bg-white text-slate-700 border-slate-200 hover:border-troutlytics-primary"
+                    className={`hud-pill px-4 py-2 text-xs uppercase tracking-[0.24em] ${
+                      activeHatchery === name ? "hud-pill-active" : ""
                     }`}
                   >
                     {name}
@@ -180,45 +250,57 @@ const HatcheryExplorer = () => {
         )}
       </section>
 
-      {hasError && (
-        <p className="p-4 mb-6 text-sm text-red-700 border border-red-100 bg-red-50 rounded-xl">
-          We couldn’t load hatchery records right now. Please refresh and try
-          again.
-        </p>
-      )}
+      {hasError ? (
+        <StatePanel
+          compact
+          variant="error"
+          eyebrow="Profile Error"
+          title="The hatchery profile feed could not be loaded."
+          description="The explorer can’t resolve hatchery records right now. Refresh once the upstream API is available again."
+        />
+      ) : null}
 
       {isInsightLoading && activeHatchery ? (
-        <div className="grid gap-4 md:grid-cols-2">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="h-32 bg-slate-100 rounded-2xl animate-pulse" />
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div
+              key={index}
+              className="metric-card h-36 animate-pulse rounded-[1.5rem]"
+            />
           ))}
-        </div>
+        </section>
       ) : selectedInsight ? (
         <>
-          <section className="mb-8">
-            <div className="flex flex-col gap-2 mb-6">
-              <p className="text-sm font-semibold tracking-[0.2em] uppercase text-troutlytics-accent">
-                Spotlight
-              </p>
-              <h2 className="text-3xl font-bold">{selectedInsight.name}</h2>
-              <p className="text-troutlytics-subtext">
+          <section className="glass-panel-strong rounded-[2rem] p-6 sm:p-7">
+            <div className="flex flex-col gap-3">
+              <p className="card-eyebrow">Spotlight</p>
+              <h2 className="text-3xl font-semibold text-white">
+                {selectedInsight.name}
+              </h2>
+              <p className="text-sm leading-7 text-cyan-50/66">
                 {selectedInsight.totalReleases > 0
-                  ? `Total coverage based on ${selectedInsight.totalReleases.toLocaleString()} stocking events across ${selectedInsight.uniqueWaters} waters.`
+                  ? `This profile aggregates ${formatInteger(
+                      selectedInsight.totalReleases
+                    )} stocking events across ${formatInteger(
+                      selectedInsight.uniqueWaters
+                    )} waters.`
                   : "No stocking records were returned for this hatchery yet."}
               </p>
             </div>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+            <div className="mt-8 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               <StatCard
                 label="Total fish stocked"
-                value={selectedInsight.totalFish.toLocaleString()}
+                value={formatCompactNumber(selectedInsight.totalFish)}
+                helper={`${formatInteger(selectedInsight.totalFish)} fish total`}
               />
               <StatCard
                 label="Stocking events"
-                value={selectedInsight.totalReleases.toLocaleString()}
+                value={formatInteger(selectedInsight.totalReleases)}
               />
               <StatCard
                 label="Unique waters served"
-                value={selectedInsight.uniqueWaters.toLocaleString()}
+                value={formatInteger(selectedInsight.uniqueWaters)}
               />
               <StatCard
                 label="Average fish weight"
@@ -261,75 +343,92 @@ const HatcheryExplorer = () => {
             />
           </section>
 
-          {selectedInsight.extraMetrics.length > 0 && (
-            <section className="mt-8">
-              <div className="p-6 bg-white shadow-sm rounded-2xl">
-                <h3 className="text-lg font-semibold">
-                  Additional profile metrics
-                </h3>
-                <div className="grid gap-3 mt-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {selectedInsight.extraMetrics.map((metric) => (
-                    <div
-                      key={`${metric.label}-${metric.value}`}
-                      className="p-3 border rounded-xl border-slate-100 bg-slate-50"
-                    >
-                      <p className="text-xs font-semibold tracking-wide uppercase text-troutlytics-subtext">
-                        {metric.label}
-                      </p>
-                      <p className="mt-1 text-base font-semibold text-slate-900">
-                        {metric.value}
-                      </p>
-                    </div>
-                  ))}
-                </div>
+          {selectedInsight.extraMetrics.length > 0 ? (
+            <section className="glass-panel rounded-[1.8rem] p-6">
+              <p className="card-eyebrow">Additional Profile Metrics</p>
+              <h3 className="mt-3 text-2xl font-semibold text-white">
+                Supplemental telemetry
+              </h3>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                {selectedInsight.extraMetrics.map((metric) => (
+                  <div
+                    key={`${metric.label}-${metric.value}`}
+                    className="rounded-[1.35rem] border border-white/8 bg-white/[0.04] p-4"
+                  >
+                    <p className="compact-label">{metric.label}</p>
+                    <p className="mt-2 text-base font-semibold text-white">
+                      {metric.value}
+                    </p>
+                  </div>
+                ))}
               </div>
             </section>
-          )}
+          ) : null}
 
-          <section className="mt-8">
-            <div className="p-6 bg-white shadow-sm rounded-2xl">
-              <h3 className="text-lg font-semibold">Recent stocking activity</h3>
-              {selectedInsight.recentReleases.length === 0 ? (
-                <p className="mt-3 text-sm text-troutlytics-subtext">
-                  No recent stocking data available.
-                </p>
-              ) : (
-                <div className="mt-4 overflow-x-auto">
-                  <table className="min-w-full text-sm">
-                    <thead>
-                      <tr className="text-left text-troutlytics-subtext">
-                        <th className="py-2 pr-4">Date</th>
-                        <th className="py-2 pr-4">Water</th>
-                        <th className="py-2 pr-4">Species</th>
-                        <th className="py-2">Fish stocked</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {selectedInsight.recentReleases.map((release) => (
-                        <tr key={release.id} className="border-t">
-                          <td className="py-3 pr-4">
-                            {formatDate(release.date)}
-                          </td>
-                          <td className="py-3 pr-4">
-                            {release.water_name_cleaned}
-                          </td>
-                          <td className="py-3 pr-4">{release.species}</td>
-                          <td className="py-3">
-                            {release.stocked_fish.toLocaleString()}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+          <section className="glass-panel-strong rounded-[2rem] p-6">
+            <div className="flex flex-col gap-2">
+              <p className="card-eyebrow">Recent Activity</p>
+              <h3 className="text-2xl font-semibold text-white">
+                Latest stocking ledger
+              </h3>
             </div>
+
+            {selectedInsight.recentReleases.length === 0 ? (
+              <p className="mt-4 text-sm leading-7 text-cyan-50/64">
+                No recent stocking data available.
+              </p>
+            ) : (
+              <div className="table-shell trout-scrollbar mt-5 overflow-x-auto rounded-[1.4rem]">
+                <table className="min-w-full">
+                  <thead className="bg-[#051826]/94">
+                    <tr className="text-left">
+                      <th className="px-4 py-4 text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-cyan-50/58">
+                        Date
+                      </th>
+                      <th className="px-4 py-4 text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-cyan-50/58">
+                        Water
+                      </th>
+                      <th className="px-4 py-4 text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-cyan-50/58">
+                        Species
+                      </th>
+                      <th className="px-4 py-4 text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-cyan-50/58">
+                        Fish stocked
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/6">
+                    {selectedInsight.recentReleases.map((release) => (
+                      <tr
+                        key={release.id}
+                        className="transition hover:bg-white/[0.035]"
+                      >
+                        <td className="px-4 py-4 text-sm text-cyan-50/76">
+                          {formatDate(release.date)}
+                        </td>
+                        <td className="px-4 py-4 text-sm font-medium text-white">
+                          {release.water_name_cleaned}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-cyan-50/72">
+                          {release.species}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-cyan-50/72">
+                          {formatInteger(release.stocked_fish)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </section>
         </>
       ) : (
-        <p className="text-troutlytics-subtext">
-          Use the search to choose a hatchery. We only load profile data after a hatchery is selected.
-        </p>
+        <StatePanel
+          compact
+          eyebrow="Awaiting Profile"
+          title="Choose a hatchery to unlock its telemetry profile."
+          description="The explorer only loads profile analytics after a hatchery is selected from the roster above."
+        />
       )}
     </div>
   );

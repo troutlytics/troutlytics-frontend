@@ -1,5 +1,4 @@
 "use client";
-import { useEffect } from "react";
 import useSWR from "swr";
 
 export interface StockedLake {
@@ -48,7 +47,6 @@ const swrOptionsDynamic = {
   dedupingInterval: 10 * 60 * 1000, // 10 minutes
   cacheTTL: 60 * 60 * 1000, // 1 hour (with SWR v2+)
   keepPreviousData: true,
-
 };
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -106,12 +104,7 @@ const useApiData = (dateRange: DateRange) => {
     error: hatcheryNamesError,
     isLoading: hatcheryNamesLoading,
   } = useSWR(`${route}/hatchery_names`, fetcher);
-  useEffect(() => {
-    console.log(stockedLakesData)
-  
 
-  }, [stockedLakesData])
-  
   return {
     // Data
     stockedLakesData,

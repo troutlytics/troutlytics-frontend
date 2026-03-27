@@ -1,11 +1,17 @@
 import React, { useMemo } from "react";
 import { Line } from "react-chartjs-2";
-import Chart from "chart.js/auto";
+import "chart.js/auto";
 import { TotalStockedByDate } from "@/hooks/useApiData";
 import { useApiDataContext } from "@/contexts/DataContext";
 import { formatDate } from "@/utils";
-
-Chart.register();
+import ChartFrame from "./ChartFrame";
+import StatePanel from "./StatePanel";
+import {
+  buildCartesianOptions,
+  chartPalette,
+  formatInteger,
+  withAlpha,
+} from "./chartTheme";
 
 interface CumulativeStockChartProps {
   data: TotalStockedByDate[];
@@ -35,51 +41,55 @@ const CumulativeStockChart: React.FC<CumulativeStockChartProps> = ({
 
   if (!cumulativeSeries.length) {
     return (
-      <div className="p-6 text-center bg-white rounded-2xl shadow-sm">
-        No cumulative data is available for this range.
-      </div>
+      <StatePanel
+        compact
+        eyebrow="Season Curve"
+        title="No cumulative data is available for this range."
+        description="The running total only appears when there are daily stocking records inside the selected window."
+      />
     );
   }
 
   const chartData = {
     datasets: [
       {
-        label: `Cumulative stockings (${formatDate(
+        label: `Cumulative stocking from ${formatDate(
           selectedDateRange.pastDate
-        )} - ${formatDate(selectedDateRange.recentDate)})`,
+        )} to ${formatDate(selectedDateRange.recentDate)}`,
         data: cumulativeSeries,
-        borderColor: "#805AD5",
-        backgroundColor: "rgba(128, 90, 213, 0.15)",
+        borderColor: chartPalette.indigo,
+        backgroundColor: withAlpha(chartPalette.indigo, 0.18),
         borderWidth: 2,
         tension: 0.15,
         pointRadius: 0,
+        pointHoverRadius: 4,
         fill: true,
       },
     ],
   };
 
-  const chartOptions = {
-    responsive: true,
-    scales: {
-      x: {
-        type: "time" as const,
-        title: { display: true, text: "Date" },
-      },
-      y: {
-        title: { display: true, text: "Running total of fish stocked" },
-        beginAtZero: true,
-      },
+  const chartOptions = buildCartesianOptions({
+    xTitle: "Date",
+    yTitle: "Running fish total",
+    timeScale: true,
+    yTicksCallback: (value) => formatInteger(Number(value)),
+    tooltipCallbacks: {
+      label: (ctx: any) =>
+        `${ctx.dataset.label}: ${formatInteger(ctx.parsed.y ?? 0)} fish`,
     },
-  };
+  });
 
   return (
-    <div className="chart-container">
-      <h2 className="mb-4 text-2xl text-center">
-        Cumulative progress across the selected range
-      </h2>
-      {/* @ts-ignore */}
-      <Line data={chartData} options={chartOptions} className="chart-size" />
-    </div>
+    <ChartFrame
+      eyebrow="Season Curve"
+      title="Cumulative progress through the selected window"
+      description="This curve reveals how quickly statewide stocking volume accumulated over time, making surges and slow periods easy to spot."
+    >
+      <div className="chart-container">
+        {/* @ts-ignore */}
+        <Line data={chartData} options={chartOptions} className="chart-size" />
+      </div>
+    </ChartFrame>
   );
 };
 
