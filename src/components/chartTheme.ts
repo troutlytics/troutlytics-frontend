@@ -1,4 +1,5 @@
 import { ChartOptions } from "chart.js";
+import { formatDate } from "@/utils";
 
 const TICK_COLOR = "rgba(214, 243, 255, 0.7)";
 const GRID_COLOR = "rgba(158, 233, 255, 0.08)";
@@ -89,6 +90,20 @@ export const buildCartesianOptions = ({
   scales: {
     x: {
       type: timeScale ? "time" : "category",
+      time: timeScale
+        ? {
+            unit: "day",
+            round: "day",
+            tooltipFormat: "MMM d, yyyy",
+            displayFormats: {
+              day: "MMM d",
+              week: "MMM d",
+              month: "MMM yyyy",
+              quarter: "MMM yyyy",
+              year: "yyyy",
+            },
+          }
+        : undefined,
       grid: {
         color: GRID_COLOR,
         drawTicks: false,
@@ -100,7 +115,16 @@ export const buildCartesianOptions = ({
         color: TICK_COLOR,
         padding: 10,
         maxRotation: 0,
-        callback: xTicksCallback,
+        autoSkip: true,
+        maxTicksLimit: timeScale ? 8 : undefined,
+        callback:
+          timeScale && !xTicksCallback
+            ? (value: string | number) =>
+                formatDate(value, {
+                  month: "short",
+                  day: "numeric",
+                })
+            : xTicksCallback,
       },
       title: {
         display: true,
@@ -164,7 +188,19 @@ export const buildCartesianOptions = ({
       titleMarginBottom: 8,
       bodySpacing: 6,
       cornerRadius: 16,
-      callbacks: tooltipCallbacks,
+      callbacks: {
+        ...(timeScale
+          ? {
+              title: (ctx: any) =>
+                formatDate(ctx?.[0]?.parsed?.x, {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                }),
+            }
+          : {}),
+        ...(tooltipCallbacks ?? {}),
+      },
     },
   },
 });
