@@ -63,33 +63,42 @@ export const buildCartesianOptions = ({
   yTicksCallback,
   xTicksCallback,
   tooltipCallbacks,
-}: CartesianOptionsConfig): ChartOptions<any> => ({
-  responsive: true,
-  maintainAspectRatio: false,
-  interaction: {
-    mode: "index",
-    intersect: false,
-  },
-  animation: {
-    duration: 620,
-  },
-  layout: {
-    padding: {
-      top: 8,
-      right: 8,
-      left: 0,
-      bottom: 0,
+}: CartesianOptionsConfig): ChartOptions<any> => {
+  const xAxisType = timeScale
+    ? "time"
+    : indexAxis === "y"
+      ? "linear"
+      : "category";
+  const yAxisType = indexAxis === "y" ? "category" : "linear";
+
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: {
+      mode: "index",
+      intersect: false,
     },
-  },
-  elements: {
-    line: {
-      capBezierPoints: true,
+    animation: {
+      duration: 620,
     },
-  },
-  indexAxis,
-  scales: {
-    x: {
-      type: timeScale ? "time" : "category",
+    layout: {
+      padding: {
+        top: 8,
+        right: 8,
+        left: 0,
+        bottom: 0,
+      },
+    },
+    elements: {
+      line: {
+        capBezierPoints: true,
+      },
+    },
+    indexAxis,
+    scales: {
+      x: {
+        type: xAxisType,
+        beginAtZero: xAxisType === "linear",
       time: timeScale
         ? {
             unit: "day",
@@ -138,7 +147,8 @@ export const buildCartesianOptions = ({
       stacked,
     },
     y: {
-      beginAtZero: true,
+      type: yAxisType,
+      beginAtZero: yAxisType === "linear",
       grid: {
         color: GRID_COLOR,
         drawTicks: false,
@@ -203,7 +213,8 @@ export const buildCartesianOptions = ({
       },
     },
   },
-});
+  };
+};
 
 export const buildPieOptions = (
   tooltipCallbacks?: Record<string, (...args: any[]) => string>
