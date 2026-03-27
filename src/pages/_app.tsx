@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "chartjs-adapter-date-fns";
 import Layout from "../components/layout";
 import type { AppProps } from "next/app";
 import { ApiDataProvider } from "@/contexts/DataContext";
