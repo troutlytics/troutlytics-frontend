@@ -76,14 +76,25 @@ const Map: React.FC<MapProps> = ({ stockedLakesData, loading }) => {
 
     L.control.zoom({ position: "topright" }).addTo(mapRef.current);
 
+    // CARTO's keyless raster basemaps now return an "API KEY REQUIRED" tile.
+    // Esri's dark gray canvas is a keyless drop-in that stays dark under the markers.
+    const basemapOptions: L.TileLayerOptions = {
+      maxZoom: 16,
+      maxNativeZoom: 16,
+    };
+
     L.tileLayer(
-      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
       {
+        ...basemapOptions,
         attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: "abcd",
-        maxZoom: 20,
+          'Tiles &copy; Esri &mdash; Source: Esri, HERE, Garmin, FAO, NOAA, USGS',
       }
+    ).addTo(mapRef.current);
+
+    L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+      basemapOptions
     ).addTo(mapRef.current);
 
     return () => {
